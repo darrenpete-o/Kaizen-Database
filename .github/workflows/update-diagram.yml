@@ -1,0 +1,46 @@
+name: Update Database Diagram
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  update-diagram:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install pyodbc pymssql
+
+      # Step 1: Run script that creates view definitions first (for naming later)
+      - name: Generate view definitions
+        run: python generate_sql_definitions.py
+
+      # Step 2: Run script that creates table definitions as a .dbml
+      - name: Generate table definitions
+        run: python generating_schema_diagram.py
+
+      # Step 3: Run script that generates the .dbml file with business friendly names (depends on both previous scripts)
+      - name: Generate DBML from Database
+        run: python generate_business_friendly_names.py
+
+      - name: Upload DBML to dbdiagram
+        env:
+          API_TOKEN: ${{ secrets.DBDIAGRAM_API_TOKEN }}
+          DIAGRAM_ID: ${{ secrets.DIAGRAM_ID }}
+        run: |
+          curl --location --request PUT "https://api.dbdiagram.io/v1/diagrams/$DIAGRAM_ID" \
+          --header "dbdiagram-access-token: $API_TOKEN" \
+          --header "Content-Type: application/json" \
+          --data "{
+            \"name\": \"My Automated Diagram\",
+            \"content\": $(cat schema.dbml | jq -Rs .)
+          }"
