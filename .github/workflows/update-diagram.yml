@@ -10,26 +10,35 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-
+          
       - name: Install dependencies
         run: |
-          pip install pyodbc pymssql
+          python -m pip install --upgrade pip
+          pip install pyodbc pymssql openai
+          echo "✅ Installed packages:"
+          pip list | grep -E "pyodbc|pymssql|openai"
+
+      - name: Verify OpenAI installation
+        run: |
+          python -c "import openai; print(f'✅ OpenAI version: {openai.__version__}')"
 
       # Step 1: Run script that creates view definitions first (for naming later)
       - name: Generate view definitions
+        env:
+          DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
         run: python generate_sql_definitions.py
 
       # Step 2: Run script that creates table definitions as a .dbml
       - name: Generate table definitions
+        env:
+          DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
         run: python generating_schema_diagram.py
 
       # Step 3: Run script that generates the .dbml file with business friendly names (depends on both previous scripts)
       - name: Generate DBML from Database
+        env:
+          DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
         run: python generate_business_friendly_names.py
 
       - name: Upload DBML to dbdiagram
