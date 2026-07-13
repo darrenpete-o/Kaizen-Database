@@ -10,10 +10,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Verify ODBC Driver
-        run: |
-          python -c "import pyodbc; print('Available ODBC drivers:'); print(pyodbc.drivers())"
           
       - name: Install dependencies
         run: |
@@ -25,6 +21,10 @@ jobs:
       - name: Verify OpenAI installation
         run: |
           python -c "import openai; print(f'✅ OpenAI version: {openai.__version__}')"
+          
+      - name: Verify ODBC Driver
+        run: |
+          python -c "import pyodbc; print('Available ODBC drivers:'); print(pyodbc.drivers())"
 
       # Step 1: Run script that creates view definitions first (for naming later)
       - name: Generate view definitions
