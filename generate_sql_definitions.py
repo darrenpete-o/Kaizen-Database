@@ -110,13 +110,10 @@ def main():
     # CONFIGURATION - Edit these values for your environment
     # ============================================================
     
-    # Using Windows Authentication (Trusted Connection)
-    connection_string = (
-        "DRIVER={SQL SERVER};"
-        "SERVER=JARVIS;"
-        "DATABASE=KIMdb;"
-        "Trusted_Connection=yes;"
-    )
+    # Use the connection string from GitHub Secrets
+    connection_string = os.environ.get("DB_CONNECTION_STRING")
+    if not connection_string:
+        raise ValueError("DB_CONNECTION_STRING environment variable not set")
 
     # ============================================================
     # END OF CONFIGURATION

@@ -6,16 +6,9 @@ def get_db_connection():
     """
     Establish connection to SQL Server using the provided connection details.
     """
-    DRIVER_NAME = 'SQL Server'
-    SERVER_NAME = 'JARVIS'
-    DATABASE_NAME = 'kimDB'
-    
-    connection_string = f"""
-        DRIVER={{{DRIVER_NAME}}};
-        SERVER={{{SERVER_NAME}}};
-        DATABASE={{{DATABASE_NAME}}};
-        Trusted_Connection=yes;
-    """
+    connection_string = os.environ.get("DB_CONNECTION_STRING")
+    if not connection_string:
+        raise ValueError("DB_CONNECTION_STRING environment variable not set")
     
     return pyodbc.connect(connection_string)
 
