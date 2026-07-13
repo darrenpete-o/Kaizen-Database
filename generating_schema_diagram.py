@@ -386,7 +386,7 @@ def main():
         with open(output_file, 'w', encoding='utf-8') as f:
             f.write(dbml_content)
         
-        print(f"\n✅ DBML successfully written to {output_file}")
+        print(f"\n DBML successfully written to {output_file}")
         
     except pyodbc.Error as e:
         print(f"Database connection error: {e}")

@@ -131,7 +131,7 @@ def parse_views_comprehensively(views_sql_content):
                     'WHEN', 'THEN', 'ELSE', 'END', 'CASE', 'OVER', 'PARTITION', 'ORDER', 'GROUP',
                     'TOP', 'PERCENT', 'DISTINCT', 'ROW_NUMBER', 'OVER', 'PARTITION', 'VALUES'}
     
-    print("\n🔍 Method 1: Finding explicit table aliases...")
+    print("\n Method 1: Finding explicit table aliases...")
     
     # Pattern 1: [dbo].[table_name] AS alias
     pattern1 = r'\[dbo\]\.\[([a-zA-Z0-9_]+)\]\s+AS\s+([a-zA-Z0-9_]+)'
@@ -143,7 +143,7 @@ def parse_views_comprehensively(views_sql_content):
                 table_names[table] = business_name
                 print(f"  {table} → {business_name}")
     
-    print("\n🔍 Method 2: Finding table purposes from JOIN aliases...")
+    print("\n Method 2: Finding table purposes from JOIN aliases...")
     
     # Pattern 2a: JOIN table_name AS alias
     pattern2a = r'JOIN\s+\[([a-zA-Z0-9_]+)\]\s+AS\s+([a-zA-Z0-9_]+)'
@@ -185,7 +185,7 @@ def parse_views_comprehensively(views_sql_content):
                 table_names[table] = business_name
                 print(f"  {table} → {business_name}")
     
-    print("\n🔍 Method 3: Finding table purposes from FROM aliases...")
+    print("\n Method 3: Finding table purposes from FROM aliases...")
     
     # Pattern 3a: FROM table_name alias
     pattern3a = r'FROM\s+\[([a-zA-Z0-9_]+)\]\s+([a-zA-Z0-9_]+)(?=\s+LEFT|\s+RIGHT|\s+INNER|\s+OUTER|\s+WHERE|\s+GROUP|\s+ORDER|\s+$)'
@@ -207,7 +207,7 @@ def parse_views_comprehensively(views_sql_content):
                 table_names[table] = business_name
                 print(f"  {table} → {business_name}")
     
-    print("\n🔍 Method 4: Finding column aliases that reveal table purpose...")
+    print("\n Method 4: Finding column aliases that reveal table purpose...")
     
     # Pattern 4: Column aliases that reveal table purpose
     pattern4 = r'\[dbo\]\.\[([a-zA-Z0-9_]+)\]\.([a-zA-Z0-9_]+)\s+AS\s+([a-zA-Z0-9_]+)'
@@ -231,7 +231,7 @@ def parse_views_comprehensively(views_sql_content):
                     table_names[table] = business_name
                     print(f"  {table} → {business_name}")
     
-    print("\n🔍 Method 5: Finding tables from view names...")
+    print("\n Method 5: Finding tables from view names...")
     
     # Pattern 5: Some views are named after the table they primarily use
     pattern5 = r'CREATE\s+VIEW\s+\[?([a-zA-Z0-9_]+)\]?\s+AS\s+SELECT.*?FROM\s+\[?([a-zA-Z0-9_]+)\]?'
@@ -244,7 +244,7 @@ def parse_views_comprehensively(views_sql_content):
                     table_names[table] = business_name
                     print(f"  {table} → {business_name} (from view {view_name})")
     
-    print("\n🔍 Method 6: Finding explicit comments with table names...")
+    print("\n Method 6: Finding explicit comments with table names...")
     
     # Pattern 6: Comments like -- xdatagroup74a2b33e = companies
     pattern6 = r'--\s*([a-zA-Z0-9_]+)\s*=\s*([a-zA-Z0-9_\s]+)'
@@ -255,7 +255,7 @@ def parse_views_comprehensively(views_sql_content):
             table_names[table] = business_name
             print(f"  {table} → {business_name}")
     
-    print("\n🔍 Method 7: Cleaning up table names from the table itself...")
+    print("\n Method 7: Cleaning up table names from the table itself...")
     
     # Tables that appear in views and have self-explanatory names
     tables_to_clean = [
@@ -377,17 +377,17 @@ def process_dbml_file(input_file, output_file, views_sql_file):
     """Main function to process the DBML file."""
     
     # First, extract business names from views
-    print(f"\n📖 Reading views file: {views_sql_file}")
+    print(f"\n Reading views file: {views_sql_file}")
     with open(views_sql_file, 'r', encoding='utf-8') as f:
         views_content = f.read()
     
     business_names_from_views = parse_views_comprehensively(views_content)
     
-    print(f"\n✅ Found {len(business_names_from_views)} business names from views")
+    print(f"\n Found {len(business_names_from_views)} business names from views")
     
     # Print all found names for debugging
     if business_names_from_views:
-        print("\n📋 All names found in views:")
+        print("\n All names found in views:")
         for table, name in sorted(business_names_from_views.items()):
             print(f"  {table} → {name}")
     
@@ -396,7 +396,7 @@ def process_dbml_file(input_file, output_file, views_sql_file):
         dbml_content = f.read()
     
     tables = extract_table_names(dbml_content)
-    print(f"\n📊 Found {len(tables)} tables in DBML")
+    print(f"\n Found {len(tables)} tables in DBML")
     
     # Check which tables already have notes
     tables_with_notes = []
@@ -442,13 +442,13 @@ def process_dbml_file(input_file, output_file, views_sql_file):
         if table in business_names_from_views:
             table_names_with_notes[table] = business_names_from_views[table]
             view_name_count += 1
-            print(f"✅ Using view name: {table} → {business_names_from_views[table]}")
+            print(f" Using view name: {table} → {business_names_from_views[table]}")
         elif table_without_prefix in business_names_from_views:
             table_names_with_notes[table] = business_names_from_views[table_without_prefix]
             view_name_count += 1
-            print(f"✅ Using view name: {table} → {business_names_from_views[table_without_prefix]}")
+            print(f" Using view name: {table} → {business_names_from_views[table_without_prefix]}")
         else:
-            print(f"\n🤖 No view name found for {table}, using AI with columns...")
+            print(f"\n No view name found for {table}, using AI with columns...")
             columns = get_table_columns(dbml_content, table)
             business_name = generate_business_name_with_columns(table, columns, client)
             if business_name:
@@ -469,7 +469,7 @@ def process_dbml_file(input_file, output_file, views_sql_file):
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write(updated_content)
     
-    print(f"\n✅ Complete! Updated file saved to: {output_file}")
+    print(f"\n Complete! Updated file saved to: {output_file}")
     print(f"Added notes to {len(table_names_with_notes)} tables")
     print(f"  - From views: {view_name_count}")
     print(f"  - From AI/fallback: {ai_name_count}")
