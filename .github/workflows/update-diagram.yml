@@ -6,7 +6,7 @@ on:
 
 jobs:
   update-diagram:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -16,7 +16,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install pyodbc pymssql openai
           echo "✅ Installed packages:"
-          pip list | grep -E "pyodbc|pymssql|openai"
+          pip list | findstr "pyodbc pymssql openai"  # Windows uses findstr, not grep
 
       - name: Verify OpenAI installation
         run: |
@@ -26,19 +26,16 @@ jobs:
         run: |
           python -c "import pyodbc; print('Available ODBC drivers:'); print(pyodbc.drivers())"
 
-      # Step 1: Run script that creates view definitions first (for naming later)
       - name: Generate view definitions
         env:
           DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
         run: python generate_sql_definitions.py
 
-      # Step 2: Run script that creates table definitions as a .dbml
       - name: Generate table definitions
         env:
           DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
         run: python generating_schema_diagram.py
 
-      # Step 3: Run script that generates the .dbml file with business friendly names (depends on both previous scripts)
       - name: Generate DBML from Database
         env:
           DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
@@ -49,11 +46,25 @@ jobs:
         env:
           API_TOKEN: ${{ secrets.DBDIAGRAM_API_TOKEN }}
           DIAGRAM_ID: ${{ secrets.DIAGRAM_ID }}
+        shell: pwsh
         run: |
-          curl --location --request PUT "https://api.dbdiagram.io/v1/diagrams/$DIAGRAM_ID" \
-          --header "dbdiagram-access-token: $API_TOKEN" \
-          --header "Content-Type: application/json" \
-          --data "{
-            \"name\": \"My Automated Diagram\",
-            \"content\": $(cat schema.dbml | jq -Rs .)
-          }"
+          if (Test-Path "schema_diagram_with_aliases_as_notes.dbml") {
+            $DBML_FILE = "schema_diagram_with_aliases_as_notes.dbml"
+          } elseif (Test-Path "schema.dbml") {
+            $DBML_FILE = "schema.dbml"
+          } else {
+            Write-Host "❌ No DBML file found!"
+            exit 1
+          }
+          
+          Write-Host "📄 Using DBML file: $DBML_FILE"
+          $content = Get-Content $DBML_FILE -Raw | ConvertTo-Json -Compress
+          $json = @{
+            name = "Kaizen Database Schema Diagram"
+            content = $content
+          } | ConvertTo-Json
+          
+          curl --location --request PUT "https://api.dbdiagram.io/v1/diagrams/$env:DIAGRAM_ID" `
+            --header "dbdiagram-access-token: $env:API_TOKEN" `
+            --header "Content-Type: application/json" `
+            --data $json
