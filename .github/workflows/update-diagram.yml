@@ -26,10 +26,25 @@ jobs:
         run: |
           python -c "import pyodbc; print('Available ODBC drivers:'); print(pyodbc.drivers())"
 
+          # Download baseline from previous run if it exists
+      - name: Download baseline from artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: database-baseline
+          path: .
+        continue-on-error: true  # Continue even if no baseline exists
+
       - name: Check for Changes
         env:
           DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
         run: python check_for_changes.py
+
+      # Upload the baseline for future runs
+      - name: Upload baseline for next run
+        uses: actions/upload-artifact@v3
+        with:
+          name: database-baseline
+          path: database_baseline.json
         
       - name: Generate view definitions
         env:
