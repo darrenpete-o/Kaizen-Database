@@ -14,9 +14,9 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pyodbc pymssql openai
+          pip install pyodbc pymssql openai pandas
           echo "✅ Installed packages:"
-          pip list | findstr "pyodbc pymssql openai"  # Windows uses findstr, not grep
+          pip list | findstr "pyodbc pymssql openai pandas"  # Windows uses findstr, not grep
 
       - name: Verify OpenAI installation
         run: |
