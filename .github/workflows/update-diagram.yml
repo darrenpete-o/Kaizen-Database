@@ -48,7 +48,7 @@ jobs:
         env:
           API_TOKEN: ${{ secrets.DBDIAGRAM_API_TOKEN }}
           DIAGRAM_ID: ${{ secrets.DIAGRAM_ID }}
-        shell: pwsh
+        shell: powershell
         run: |
           if (Test-Path "schema_diagram_with_aliases_as_notes.dbml") {
             $DBML_FILE = "schema_diagram_with_aliases_as_notes.dbml"
