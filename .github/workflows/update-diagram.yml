@@ -45,6 +45,14 @@ jobs:
         with:
           name: database-baseline
           path: database_baseline.json
+
+      # Upload the change report
+      - name: Upload Excel Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: database-changes
+          path: database_changes_*.xlsx
         
       - name: Generate view definitions
         env:
