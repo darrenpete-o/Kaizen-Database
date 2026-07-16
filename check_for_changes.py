@@ -53,108 +53,44 @@ class DatabaseMonitor:
         """Get current database schema including tables and columns"""
         schema = {}
         
-        # Get all tables with business friendly names from MULTIPLE sources
+        # First, get all tables with their metadata
         tables_query = """
-        WITH TableBusinessNames AS (
-            SELECT 
-                t.TABLE_SCHEMA,
-                t.TABLE_NAME,
-                -- Check for business friendly names from multiple sources
-                COALESCE(
-                    -- 1. Custom Extended Property 'BusinessFriendlyName'
-                    (SELECT TOP 1 value 
-                     FROM sys.extended_properties ep
-                     WHERE ep.major_id = OBJECT_ID(QUOTENAME(t.TABLE_SCHEMA) + '.' + QUOTENAME(t.TABLE_NAME))
-                       AND ep.minor_id = 0
-                       AND ep.name = 'BusinessFriendlyName'
-                       AND ep.class = 1),
-                    -- 2. Custom Extended Property 'FriendlyName'
-                    (SELECT TOP 1 value 
-                     FROM sys.extended_properties ep
-                     WHERE ep.major_id = OBJECT_ID(QUOTENAME(t.TABLE_SCHEMA) + '.' + QUOTENAME(t.TABLE_NAME))
-                       AND ep.minor_id = 0
-                       AND ep.name = 'FriendlyName'
-                       AND ep.class = 1),
-                    -- 3. MS_Description (Table Description)
-                    (SELECT TOP 1 value 
-                     FROM sys.extended_properties ep
-                     WHERE ep.major_id = OBJECT_ID(QUOTENAME(t.TABLE_SCHEMA) + '.' + QUOTENAME(t.TABLE_NAME))
-                       AND ep.minor_id = 0
-                       AND ep.name = 'MS_Description'
-                       AND ep.class = 1),
-                    -- 4. Check if table has a synonym pointing to it
-                    (SELECT TOP 1 s.name
-                     FROM sys.synonyms s
-                     WHERE OBJECT_ID(s.base_object_name) = OBJECT_ID(QUOTENAME(t.TABLE_SCHEMA) + '.' + QUOTENAME(t.TABLE_NAME))
-                       AND s.base_object_name IS NOT NULL),
-                    -- 5. Check custom metadata table (if it exists)
-                    (SELECT TOP 1 BusinessName
-                     FROM dbo.TableMetadata
-                     WHERE TableName = QUOTENAME(t.TABLE_SCHEMA) + '.' + QUOTENAME(t.TABLE_NAME)),
-                    -- 6. Check if table name itself is business-friendly
-                    (SELECT TOP 1 'SELF' 
-                     WHERE 
-                        -- Check if table name is business-friendly (not technical)
-                        NOT EXISTS (
-                            SELECT 1 FROM (VALUES ('tbl_'), ('tab_'), ('v_'), ('vw_'), ('sys_'), ('tmp_'), ('temp_'), 
-                                                 ('lkp_'), ('ref_'), ('dim_'), ('fact_'), ('stg_'), ('ods_'), ('aud_')) 
-                            AS prefixes(prefix)
-                            WHERE LOWER(t.TABLE_NAME) LIKE LOWER(prefixes.prefix + '%')
-                        )
-                        AND NOT EXISTS (
-                            SELECT 1 FROM (VALUES ('_tbl'), ('_tab'), ('_vw'), ('_view'), ('_tmp'), ('_temp')) 
-                            AS suffixes(suffix)
-                            WHERE LOWER(t.TABLE_NAME) LIKE LOWER('%' + suffixes.suffix)
-                        )
-                        AND NOT (CHARINDEX('_', t.TABLE_NAME) > 0 AND t.TABLE_NAME != REPLACE(t.TABLE_NAME, '_', ' '))
-                        AND LOWER(t.TABLE_NAME) != t.TABLE_NAME  -- Not all lowercase
-                ) AS BusinessName,
-                -- Track what source provided the name
-                CASE 
-                    WHEN (SELECT value FROM sys.extended_properties ep
-                          WHERE ep.major_id = OBJECT_ID(QUOTENAME(t.TABLE_SCHEMA) + '.' + QUOTENAME(t.TABLE_NAME))
-                            AND ep.minor_id = 0
-                            AND ep.name = 'BusinessFriendlyName'
-                            AND ep.class = 1) IS NOT NULL THEN 'ExtendedProperty_BusinessFriendlyName'
-                    WHEN (SELECT value FROM sys.extended_properties ep
-                          WHERE ep.major_id = OBJECT_ID(QUOTENAME(t.TABLE_SCHEMA) + '.' + QUOTENAME(t.TABLE_NAME))
-                            AND ep.minor_id = 0
-                            AND ep.name = 'FriendlyName'
-                            AND ep.class = 1) IS NOT NULL THEN 'ExtendedProperty_FriendlyName'
-                    WHEN (SELECT value FROM sys.extended_properties ep
-                          WHERE ep.major_id = OBJECT_ID(QUOTENAME(t.TABLE_SCHEMA) + '.' + QUOTENAME(t.TABLE_NAME))
-                            AND ep.minor_id = 0
-                            AND ep.name = 'MS_Description'
-                            AND ep.class = 1) IS NOT NULL THEN 'ExtendedProperty_MS_Description'
-                    WHEN (SELECT TOP 1 s.name FROM sys.synonyms s
-                          WHERE OBJECT_ID(s.base_object_name) = OBJECT_ID(QUOTENAME(t.TABLE_SCHEMA) + '.' + QUOTENAME(t.TABLE_NAME))
-                            AND s.base_object_name IS NOT NULL) IS NOT NULL THEN 'Synonym'
-                    WHEN (SELECT TOP 1 BusinessName FROM dbo.TableMetadata
-                          WHERE TableName = QUOTENAME(t.TABLE_SCHEMA) + '.' + QUOTENAME(t.TABLE_NAME)) IS NOT NULL THEN 'CustomMetadataTable'
-                    WHEN 'SELF' = 'SELF' AND 
-                        NOT EXISTS (
-                            SELECT 1 FROM (VALUES ('tbl_'), ('tab_'), ('v_'), ('vw_'), ('sys_'), ('tmp_'), ('temp_'), 
-                                                 ('lkp_'), ('ref_'), ('dim_'), ('fact_'), ('stg_'), ('ods_'), ('aud_')) 
-                            AS prefixes(prefix)
-                            WHERE LOWER(t.TABLE_NAME) LIKE LOWER(prefixes.prefix + '%')
-                        )
-                        AND NOT EXISTS (
-                            SELECT 1 FROM (VALUES ('_tbl'), ('_tab'), ('_vw'), ('_view'), ('_tmp'), ('_temp')) 
-                            AS suffixes(suffix)
-                            WHERE LOWER(t.TABLE_NAME) LIKE LOWER('%' + suffixes.suffix)
-                        )
-                        AND NOT (CHARINDEX('_', t.TABLE_NAME) > 0 AND t.TABLE_NAME != REPLACE(t.TABLE_NAME, '_', ' '))
-                        AND LOWER(t.TABLE_NAME) != t.TABLE_NAME THEN 'Self-Descriptive'
-                    ELSE 'Missing'
-                END AS BusinessNameSource
-            FROM 
-                INFORMATION_SCHEMA.TABLES t
-            WHERE 
-                t.TABLE_TYPE = 'BASE TABLE'
-                AND t.TABLE_SCHEMA NOT IN ('sys', 'INFORMATION_SCHEMA')
-        )
-        SELECT * FROM TableBusinessNames
-        ORDER BY TABLE_SCHEMA, TABLE_NAME
+        SELECT 
+            t.TABLE_SCHEMA,
+            t.TABLE_NAME,
+            -- Get BusinessFriendlyName extended property
+            (SELECT TOP 1 CAST(value AS NVARCHAR(MAX)) 
+             FROM sys.extended_properties ep
+             WHERE ep.major_id = OBJECT_ID(QUOTENAME(t.TABLE_SCHEMA) + '.' + QUOTENAME(t.TABLE_NAME))
+               AND ep.minor_id = 0
+               AND ep.name = 'BusinessFriendlyName'
+               AND ep.class = 1) AS BusinessFriendlyName,
+            -- Get FriendlyName extended property
+            (SELECT TOP 1 CAST(value AS NVARCHAR(MAX)) 
+             FROM sys.extended_properties ep
+             WHERE ep.major_id = OBJECT_ID(QUOTENAME(t.TABLE_SCHEMA) + '.' + QUOTENAME(t.TABLE_NAME))
+               AND ep.minor_id = 0
+               AND ep.name = 'FriendlyName'
+               AND ep.class = 1) AS FriendlyName,
+            -- Get MS_Description extended property
+            (SELECT TOP 1 CAST(value AS NVARCHAR(MAX)) 
+             FROM sys.extended_properties ep
+             WHERE ep.major_id = OBJECT_ID(QUOTENAME(t.TABLE_SCHEMA) + '.' + QUOTENAME(t.TABLE_NAME))
+               AND ep.minor_id = 0
+               AND ep.name = 'MS_Description'
+               AND ep.class = 1) AS MS_Description,
+            -- Get synonym if exists
+            (SELECT TOP 1 s.name
+             FROM sys.synonyms s
+             WHERE OBJECT_ID(s.base_object_name) = OBJECT_ID(QUOTENAME(t.TABLE_SCHEMA) + '.' + QUOTENAME(t.TABLE_NAME))
+               AND s.base_object_name IS NOT NULL) AS SynonymName
+        FROM 
+            INFORMATION_SCHEMA.TABLES t
+        WHERE 
+            t.TABLE_TYPE = 'BASE TABLE'
+            AND t.TABLE_SCHEMA NOT IN ('sys', 'INFORMATION_SCHEMA')
+        ORDER BY 
+            t.TABLE_SCHEMA, t.TABLE_NAME
         """
         
         self.cursor.execute(tables_query)
@@ -163,9 +99,66 @@ class DatabaseMonitor:
         for table in tables:
             schema_name = table[0]
             table_name = table[1]
-            business_name = table[2] if len(table) > 2 else None
-            name_source = table[3] if len(table) > 3 else None
+            business_friendly_name = table[2] if len(table) > 2 else None
+            friendly_name = table[3] if len(table) > 3 else None
+            ms_description = table[4] if len(table) > 4 else None
+            synonym_name = table[5] if len(table) > 5 else None
+            
             full_name = f"{schema_name}.{table_name}"
+            
+            # Determine the best business name and its source
+            business_name = None
+            name_source = None
+            
+            if business_friendly_name and str(business_friendly_name).strip():
+                business_name = business_friendly_name
+                name_source = 'ExtendedProperty_BusinessFriendlyName'
+            elif friendly_name and str(friendly_name).strip():
+                business_name = friendly_name
+                name_source = 'ExtendedProperty_FriendlyName'
+            elif ms_description and str(ms_description).strip():
+                business_name = ms_description
+                name_source = 'ExtendedProperty_MS_Description'
+            elif synonym_name and str(synonym_name).strip():
+                business_name = synonym_name
+                name_source = 'Synonym'
+            else:
+                # Check if table name itself is business-friendly
+                # Remove schema prefix for checking
+                clean_name = table_name
+                
+                # Check for technical prefixes
+                technical_prefixes = ['tbl_', 'tab_', 'v_', 'vw_', 'sys_', 'tmp_', 'temp_', 
+                                     'lkp_', 'ref_', 'dim_', 'fact_', 'stg_', 'ods_', 'aud_']
+                
+                technical_suffixes = ['_tbl', '_tab', '_vw', '_view', '_tmp', '_temp']
+                
+                name_lower = clean_name.lower()
+                is_technical = False
+                
+                for prefix in technical_prefixes:
+                    if name_lower.startswith(prefix):
+                        is_technical = True
+                        break
+                
+                if not is_technical:
+                    for suffix in technical_suffixes:
+                        if name_lower.endswith(suffix):
+                            is_technical = True
+                            break
+                
+                # Check if it has underscores and isn't title case
+                if '_' in clean_name and not clean_name.replace('_', ' ').istitle():
+                    is_technical = True
+                
+                # If it's all lowercase, it's technical
+                if name_lower == clean_name:
+                    is_technical = True
+                
+                # If not technical, it's self-descriptive
+                if not is_technical:
+                    business_name = clean_name.replace('_', ' ')
+                    name_source = 'Self-Descriptive'
             
             # Get columns for each table
             columns_query = """
@@ -259,16 +252,13 @@ class DatabaseMonitor:
         
         return changes
     
-    def has_business_friendly_name(self, business_name, name_source):
+    def has_business_friendly_name(self, business_name):
         """
         Check if a table has a business friendly name.
         Returns True if ANY business name metadata exists.
         """
-        # If business_name is None or empty string, no business name was found
         if business_name is None or str(business_name).strip() == '':
             return False
-        
-        # If we found any value (even 'SELF'), consider it as having a business name
         return True
     
     def create_excel_report(self, changes, current_schema):
@@ -279,7 +269,7 @@ class DatabaseMonitor:
         for table in changes.get('added_tables', []):
             business_name = current_schema[table].get('business_name')
             name_source = current_schema[table].get('name_source')
-            has_business_name = self.has_business_friendly_name(business_name, name_source)
+            has_business_name = self.has_business_friendly_name(business_name)
             
             # Check for required columns
             has_dtinsert = 'dtinsert' in current_schema[table]['column_names']
@@ -329,7 +319,7 @@ class DatabaseMonitor:
             table = modification['table']
             business_name = current_schema[table].get('business_name')
             name_source = current_schema[table].get('name_source')
-            has_business_name = self.has_business_friendly_name(business_name, name_source)
+            has_business_name = self.has_business_friendly_name(business_name)
             
             display_business_name = business_name if business_name else 'None'
             display_source = name_source if name_source else 'None'
