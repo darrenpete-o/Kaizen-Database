@@ -37,17 +37,17 @@ class DatabaseMonitor:
         try:
             self.conn = pyodbc.connect(self.connection_string)
             self.cursor = self.conn.cursor()
-            print("✓ Connected to database successfully")
+            print("Connected to database successfully")
             return True
         except Exception as e:
-            print(f"✗ Failed to connect to database: {e}")
+            print(f"Failed to connect to database: {e}")
             return False
     
     def disconnect(self):
         """Close database connection"""
         if self.conn:
             self.conn.close()
-            print("✓ Database connection closed")
+            print("Database connection closed")
     
     def get_database_schema(self):
         """Get current database schema including tables and columns"""
@@ -130,7 +130,7 @@ class DatabaseMonitor:
         }
         with open(self.baseline_file, 'w') as f:
             json.dump(baseline, f, indent=2)
-        print(f"✓ Baseline saved to {self.baseline_file}")
+        print(f"Baseline saved to {self.baseline_file}")
         return baseline
     
     def detect_changes(self, current_schema, baseline_schema):
@@ -292,7 +292,7 @@ class DatabaseMonitor:
         
         # If no changes detected, return None
         if not report_data:
-            print("✓ No changes detected")
+            print("No changes detected")
             return None
         
         # Create DataFrame
@@ -335,12 +335,12 @@ class DatabaseMonitor:
                             cell.fill = red_fill
                             cell.font = Font(bold=True, color='FFFFFF')
         
-        print(f"✓ Report saved to {filename}")
+        print(f"Report saved to {filename}")
         return filename
     
     def run_monitoring(self):
         """Main monitoring function"""
-        print("🔍 Starting database monitoring...")
+        print("Starting database monitoring...")
         
         if not self.connect():
             return False
@@ -354,18 +354,18 @@ class DatabaseMonitor:
             baseline = self.load_baseline()
             
             if baseline is None:
-                print("📝 No baseline found. Creating initial baseline...")
+                print("No baseline found. Creating initial baseline...")
                 self.save_baseline(current_schema, current_hash)
-                print("✓ Baseline created successfully.")
+                print("Baseline created successfully.")
                 return True
             
             # Check if changes occurred
             if baseline['hash'] == current_hash:
-                print("✓ No changes detected in the database.")
+                print("No changes detected in the database.")
                 return True
             
             # Detect and document changes
-            print("📊 Changes detected! Generating report...")
+            print("Changes detected! Generating report...")
             changes = self.detect_changes(current_schema, baseline['schema'])
             
             # Create Excel report
@@ -375,7 +375,7 @@ class DatabaseMonitor:
             self.save_baseline(current_schema, current_hash)
             
             # Print summary
-            print("\n📋 Change Summary:")
+            print("\nChange Summary:")
             print(f"  - Added tables: {len(changes['added_tables'])}")
             print(f"  - Removed tables: {len(changes['removed_tables'])}")
             print(f"  - Modified tables: {len(changes['modified_tables'])}")
@@ -385,7 +385,7 @@ class DatabaseMonitor:
             return True
             
         except Exception as e:
-            print(f"✗ Error during monitoring: {e}")
+            print(f"Error during monitoring: {e}")
             return False
         finally:
             self.disconnect()
