@@ -13,7 +13,7 @@ class DatabaseMonitor:
     def __init__(self, baseline_file='database_baseline.json', 
                  excel_file='database_changes.xlsx'):
         """
-        Initialize the Database Monitor
+        Initialize the Database Monitors
         
         Args:
             baseline_file: JSON file to store baseline snapshot
