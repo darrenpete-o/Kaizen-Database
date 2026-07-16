@@ -37,34 +37,124 @@ class DatabaseMonitor:
         try:
             self.conn = pyodbc.connect(self.connection_string)
             self.cursor = self.conn.cursor()
-            print("Connected to database successfully")
+            print("[OK] Connected to database successfully")
             return True
         except Exception as e:
-            print(f"Failed to connect to database: {e}")
+            print(f"[ERROR] Failed to connect to database: {e}")
             return False
     
     def disconnect(self):
         """Close database connection"""
         if self.conn:
             self.conn.close()
-            print("Database connection closed")
+            print("[OK] Database connection closed")
     
     def get_database_schema(self):
         """Get current database schema including tables and columns"""
         schema = {}
         
-        # Get all tables
+        # Get all tables with business friendly names from MULTIPLE sources
         tables_query = """
-        SELECT 
-            TABLE_SCHEMA,
-            TABLE_NAME
-        FROM 
-            INFORMATION_SCHEMA.TABLES
-        WHERE 
-            TABLE_TYPE = 'BASE TABLE'
-            AND TABLE_SCHEMA NOT IN ('sys', 'INFORMATION_SCHEMA')
-        ORDER BY 
-            TABLE_SCHEMA, TABLE_NAME
+        WITH TableBusinessNames AS (
+            SELECT 
+                t.TABLE_SCHEMA,
+                t.TABLE_NAME,
+                -- Check for business friendly names from multiple sources
+                COALESCE(
+                    -- 1. Custom Extended Property 'BusinessFriendlyName'
+                    (SELECT TOP 1 value 
+                     FROM sys.extended_properties ep
+                     WHERE ep.major_id = OBJECT_ID(QUOTENAME(t.TABLE_SCHEMA) + '.' + QUOTENAME(t.TABLE_NAME))
+                       AND ep.minor_id = 0
+                       AND ep.name = 'BusinessFriendlyName'
+                       AND ep.class = 1),
+                    -- 2. Custom Extended Property 'FriendlyName'
+                    (SELECT TOP 1 value 
+                     FROM sys.extended_properties ep
+                     WHERE ep.major_id = OBJECT_ID(QUOTENAME(t.TABLE_SCHEMA) + '.' + QUOTENAME(t.TABLE_NAME))
+                       AND ep.minor_id = 0
+                       AND ep.name = 'FriendlyName'
+                       AND ep.class = 1),
+                    -- 3. MS_Description (Table Description)
+                    (SELECT TOP 1 value 
+                     FROM sys.extended_properties ep
+                     WHERE ep.major_id = OBJECT_ID(QUOTENAME(t.TABLE_SCHEMA) + '.' + QUOTENAME(t.TABLE_NAME))
+                       AND ep.minor_id = 0
+                       AND ep.name = 'MS_Description'
+                       AND ep.class = 1),
+                    -- 4. Check if table has a synonym pointing to it
+                    (SELECT TOP 1 s.name
+                     FROM sys.synonyms s
+                     WHERE OBJECT_ID(s.base_object_name) = OBJECT_ID(QUOTENAME(t.TABLE_SCHEMA) + '.' + QUOTENAME(t.TABLE_NAME))
+                       AND s.base_object_name IS NOT NULL),
+                    -- 5. Check custom metadata table (if it exists)
+                    (SELECT TOP 1 BusinessName
+                     FROM dbo.TableMetadata
+                     WHERE TableName = QUOTENAME(t.TABLE_SCHEMA) + '.' + QUOTENAME(t.TABLE_NAME)),
+                    -- 6. Check if table name itself is business-friendly
+                    (SELECT TOP 1 'SELF' 
+                     WHERE 
+                        -- Check if table name is business-friendly (not technical)
+                        NOT EXISTS (
+                            SELECT 1 FROM (VALUES ('tbl_'), ('tab_'), ('v_'), ('vw_'), ('sys_'), ('tmp_'), ('temp_'), 
+                                                 ('lkp_'), ('ref_'), ('dim_'), ('fact_'), ('stg_'), ('ods_'), ('aud_')) 
+                            AS prefixes(prefix)
+                            WHERE LOWER(t.TABLE_NAME) LIKE LOWER(prefixes.prefix + '%')
+                        )
+                        AND NOT EXISTS (
+                            SELECT 1 FROM (VALUES ('_tbl'), ('_tab'), ('_vw'), ('_view'), ('_tmp'), ('_temp')) 
+                            AS suffixes(suffix)
+                            WHERE LOWER(t.TABLE_NAME) LIKE LOWER('%' + suffixes.suffix)
+                        )
+                        AND NOT (CHARINDEX('_', t.TABLE_NAME) > 0 AND t.TABLE_NAME != REPLACE(t.TABLE_NAME, '_', ' '))
+                        AND LOWER(t.TABLE_NAME) != t.TABLE_NAME  -- Not all lowercase
+                ) AS BusinessName,
+                -- Track what source provided the name
+                CASE 
+                    WHEN (SELECT value FROM sys.extended_properties ep
+                          WHERE ep.major_id = OBJECT_ID(QUOTENAME(t.TABLE_SCHEMA) + '.' + QUOTENAME(t.TABLE_NAME))
+                            AND ep.minor_id = 0
+                            AND ep.name = 'BusinessFriendlyName'
+                            AND ep.class = 1) IS NOT NULL THEN 'ExtendedProperty_BusinessFriendlyName'
+                    WHEN (SELECT value FROM sys.extended_properties ep
+                          WHERE ep.major_id = OBJECT_ID(QUOTENAME(t.TABLE_SCHEMA) + '.' + QUOTENAME(t.TABLE_NAME))
+                            AND ep.minor_id = 0
+                            AND ep.name = 'FriendlyName'
+                            AND ep.class = 1) IS NOT NULL THEN 'ExtendedProperty_FriendlyName'
+                    WHEN (SELECT value FROM sys.extended_properties ep
+                          WHERE ep.major_id = OBJECT_ID(QUOTENAME(t.TABLE_SCHEMA) + '.' + QUOTENAME(t.TABLE_NAME))
+                            AND ep.minor_id = 0
+                            AND ep.name = 'MS_Description'
+                            AND ep.class = 1) IS NOT NULL THEN 'ExtendedProperty_MS_Description'
+                    WHEN (SELECT TOP 1 s.name FROM sys.synonyms s
+                          WHERE OBJECT_ID(s.base_object_name) = OBJECT_ID(QUOTENAME(t.TABLE_SCHEMA) + '.' + QUOTENAME(t.TABLE_NAME))
+                            AND s.base_object_name IS NOT NULL) IS NOT NULL THEN 'Synonym'
+                    WHEN (SELECT TOP 1 BusinessName FROM dbo.TableMetadata
+                          WHERE TableName = QUOTENAME(t.TABLE_SCHEMA) + '.' + QUOTENAME(t.TABLE_NAME)) IS NOT NULL THEN 'CustomMetadataTable'
+                    WHEN 'SELF' = 'SELF' AND 
+                        NOT EXISTS (
+                            SELECT 1 FROM (VALUES ('tbl_'), ('tab_'), ('v_'), ('vw_'), ('sys_'), ('tmp_'), ('temp_'), 
+                                                 ('lkp_'), ('ref_'), ('dim_'), ('fact_'), ('stg_'), ('ods_'), ('aud_')) 
+                            AS prefixes(prefix)
+                            WHERE LOWER(t.TABLE_NAME) LIKE LOWER(prefixes.prefix + '%')
+                        )
+                        AND NOT EXISTS (
+                            SELECT 1 FROM (VALUES ('_tbl'), ('_tab'), ('_vw'), ('_view'), ('_tmp'), ('_temp')) 
+                            AS suffixes(suffix)
+                            WHERE LOWER(t.TABLE_NAME) LIKE LOWER('%' + suffixes.suffix)
+                        )
+                        AND NOT (CHARINDEX('_', t.TABLE_NAME) > 0 AND t.TABLE_NAME != REPLACE(t.TABLE_NAME, '_', ' '))
+                        AND LOWER(t.TABLE_NAME) != t.TABLE_NAME THEN 'Self-Descriptive'
+                    ELSE 'Missing'
+                END AS BusinessNameSource
+            FROM 
+                INFORMATION_SCHEMA.TABLES t
+            WHERE 
+                t.TABLE_TYPE = 'BASE TABLE'
+                AND t.TABLE_SCHEMA NOT IN ('sys', 'INFORMATION_SCHEMA')
+        )
+        SELECT * FROM TableBusinessNames
+        ORDER BY TABLE_SCHEMA, TABLE_NAME
         """
         
         self.cursor.execute(tables_query)
@@ -73,6 +163,8 @@ class DatabaseMonitor:
         for table in tables:
             schema_name = table[0]
             table_name = table[1]
+            business_name = table[2] if len(table) > 2 else None
+            name_source = table[3] if len(table) > 3 else None
             full_name = f"{schema_name}.{table_name}"
             
             # Get columns for each table
@@ -95,6 +187,8 @@ class DatabaseMonitor:
             columns = self.cursor.fetchall()
             
             schema[full_name] = {
+                'business_name': business_name,
+                'name_source': name_source,
                 'columns': [
                     {
                         'name': col[0],
@@ -130,7 +224,7 @@ class DatabaseMonitor:
         }
         with open(self.baseline_file, 'w') as f:
             json.dump(baseline, f, indent=2)
-        print(f"Baseline saved to {self.baseline_file}")
+        print(f"[OK] Baseline saved to {self.baseline_file}")
         return baseline
     
     def detect_changes(self, current_schema, baseline_schema):
@@ -165,41 +259,16 @@ class DatabaseMonitor:
         
         return changes
     
-    def has_business_friendly_name(self, table_name):
+    def has_business_friendly_name(self, business_name, name_source):
         """
-        Check if table has a business friendly name.
-        Returns True if it looks business-friendly, False if it looks technical.
+        Check if a table has a business friendly name.
+        Returns True if ANY business name metadata exists.
         """
-        # Remove schema prefix for checking
-        name = table_name.split('.')[-1] if '.' in table_name else table_name
-        
-        # Common technical prefixes
-        technical_prefixes = ['tbl_', 'tab_', 'v_', 'vw_', 'sys_', 'tmp_', 'temp_', 
-                             'lkp_', 'ref_', 'dim_', 'fact_', 'stg_', 'ods_', 'aud_']
-        
-        # Common technical suffixes
-        technical_suffixes = ['_tbl', '_tab', '_vw', '_view', '_tmp', '_temp']
-        
-        name_lower = name.lower()
-        
-        # Check for technical patterns
-        for prefix in technical_prefixes:
-            if name_lower.startswith(prefix):
-                return False
-        
-        for suffix in technical_suffixes:
-            if name_lower.endswith(suffix):
-                return False
-        
-        # Check if it has underscores (often indicates technical naming)
-        if '_' in name and not name.replace('_', ' ').istitle():
+        # If business_name is None or empty string, no business name was found
+        if business_name is None or str(business_name).strip() == '':
             return False
         
-        # If it's all lowercase or has underscores, flag as technical
-        if name_lower == name or '_' in name:
-            return False
-        
-        # Otherwise, consider it business-friendly
+        # If we found any value (even 'SELF'), consider it as having a business name
         return True
     
     def create_excel_report(self, changes, current_schema):
@@ -208,7 +277,9 @@ class DatabaseMonitor:
         
         # Process added tables
         for table in changes.get('added_tables', []):
-            has_business_name = self.has_business_friendly_name(table)
+            business_name = current_schema[table].get('business_name')
+            name_source = current_schema[table].get('name_source')
+            has_business_name = self.has_business_friendly_name(business_name, name_source)
             
             # Check for required columns
             has_dtinsert = 'dtinsert' in current_schema[table]['column_names']
@@ -222,9 +293,15 @@ class DatabaseMonitor:
             if not has_dtedit:
                 warning.append('Missing dtedit column')
             
+            # Display business name value (or None if missing)
+            display_business_name = business_name if business_name else 'None'
+            display_source = name_source if name_source else 'None'
+            
             # Add table row
             report_data.append({
                 'Table Name': table,
+                'Business Name': display_business_name,
+                'Name Source': display_source,
                 'Change Type': 'TABLE ADDED',
                 'Column Name': 'TABLE',
                 'Data Type': '',
@@ -237,6 +314,8 @@ class DatabaseMonitor:
             for col in current_schema[table]['columns']:
                 report_data.append({
                     'Table Name': table,
+                    'Business Name': display_business_name,
+                    'Name Source': display_source,
                     'Change Type': 'COLUMN ADDED',
                     'Column Name': col['name'],
                     'Data Type': col['data_type'],
@@ -248,7 +327,12 @@ class DatabaseMonitor:
         # Process modified tables
         for modification in changes.get('modified_tables', []):
             table = modification['table']
-            has_business_name = self.has_business_friendly_name(table)
+            business_name = current_schema[table].get('business_name')
+            name_source = current_schema[table].get('name_source')
+            has_business_name = self.has_business_friendly_name(business_name, name_source)
+            
+            display_business_name = business_name if business_name else 'None'
+            display_source = name_source if name_source else 'None'
             
             # Added columns
             for col in modification.get('added_columns', []):
@@ -258,6 +342,8 @@ class DatabaseMonitor:
                 
                 report_data.append({
                     'Table Name': table,
+                    'Business Name': display_business_name,
+                    'Name Source': display_source,
                     'Change Type': 'COLUMN ADDED',
                     'Column Name': col,
                     'Data Type': col_details['data_type'] if col_details else '',
@@ -270,6 +356,8 @@ class DatabaseMonitor:
             for col in modification.get('removed_columns', []):
                 report_data.append({
                     'Table Name': table,
+                    'Business Name': display_business_name,
+                    'Name Source': display_source,
                     'Change Type': 'COLUMN REMOVED',
                     'Column Name': col,
                     'Data Type': '',
@@ -282,6 +370,8 @@ class DatabaseMonitor:
         for table in changes.get('removed_tables', []):
             report_data.append({
                 'Table Name': table,
+                'Business Name': 'Unknown (Table Removed)',
+                'Name Source': 'Unknown',
                 'Change Type': 'TABLE REMOVED',
                 'Column Name': 'TABLE',
                 'Data Type': '',
@@ -292,7 +382,7 @@ class DatabaseMonitor:
         
         # If no changes detected, return None
         if not report_data:
-            print("No changes detected")
+            print("[OK] No changes detected")
             return None
         
         # Create DataFrame
@@ -324,8 +414,8 @@ class DatabaseMonitor:
             yellow_fill = PatternFill(start_color='FFFF00', end_color='FFFF00', fill_type='solid')
             red_fill = PatternFill(start_color='FF0000', end_color='FF0000', fill_type='solid')
             
-            # Highlight warning cells
-            for row in worksheet.iter_rows(min_row=2, max_row=worksheet.max_row, min_col=7, max_col=7):
+            # Highlight warning cells (column 8 in the Excel file)
+            for row in worksheet.iter_rows(min_row=2, max_row=worksheet.max_row, min_col=8, max_col=8):
                 for cell in row:
                     if cell.value and cell.value != 'None':
                         if 'Missing Business Friendly Name' in str(cell.value):
@@ -335,12 +425,12 @@ class DatabaseMonitor:
                             cell.fill = red_fill
                             cell.font = Font(bold=True, color='FFFFFF')
         
-        print(f"Report saved to {filename}")
+        print(f"[OK] Report saved to {filename}")
         return filename
     
     def run_monitoring(self):
         """Main monitoring function"""
-        print("Starting database monitoring...")
+        print("[INFO] Starting database monitoring...")
         
         if not self.connect():
             return False
@@ -354,18 +444,18 @@ class DatabaseMonitor:
             baseline = self.load_baseline()
             
             if baseline is None:
-                print("No baseline found. Creating initial baseline...")
+                print("[INFO] No baseline found. Creating initial baseline...")
                 self.save_baseline(current_schema, current_hash)
-                print("Baseline created successfully.")
+                print("[OK] Baseline created successfully.")
                 return True
             
             # Check if changes occurred
             if baseline['hash'] == current_hash:
-                print("No changes detected in the database.")
+                print("[OK] No changes detected in the database.")
                 return True
             
             # Detect and document changes
-            print("Changes detected! Generating report...")
+            print("[INFO] Changes detected! Generating report...")
             changes = self.detect_changes(current_schema, baseline['schema'])
             
             # Create Excel report
@@ -375,7 +465,7 @@ class DatabaseMonitor:
             self.save_baseline(current_schema, current_hash)
             
             # Print summary
-            print("\nChange Summary:")
+            print("\n[SUMMARY] Change Summary:")
             print(f"  - Added tables: {len(changes['added_tables'])}")
             print(f"  - Removed tables: {len(changes['removed_tables'])}")
             print(f"  - Modified tables: {len(changes['modified_tables'])}")
@@ -385,7 +475,7 @@ class DatabaseMonitor:
             return True
             
         except Exception as e:
-            print(f"Error during monitoring: {e}")
+            print(f"[ERROR] Error during monitoring: {e}")
             return False
         finally:
             self.disconnect()
