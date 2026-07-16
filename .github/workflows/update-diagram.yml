@@ -36,7 +36,7 @@ jobs:
           DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
         run: python generating_schema_diagram.py
 
-      - name: Generate DBML from Database
+      - name: Generate business friendly names as dbml
         env:
           DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
@@ -44,29 +44,55 @@ jobs:
           PYTHONUTF8: 1
         run: python generate_business_friendly_names.py
 
+      - name: Verify DBML file
+        run: |
+          if (Test-Path "schema_diagram_with_aliases_as_notes.dbml") {
+            $content = Get-Content "schema_diagram_with_aliases_as_notes.dbml" -Raw
+            Write-Host "✅ DBML file exists. Size: $($content.Length) characters"
+          } else {
+            Write-Host "❌ DBML file not found!"
+            exit 1
+          }
+
+      - name: Debug - Show current directory and files
+        run: |
+          Write-Host "Current directory: $(Get-Location)"
+          Write-Host "Files in current directory:"
+          Get-ChildItem -File
+          Write-Host "`nFull path of DBML file:"
+          Resolve-Path "schema_diagram_with_aliases_as_notes.dbml" -ErrorAction SilentlyContinue
+
       - name: Upload DBML to dbdiagram
+        timeout-minutes: 2
         env:
           API_TOKEN: ${{ secrets.DBDIAGRAM_API_TOKEN }}
           DIAGRAM_ID: ${{ secrets.DIAGRAM_ID }}
         shell: powershell
         run: |
-          if (Test-Path "schema_diagram_with_aliases_as_notes.dbml") {
-            $DBML_FILE = "schema_diagram_with_aliases_as_notes.dbml"
-          } elseif (Test-Path "schema.dbml") {
-            $DBML_FILE = "schema.dbml"
-          } else {
-            Write-Host "❌ No DBML file found!"
+          Write-Host "Reading DBML file..."
+    
+          $filePath = "C:\actions-runner\_work\Kaizen-Database\Kaizen-Database\schema_diagram_with_aliases_as_notes.dbml"
+    
+          if (-not (Test-Path $filePath)) {
+            Write-Host "File not found!"
             exit 1
           }
-          
-          Write-Host "📄 Using DBML file: $DBML_FILE"
-          $content = Get-Content $DBML_FILE -Raw | ConvertTo-Json -Compress
-          $json = @{
+    
+          $content = [System.IO.File]::ReadAllText($filePath)
+          Write-Host "Read $($content.Length) characters"
+          Write-Host "Uploading to dbdiagram.io..."
+    
+          $body = @{
             name = "Kaizen Database Schema Diagram"
             content = $content
-          } | ConvertTo-Json
-          
-          curl --location --request PUT "https://api.dbdiagram.io/v1/diagrams/$env:DIAGRAM_ID" `
-            --header "dbdiagram-access-token: $env:API_TOKEN" `
-            --header "Content-Type: application/json" `
-            --data $json
+          } | ConvertTo-Json -Depth 10
+    
+          $headers = @{
+            "dbdiagram-access-token" = $env:API_TOKEN
+            "Content-Type" = "application/json"
+          }
+    
+          $response = Invoke-RestMethod -Method Put -Uri "https://api.dbdiagram.io/v1/diagrams/$env:DIAGRAM_ID" -Headers $headers -Body $body -TimeoutSec 30
+    
+          Write-Host "Upload successful!"
+          Write-Host "View your diagram at: https://dbdiagram.io/d/$env:DIAGRAM_ID"
