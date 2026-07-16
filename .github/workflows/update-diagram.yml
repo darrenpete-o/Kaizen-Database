@@ -28,7 +28,7 @@ jobs:
 
           # Download baseline from previous run if it exists
       - name: Download baseline from artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: database-baseline
           path: .
@@ -41,7 +41,7 @@ jobs:
 
       # Upload the baseline for future runs
       - name: Upload baseline for next run
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: database-baseline
           path: database_baseline.json
