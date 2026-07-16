@@ -26,6 +26,11 @@ jobs:
         run: |
           python -c "import pyodbc; print('Available ODBC drivers:'); print(pyodbc.drivers())"
 
+      - name: Check for Changes
+        env:
+          DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
+        run: python check_for_changes.py
+        
       - name: Generate view definitions
         env:
           DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
