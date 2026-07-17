@@ -39,17 +39,18 @@ jobs:
           DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
         run: python check_for_changes.py
 
-      # Upload the baseline for future runs
+      # Upload baseline for future runs - ONLY if script succeeded
       - name: Upload baseline for next run
         uses: actions/upload-artifact@v4
+        if: success()  # Only upload if the monitoring script succeeded
         with:
           name: database-baseline
           path: database_baseline.json
 
-      # Upload the change report
+      # Upload Excel report - ALWAYS (even if script had warnings)
       - name: Upload Excel Report
         uses: actions/upload-artifact@v4
-        if: always()
+        if: always()  # Always upload, even if script fails
         with:
           name: database-changes
           path: database_changes_*.xlsx
