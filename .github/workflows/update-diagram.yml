@@ -3,7 +3,10 @@ name: Update Database Diagram
 on:
   push:
     branches: [ main ]
-
+  schedule:
+    - cron: '0 6 * * 0'
+  workflow_dispatch:
+  
 jobs:
   update-diagram:
     runs-on: self-hosted
