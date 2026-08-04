@@ -4,6 +4,7 @@ import json
 import time
 from pathlib import Path
 from openai import OpenAI
+import pandas as pd
 
 # Initialize Groq client
 client = OpenAI(
