@@ -10,7 +10,6 @@ client = OpenAI(
     api_key=os.environ.get("GROQ_API_KEY"),
     base_url="https://api.groq.com/openai/v1"
 )
-
 def get_tables_to_exclude(excel_file, sheet_name="Tables NOT in Source Code", column_name="TableName"):
     """
     Read table names from Excel file that should be excluded from visual diagram.
@@ -20,15 +19,15 @@ def get_tables_to_exclude(excel_file, sheet_name="Tables NOT in Source Code", co
     
     try:
         if not Path(excel_file).exists():
-            print(f"⚠️  Warning: Excel file '{excel_file}' not found!")
+            print(f"Warning: Excel file '{excel_file}' not found!")
             print("   Continuing without excluding any tables.")
             return tables_to_exclude
         
-        print(f"\n📊 Reading exclusion list from: {excel_file}")
+        print(f"\nReading exclusion list from: {excel_file}")
         df = pd.read_excel(excel_file, sheet_name=sheet_name)
         
-        print(f"📋 Columns found: {list(df.columns)}")
-        print(f"📈 Total rows: {len(df)}")
+        print(f"Columns found: {list(df.columns)}")
+        print(f"Total rows: {len(df)}")
         
         # Try to find the column with table names
         if column_name not in df.columns:
@@ -42,11 +41,11 @@ def get_tables_to_exclude(excel_file, sheet_name="Tables NOT in Source Code", co
             
             if found_col:
                 column_name = found_col
-                print(f"📋 Using column: {column_name}")
+                print(f"Using column: {column_name}")
             else:
                 # Use first column as fallback
                 column_name = df.columns[0]
-                print(f"⚠️  Using first column as table name: {column_name}")
+                print(f"Using first column as table name: {column_name}")
         
         # Extract table names
         for idx, row in df.iterrows():
@@ -70,11 +69,11 @@ def get_tables_to_exclude(excel_file, sheet_name="Tables NOT in Source Code", co
                 
                 tables_to_exclude.add(clean_table_name)
         
-        print(f"✅ Found {len(tables_to_exclude)} unique tables to exclude from visual diagram")
+        print(f"Found {len(tables_to_exclude)} unique tables to exclude from visual diagram")
         
         # Show first 10 tables for verification
         if tables_to_exclude:
-            print("\n📋 Tables to exclude from visual diagram (first 10):")
+            print("\nTables to exclude from visual diagram (first 10):")
             for i, table in enumerate(sorted(list(tables_to_exclude))[:10], 1):
                 print(f"   {i}. {table}")
             if len(tables_to_exclude) > 10:
@@ -83,12 +82,12 @@ def get_tables_to_exclude(excel_file, sheet_name="Tables NOT in Source Code", co
         return tables_to_exclude
         
     except Exception as e:
-        print(f"❌ Error reading Excel file: {e}")
+        print(f"Error reading Excel file: {e}")
         import traceback
         traceback.print_exc()
         return tables_to_exclude
-        
-def extract_table_names(dbml_content):
+
+def extract_all_tables(dbml_content):
     """Extract all table names from DBML content."""
     pattern = r'Table\s+([a-zA-Z0-9_\.]+)\s*\{'
     tables = re.findall(pattern, dbml_content)
@@ -218,7 +217,7 @@ def parse_views_comprehensively(views_sql_content):
             business_name = alias.replace('_', ' ').title()
             if len(business_name) > 1:
                 table_names[table] = business_name
-                print(f"  {table} → {business_name}")
+                print(f"  {table} -> {business_name}")
     
     print("\n Method 2: Finding table purposes from JOIN aliases...")
     
@@ -230,7 +229,7 @@ def parse_views_comprehensively(views_sql_content):
             business_name = alias.replace('_', ' ').title()
             if len(business_name) > 1:
                 table_names[table] = business_name
-                print(f"  {table} → {business_name}")
+                print(f"  {table} -> {business_name}")
     
     # Pattern 2b: JOIN table_name alias (without AS)
     pattern2b = r'JOIN\s+\[([a-zA-Z0-9_]+)\]\s+([a-zA-Z0-9_]+)(?=\s+ON|\s+WHERE|\s+GROUP|\s+ORDER|\s+LEFT|\s+RIGHT|\s+INNER|\s+OUTER|\s+$)'
@@ -240,7 +239,7 @@ def parse_views_comprehensively(views_sql_content):
             business_name = alias.replace('_', ' ').title()
             if len(business_name) > 1:
                 table_names[table] = business_name
-                print(f"  {table} → {business_name}")
+                print(f"  {table} -> {business_name}")
     
     # Pattern 2c: JOIN table_name alias (with AS, no brackets)
     pattern2c = r'JOIN\s+([a-zA-Z0-9_]+)\s+AS\s+([a-zA-Z0-9_]+)'
@@ -250,7 +249,7 @@ def parse_views_comprehensively(views_sql_content):
             business_name = alias.replace('_', ' ').title()
             if len(business_name) > 1:
                 table_names[table] = business_name
-                print(f"  {table} → {business_name}")
+                print(f"  {table} -> {business_name}")
     
     # Pattern 2d: JOIN table_name alias (without AS, no brackets)
     pattern2d = r'JOIN\s+([a-zA-Z0-9_]+)\s+([a-zA-Z0-9_]+)(?=\s+ON|\s+WHERE|\s+GROUP|\s+ORDER|\s+LEFT|\s+RIGHT|\s+INNER|\s+OUTER|\s+$)'
@@ -260,7 +259,7 @@ def parse_views_comprehensively(views_sql_content):
             business_name = alias.replace('_', ' ').title()
             if len(business_name) > 1:
                 table_names[table] = business_name
-                print(f"  {table} → {business_name}")
+                print(f"  {table} -> {business_name}")
     
     print("\n Method 3: Finding table purposes from FROM aliases...")
     
@@ -272,7 +271,7 @@ def parse_views_comprehensively(views_sql_content):
             business_name = alias.replace('_', ' ').title()
             if len(business_name) > 1:
                 table_names[table] = business_name
-                print(f"  {table} → {business_name}")
+                print(f"  {table} -> {business_name}")
     
     # Pattern 3b: FROM table_name alias (no brackets)
     pattern3b = r'FROM\s+([a-zA-Z0-9_]+)\s+([a-zA-Z0-9_]+)(?=\s+LEFT|\s+RIGHT|\s+INNER|\s+OUTER|\s+WHERE|\s+GROUP|\s+ORDER|\s+$)'
@@ -282,7 +281,7 @@ def parse_views_comprehensively(views_sql_content):
             business_name = alias.replace('_', ' ').title()
             if len(business_name) > 1:
                 table_names[table] = business_name
-                print(f"  {table} → {business_name}")
+                print(f"  {table} -> {business_name}")
     
     print("\n Method 4: Finding column aliases that reveal table purpose...")
     
@@ -303,10 +302,10 @@ def parse_views_comprehensively(views_sql_content):
                     existing = table_names[table]
                     if len(existing) <= 2 or existing in ['Ful', 'Ems', 'Ldc']:
                         table_names[table] = business_name
-                        print(f"  {table} → {business_name} (replaced {existing})")
+                        print(f"  {table} -> {business_name} (replaced {existing})")
                 else:
                     table_names[table] = business_name
-                    print(f"  {table} → {business_name}")
+                    print(f"  {table} -> {business_name}")
     
     print("\n Method 5: Finding tables from view names...")
     
@@ -319,7 +318,7 @@ def parse_views_comprehensively(views_sql_content):
             if len(business_name) > 2 and business_name not in ['Vbluser', 'Ki']:
                 if table not in table_names:
                     table_names[table] = business_name
-                    print(f"  {table} → {business_name} (from view {view_name})")
+                    print(f"  {table} -> {business_name} (from view {view_name})")
     
     print("\n Method 6: Finding explicit comments with table names...")
     
@@ -330,13 +329,12 @@ def parse_views_comprehensively(views_sql_content):
         if description.strip() and len(description.strip()) > 1:
             business_name = description.strip().title()
             table_names[table] = business_name
-            print(f"  {table} → {business_name}")
+            print(f"  {table} -> {business_name}")
     
     print("\n Method 7: Cleaning up table names from the table itself...")
     
     # Tables that appear in views and have self-explanatory names
     tables_to_clean = [
-        # Self-explanatory tables
         'helpdesk_activity', 'helpdesk_ticket', 'helpdesk_scopes', 'helpdesk_sub_category',
         'website_newsletter', 'website_pages', 'website_content', 'website_forms',
         'website_products', 'website_sectors', 'website_solutions', 'website_sub_sector',
@@ -344,21 +342,12 @@ def parse_views_comprehensively(views_sql_content):
         'countries_iso', 'business_areas', 'association_names', 'member_types',
         'office_licenses', 'new_kim_employees', 'ki_surveys', 'kim_settings',
         'soft_skills', 'routes_distances', 'validated_routes',
-        
-        # Tables that need proper business names
-        'xdatagroup1cbaedf3',      # PO Invoices
-        'xdatagroup44427259',      # Action Points
-        'xdatagroup455ae863',      # Connected Consultant
-        'xdatagroupdf856a4c',      # Exchange Rates
-        'xdatagroup5f99096f',      # Team Filters
-        'xdatagroup5a7e1860',      # Deductions
-        'xdatagroup17bd9dde',      # Industry Mappings
-        'xdatagroup86fd9c45',      # Core Technology Mappings
-        'xdatagroupde529862',      # Pilar Mappings
-        'xdatagroup353ea8c1',      # Employee Team Lids
+        'xdatagroup1cbaedf3', 'xdatagroup44427259', 'xdatagroup455ae863',
+        'xdatagroupdf856a4c', 'xdatagroup5f99096f', 'xdatagroup5a7e1860',
+        'xdatagroup17bd9dde', 'xdatagroup86fd9c45', 'xdatagroupde529862',
+        'xdatagroup353ea8c1'
     ]
     
-    # Manual mapping for specific tables
     business_name_map = {
         'xdatagroup1cbaedf3': 'PO Invoices',
         'xdatagroup44427259': 'Action Points',
@@ -373,16 +362,15 @@ def parse_views_comprehensively(views_sql_content):
     }
     
     for table_name in tables_to_clean:
-        # Only add if the table appears in views and doesn't have a name yet
         if table_name in views_sql_content and table_name not in table_names:
             if table_name in business_name_map:
                 business_name = business_name_map[table_name]
             else:
                 business_name = table_name.replace('_', ' ').title()
             table_names[table_name] = business_name
-            print(f"  {table_name} → {business_name}")
+            print(f"  {table_name} -> {business_name}")
     
-    # Remove duplicates - keep first occurrence
+    # Remove duplicates
     unique_names = {}
     seen_tables = set()
     
@@ -468,7 +456,7 @@ def create_diagram_view(dbml_content, tables_to_exclude):
         if clean_table_name not in tables_to_exclude and table not in tables_to_exclude:
             included_tables.append(table)
     
-    print(f"\n Creating DiagramView with {len(included_tables)} tables (excluding {len(tables_to_exclude)})")
+    print(f"\nCreating DiagramView with {len(included_tables)} tables (excluding {len(tables_to_exclude)})")
     
     # Build the DiagramView
     diagram_view = "\n\n// ================================================\n"
@@ -490,33 +478,32 @@ def create_diagram_view(dbml_content, tables_to_exclude):
     
     # Append the new DiagramView
     return dbml_content + diagram_view
-    
-def process_dbml_file(input_file, output_file, views_sql_file):
+
+def process_dbml_file(input_file, output_file, views_sql_file, excel_file="tables_missing_from_source_code.xlsx"):
     """Main function to process the DBML file."""
     
-    # First, extract business names from views
-    print(f"\n Reading views file: {views_sql_file}")
+    # Step 1: Get tables to exclude from Excel
+    tables_to_exclude = get_tables_to_exclude(excel_file)
+    
+    # Step 2: Read the DBML content
+    print(f"\nReading DBML file: {input_file}")
+    with open(input_file, 'r', encoding='utf-8') as f:
+        dbml_content = f.read()
+    
+    # Step 3: Extract business names from views
+    print(f"\nReading views file: {views_sql_file}")
     with open(views_sql_file, 'r', encoding='utf-8') as f:
         views_content = f.read()
     
     business_names_from_views = parse_views_comprehensively(views_content)
     
-    print(f"\n Found {len(business_names_from_views)} business names from views")
+    print(f"\nFound {len(business_names_from_views)} business names from views")
     
-    # Print all found names for debugging
-    if business_names_from_views:
-        print("\n All names found in views:")
-        for table, name in sorted(business_names_from_views.items()):
-            print(f"  {table} → {name}")
+    # Step 4: Get tables from the DBML
+    tables = extract_all_tables(dbml_content)
+    print(f"\nFound {len(tables)} tables in DBML")
     
-    # Read DBML content
-    with open(input_file, 'r', encoding='utf-8') as f:
-        dbml_content = f.read()
-    
-    tables = extract_table_names(dbml_content)
-    print(f"\n Found {len(tables)} tables in DBML")
-    
-    # Check which tables already have notes
+    # Step 5: Check which tables already have notes
     tables_with_notes = []
     lines = dbml_content.split('\n')
     i = 0
@@ -547,9 +534,15 @@ def process_dbml_file(input_file, output_file, views_sql_file):
     
     if not tables_to_process:
         print("All tables already have notes!")
+        # Still create the DiagramView
+        dbml_content = create_diagram_view(dbml_content, tables_to_exclude)
+        with open(output_file, 'w', encoding='utf-8') as f:
+            f.write(dbml_content)
+        print(f"\nUpdated file saved to: {output_file}")
+        print(f"Excluded {len(tables_to_exclude)} tables from visual diagram")
         return
     
-    # Try to get names from views first
+    # Step 6: Process remaining tables
     table_names_with_notes = {}
     view_name_count = 0
     ai_name_count = 0
@@ -560,11 +553,11 @@ def process_dbml_file(input_file, output_file, views_sql_file):
         if table in business_names_from_views:
             table_names_with_notes[table] = business_names_from_views[table]
             view_name_count += 1
-            print(f" Using view name: {table} → {business_names_from_views[table]}")
+            print(f" Using view name: {table} -> {business_names_from_views[table]}")
         elif table_without_prefix in business_names_from_views:
             table_names_with_notes[table] = business_names_from_views[table_without_prefix]
             view_name_count += 1
-            print(f" Using view name: {table} → {business_names_from_views[table_without_prefix]}")
+            print(f" Using view name: {table} -> {business_names_from_views[table_without_prefix]}")
         else:
             print(f"\n No view name found for {table}, using AI with columns...")
             columns = get_table_columns(dbml_content, table)
@@ -572,30 +565,37 @@ def process_dbml_file(input_file, output_file, views_sql_file):
             if business_name:
                 table_names_with_notes[table] = business_name
                 ai_name_count += 1
-                print(f"  → {business_name}")
+                print(f"  -> {business_name}")
             else:
                 fallback = table.replace('dbo.', '').replace('_', ' ').title()
                 table_names_with_notes[table] = fallback
                 ai_name_count += 1
-                print(f"  → Using fallback: {fallback}")
+                print(f"  -> Using fallback: {fallback}")
             
             if idx < len(tables_to_process):
                 time.sleep(0.5)
     
+    # Step 7: Add notes to DBML
     updated_content = add_notes_to_dbml(dbml_content, table_names_with_notes)
     
+    # Step 8: Create DiagramView that excludes tables
+    updated_content = create_diagram_view(updated_content, tables_to_exclude)
+    
+    # Step 9: Save the updated file
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write(updated_content)
     
-    print(f"\n Complete! Updated file saved to: {output_file}")
+    print(f"\nComplete! Updated file saved to: {output_file}")
     print(f"Added notes to {len(table_names_with_notes)} tables")
     print(f"  - From views: {view_name_count}")
     print(f"  - From AI/fallback: {ai_name_count}")
+    print(f"Excluded {len(tables_to_exclude)} tables from visual diagram (tables kept in DBML)")
 
 def main():
     input_file = 'schema_diagram.dbml'  
     output_file = 'schema_diagram_with_aliases_as_notes.dbml'
     views_sql_file = 'views_Script.sql'
+    excel_file = 'tables_missing_from_source_code.xlsx'
     
     if not Path(input_file).exists():
         print(f"Error: Input file '{input_file}' not found!")
