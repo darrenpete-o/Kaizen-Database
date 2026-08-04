@@ -11,6 +11,83 @@ client = OpenAI(
     base_url="https://api.groq.com/openai/v1"
 )
 
+def get_tables_to_exclude(excel_file, sheet_name="Tables NOT in Source Code", column_name="TableName"):
+    """
+    Read table names from Excel file that should be excluded from visual diagram.
+    Returns a set of table names to exclude.
+    """
+    tables_to_exclude = set()
+    
+    try:
+        if not Path(excel_file).exists():
+            print(f"⚠️  Warning: Excel file '{excel_file}' not found!")
+            print("   Continuing without excluding any tables.")
+            return tables_to_exclude
+        
+        print(f"\n📊 Reading exclusion list from: {excel_file}")
+        df = pd.read_excel(excel_file, sheet_name=sheet_name)
+        
+        print(f"📋 Columns found: {list(df.columns)}")
+        print(f"📈 Total rows: {len(df)}")
+        
+        # Try to find the column with table names
+        if column_name not in df.columns:
+            # Try alternative column names
+            possible_columns = ['TableName', 'Table', 'Name', 'table_name', 'TABLE_NAME', 'Table Name']
+            found_col = None
+            for col in possible_columns:
+                if col in df.columns:
+                    found_col = col
+                    break
+            
+            if found_col:
+                column_name = found_col
+                print(f"📋 Using column: {column_name}")
+            else:
+                # Use first column as fallback
+                column_name = df.columns[0]
+                print(f"⚠️  Using first column as table name: {column_name}")
+        
+        # Extract table names
+        for idx, row in df.iterrows():
+            table_name = str(row[column_name]) if pd.notna(row[column_name]) else ''
+            
+            if table_name and table_name != 'nan':
+                # Clean up the table name
+                clean_table_name = table_name.strip()
+                
+                # Remove 'dbo.' prefix if present
+                if clean_table_name.lower().startswith('dbo.'):
+                    clean_table_name = clean_table_name[4:]
+                
+                # Remove any schema prefix if present
+                if '.' in clean_table_name:
+                    clean_table_name = clean_table_name.split('.')[-1]
+                
+                # Clean up any invalid characters
+                clean_table_name = clean_table_name.replace('-', '_')
+                clean_table_name = re.sub(r'[^a-zA-Z0-9_.]', '_', clean_table_name)
+                
+                tables_to_exclude.add(clean_table_name)
+        
+        print(f"✅ Found {len(tables_to_exclude)} unique tables to exclude from visual diagram")
+        
+        # Show first 10 tables for verification
+        if tables_to_exclude:
+            print("\n📋 Tables to exclude from visual diagram (first 10):")
+            for i, table in enumerate(sorted(list(tables_to_exclude))[:10], 1):
+                print(f"   {i}. {table}")
+            if len(tables_to_exclude) > 10:
+                print(f"   ... and {len(tables_to_exclude) - 10} more")
+        
+        return tables_to_exclude
+        
+    except Exception as e:
+        print(f"❌ Error reading Excel file: {e}")
+        import traceback
+        traceback.print_exc()
+        return tables_to_exclude
+        
 def extract_table_names(dbml_content):
     """Extract all table names from DBML content."""
     pattern = r'Table\s+([a-zA-Z0-9_\.]+)\s*\{'
@@ -373,6 +450,47 @@ def add_notes_to_dbml(dbml_content, table_names_with_notes):
     
     return '\n'.join(new_lines)
 
+def create_diagram_view(dbml_content, tables_to_exclude):
+    """
+    Create a DiagramView that excludes the specified tables from the visual diagram.
+    This keeps all tables in the DBML but hides the excluded ones from the diagram.
+    """
+    if not tables_to_exclude:
+        return dbml_content
+    
+    # Extract all table names from the DBML
+    all_tables = extract_all_tables(dbml_content)
+    
+    # Filter out excluded tables
+    included_tables = []
+    for table in all_tables:
+        clean_table_name = table.replace('dbo.', '')
+        if clean_table_name not in tables_to_exclude and table not in tables_to_exclude:
+            included_tables.append(table)
+    
+    print(f"\n Creating DiagramView with {len(included_tables)} tables (excluding {len(tables_to_exclude)})")
+    
+    # Build the DiagramView
+    diagram_view = "\n\n// ================================================\n"
+    diagram_view += "// AUTO-GENERATED DIAGRAM VIEW\n"
+    diagram_view += f"// Excludes {len(tables_to_exclude)} tables from the visual diagram\n"
+    diagram_view += "// ================================================\n"
+    diagram_view += 'DiagramView "Main View" {\n'
+    diagram_view += "  Tables {\n"
+    
+    for table in sorted(included_tables):
+        diagram_view += f"    {table}\n"
+    
+    diagram_view += "  }\n"
+    diagram_view += "}\n"
+    
+    # Remove any existing DiagramView blocks
+    dbml_content = re.sub(r'DiagramView\s+"[^"]*"\s*\{[^}]*\}', '', dbml_content, flags=re.DOTALL)
+    dbml_content = re.sub(r'\n\s*\n\s*\n', '\n\n', dbml_content)
+    
+    # Append the new DiagramView
+    return dbml_content + diagram_view
+    
 def process_dbml_file(input_file, output_file, views_sql_file):
     """Main function to process the DBML file."""
     
@@ -487,7 +605,7 @@ def main():
         print(f"Error: Views file '{views_sql_file}' not found!")
         return
     
-    process_dbml_file(input_file, output_file, views_sql_file)
+    process_dbml_file(input_file, output_file, views_sql_file, excel_file)
 
 if __name__ == "__main__":
     main()
