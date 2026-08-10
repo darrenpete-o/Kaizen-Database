@@ -581,8 +581,115 @@ def process_dbml_file(input_file, output_file, views_sql_file, excel_file="table
     
     # Step 8: Create DiagramView that excludes tables
     updated_content = create_diagram_view(updated_content, tables_to_exclude)
+
+    # Step 9: create the default view (Kim Overview Map)
+    default_view_overview_map = """
+//DEFAULT VIEW 
+table Companies_and_Employees [headercolor: #8B0000]{
+  note: '''
+    Companies & Employees: 
+
+        Organization structure 
+        and user management
+  '''
+  string attributes
+}
+
+table Projects [headercolor: #9DCCCC]{
+  note: '''
+    Projects: 
     
-    # Step 9: Save the updated file
+        Project lifecycle from
+        creation to completion
+  '''
+  string attributes
+}
+
+table Planning_and_delivery [headercolor: #4A0000]{
+  note: '''
+    Planning & Delivery: 
+    
+        Resource planning and
+        workshop delivery
+  '''
+  string attributes
+}
+
+table Expenses_and_Trips [headercolor: #9Ceecd]{
+  note: '''
+    Expenses & Trips: 
+    
+        Expense reporting and 
+        approval workflows
+  '''
+  string attributes
+}
+
+table Invoices_and_Payments [headercolor: #9Cadce]{
+  note: '''
+    Invoices & Payments: 
+    
+        Billing and financial 
+        management
+  '''
+  string attributes
+}
+
+table CO2_Reporting [headercolor: #9Cff00]{
+  note: '''
+    CO₂ Reporting: 
+    
+        Carbon emissions tracking 
+        and reporting
+  '''
+  string attributes
+}
+
+table Helpdesk [headercolor: #901cdc]{
+  note: '''
+    Helpdesk: 
+    
+        Support ticket 
+        management
+  '''
+  string attributes
+}
+
+table Analytics [headercolor: #4d1cdc]{
+  note: '''
+    Analytics: 
+    
+        Business intelligence 
+        and reporting
+  '''
+  string attributes
+}
+
+Ref: Companies_and_Employees.string < Projects.string [color: #8B0000]
+Ref: Projects.string < Planning_and_delivery.string [color: #9DCCCC]
+Ref: Planning_and_delivery.string < Expenses_and_Trips.string [color: #4A0000]
+Ref: Expenses_and_Trips.string < Invoices_and_Payments.string [color: #9Ceecd]
+Ref: Invoices_and_Payments.string < CO2_Reporting.string [color: #9Cadce]
+Ref: CO2_Reporting.string < Helpdesk.string [color: #9Cff00]
+Ref: Helpdesk.string < Analytics.string [color: #901cdc]
+
+DiagramView Default {
+  tables {
+    Companies_and_Employees
+    Projects
+    Planning_and_delivery
+    Expenses_and_Trips
+    Invoices_and_Payments
+    CO2_Reporting
+    Helpdesk
+    Analytics
+  }
+}
+"""
+    # Step 9.5: add the default view to the updated content
+    updated_content = updated_content + "\n" + default_view_overview_map
+    
+    # Step 10: Save the updated file
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write(updated_content)
     
