@@ -480,109 +480,8 @@ def create_diagram_view(dbml_content, tables_to_exclude):
     # Append the new DiagramView
     return dbml_content + diagram_view
 
-def process_dbml_file(input_file, output_file, views_sql_file, excel_file="tables_missing_from_source_code.xlsx"):
-    """Main function to process the DBML file."""
-    
-    # Step 1: Get tables to exclude from Excel
-    tables_to_exclude = get_tables_to_exclude(excel_file)
-    
-    # Step 2: Read the DBML content
-    print(f"\nReading DBML file: {input_file}")
-    with open(input_file, 'r', encoding='utf-8') as f:
-        dbml_content = f.read()
-    
-    # Step 3: Extract business names from views
-    print(f"\nReading views file: {views_sql_file}")
-    with open(views_sql_file, 'r', encoding='utf-8') as f:
-        views_content = f.read()
-    
-    business_names_from_views = parse_views_comprehensively(views_content)
-    
-    print(f"\nFound {len(business_names_from_views)} business names from views")
-    
-    # Step 4: Get tables from the DBML
-    tables = extract_all_tables(dbml_content)
-    print(f"\nFound {len(tables)} tables in DBML")
-    
-    # Step 5: Check which tables already have notes
-    tables_with_notes = []
-    lines = dbml_content.split('\n')
-    i = 0
-    while i < len(lines):
-        line = lines[i]
-        table_match = re.match(r'Table\s+([a-zA-Z0-9_\.]+)\s*\{', line)
-        if table_match:
-            table_name = table_match.group(1)
-            has_note = False
-            brace_count = 0
-            j = i + 1
-            while j < len(lines):
-                current_line = lines[j].strip()
-                brace_count += current_line.count('{') - current_line.count('}')
-                if 'note:' in current_line.lower():
-                    has_note = True
-                    break
-                if brace_count < 0:
-                    break
-                j += 1
-            if has_note:
-                tables_with_notes.append(table_name)
-        i += 1
-    
-    tables_to_process = [t for t in tables if t not in tables_with_notes]
-    print(f"Tables with notes already: {len(tables_with_notes)}")
-    print(f"Need to process: {len(tables_to_process)} tables")
-    
-    if not tables_to_process:
-        print("All tables already have notes!")
-        # Still create the DiagramView
-        dbml_content = create_diagram_view(dbml_content, tables_to_exclude)
-        with open(output_file, 'w', encoding='utf-8') as f:
-            f.write(dbml_content)
-        print(f"\nUpdated file saved to: {output_file}")
-        print(f"Excluded {len(tables_to_exclude)} tables from visual diagram")
-        return
-    
-    # Step 6: Process remaining tables
-    table_names_with_notes = {}
-    view_name_count = 0
-    ai_name_count = 0
-    
-    for idx, table in enumerate(tables_to_process, 1):
-        table_without_prefix = table.replace('dbo.', '')
-        
-        if table in business_names_from_views:
-            table_names_with_notes[table] = business_names_from_views[table]
-            view_name_count += 1
-            print(f" Using view name: {table} -> {business_names_from_views[table]}")
-        elif table_without_prefix in business_names_from_views:
-            table_names_with_notes[table] = business_names_from_views[table_without_prefix]
-            view_name_count += 1
-            print(f" Using view name: {table} -> {business_names_from_views[table_without_prefix]}")
-        else:
-            print(f"\n No view name found for {table}, using AI with columns...")
-            columns = get_table_columns(dbml_content, table)
-            business_name = generate_business_name_with_columns(table, columns, client)
-            if business_name:
-                table_names_with_notes[table] = business_name
-                ai_name_count += 1
-                print(f"  -> {business_name}")
-            else:
-                fallback = table.replace('dbo.', '').replace('_', ' ').title()
-                table_names_with_notes[table] = fallback
-                ai_name_count += 1
-                print(f"  -> Using fallback: {fallback}")
-            
-            if idx < len(tables_to_process):
-                time.sleep(0.5)
-    
-    # Step 7: Add notes to DBML
-    updated_content = add_notes_to_dbml(dbml_content, table_names_with_notes)
-    
-    # Step 8: Create DiagramView that excludes tables
-    updated_content = create_diagram_view(updated_content, tables_to_exclude)
-
-    # Step 9: create the default view (Kim Overview Map)
+def create_default_view(updated_content):
+    # create the default view (Kim Overview Map)
     default_view_overview_map = """
 //DEFAULT VIEW 
 table Companies_and_Employees [headercolor: #8B0000]{
@@ -686,10 +585,115 @@ DiagramView Default {
   }
 }
 """
-    # Step 9.5: add the default view to the updated content
-    updated_content = updated_content + "\n" + default_view_overview_map
+    # add the default view to the updated content
+    return updated_content + "\n" + default_view_overview_map
+
+def process_dbml_file(input_file, output_file, views_sql_file, excel_file="tables_missing_from_source_code.xlsx"):
+    """Main function to process the DBML file."""
     
-    # Step 10: Save the updated file
+    # Step 1: Get tables to exclude from Excel
+    tables_to_exclude = get_tables_to_exclude(excel_file)
+    
+    # Step 2: Read the DBML content
+    print(f"\nReading DBML file: {input_file}")
+    with open(input_file, 'r', encoding='utf-8') as f:
+        dbml_content = f.read()
+    
+    # Step 3: Extract business names from views
+    print(f"\nReading views file: {views_sql_file}")
+    with open(views_sql_file, 'r', encoding='utf-8') as f:
+        views_content = f.read()
+    
+    business_names_from_views = parse_views_comprehensively(views_content)
+    
+    print(f"\nFound {len(business_names_from_views)} business names from views")
+    
+    # Step 4: Get tables from the DBML
+    tables = extract_all_tables(dbml_content)
+    print(f"\nFound {len(tables)} tables in DBML")
+    
+    # Step 5: Check which tables already have notes
+    tables_with_notes = []
+    lines = dbml_content.split('\n')
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+        table_match = re.match(r'Table\s+([a-zA-Z0-9_\.]+)\s*\{', line)
+        if table_match:
+            table_name = table_match.group(1)
+            has_note = False
+            brace_count = 0
+            j = i + 1
+            while j < len(lines):
+                current_line = lines[j].strip()
+                brace_count += current_line.count('{') - current_line.count('}')
+                if 'note:' in current_line.lower():
+                    has_note = True
+                    break
+                if brace_count < 0:
+                    break
+                j += 1
+            if has_note:
+                tables_with_notes.append(table_name)
+        i += 1
+    
+    tables_to_process = [t for t in tables if t not in tables_with_notes]
+    print(f"Tables with notes already: {len(tables_with_notes)}")
+    print(f"Need to process: {len(tables_to_process)} tables")
+    
+    if not tables_to_process:
+        print("All tables already have notes!")
+        # Still create the DiagramView
+        dbml_content = create_diagram_view(dbml_content, tables_to_exclude)
+        with open(output_file, 'w', encoding='utf-8') as f:
+            f.write(dbml_content)
+        print(f"\nUpdated file saved to: {output_file}")
+        print(f"Excluded {len(tables_to_exclude)} tables from visual diagram")
+        return
+    
+    # Step 6: Process remaining tables
+    table_names_with_notes = {}
+    view_name_count = 0
+    ai_name_count = 0
+    
+    for idx, table in enumerate(tables_to_process, 1):
+        table_without_prefix = table.replace('dbo.', '')
+        
+        if table in business_names_from_views:
+            table_names_with_notes[table] = business_names_from_views[table]
+            view_name_count += 1
+            print(f" Using view name: {table} -> {business_names_from_views[table]}")
+        elif table_without_prefix in business_names_from_views:
+            table_names_with_notes[table] = business_names_from_views[table_without_prefix]
+            view_name_count += 1
+            print(f" Using view name: {table} -> {business_names_from_views[table_without_prefix]}")
+        else:
+            print(f"\n No view name found for {table}, using AI with columns...")
+            columns = get_table_columns(dbml_content, table)
+            business_name = generate_business_name_with_columns(table, columns, client)
+            if business_name:
+                table_names_with_notes[table] = business_name
+                ai_name_count += 1
+                print(f"  -> {business_name}")
+            else:
+                fallback = table.replace('dbo.', '').replace('_', ' ').title()
+                table_names_with_notes[table] = fallback
+                ai_name_count += 1
+                print(f"  -> Using fallback: {fallback}")
+            
+            if idx < len(tables_to_process):
+                time.sleep(0.5)
+    
+    # Step 7: Add notes to DBML
+    updated_content = add_notes_to_dbml(dbml_content, table_names_with_notes)
+    
+    # Step 8: Create DiagramView that excludes tables
+    updated_content = create_diagram_view(updated_content, tables_to_exclude)
+
+    # Step 9: create the default view (Kim Overview Map)
+    updated_content = create_default_view(updated_content)
+    
+    # Step 11: Save the updated file
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write(updated_content)
     
