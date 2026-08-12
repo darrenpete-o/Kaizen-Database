@@ -778,17 +778,18 @@ def process_dbml_file(input_file, output_file, views_sql_file, excel_file="table
     
     # Step 7: Add notes to DBML
     updated_content = add_notes_to_dbml(dbml_content, table_names_with_notes)
+    under_token_limit_content = add_notes_to_dbml(dbml_content, table_names_with_notes)
     
     # Step 8: Create DiagramView that excludes tables
     updated_content = create_diagram_view(updated_content, tables_to_exclude)
     
-    #compress updated_content for AI
-    compressed_updated_content = compress_dbml(updated_content)
     # Step 9: create the default view (Kim Overview Map)
-    updated_content = create_default_view(compressed_updated_content)
+    updated_content = create_default_view(updated_content)
 
+    #compress updated_content for AI
+    compressed_updated_content = compress_dbml(under_token_limit_content)
     # Step 10: Filter tables into domains using AI
-    updated_content = create_domains(updated_content)
+    updated_content = create_domains(compressed_updated_content)
     # Step 11: Save the updated file
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write(updated_content)
