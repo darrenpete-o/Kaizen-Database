@@ -655,7 +655,7 @@ def create_domains(updated_content):
     try:
         #Ask AI
         response = client.chat.completions.create(
-            model = "llama-3.1-8b-instant",
+            model = "llama-3.1-70b-versatile",
             messages = [
                     {"role": "system", "content": "You are a senior database architect with 15+ years of experience in data modeling and system organization. Your expertise is in analyzing database schemas, understanding table relationships, and logically grouping tables into functional domains. You are meticulous, precise, and always follow formatting rules exactly."},
                     {"role": "user", "content": prompt}
