@@ -617,33 +617,33 @@ def create_domains(updated_content):
         
         The format should be this for each domain:
             //*incrementing number starting from 00* *-* *Domain name*
-            TableGroup *Domain name* [color: *Domain name color*]{
+            TableGroup *Domain name* [color: *Domain name color*]{{
               *List of all the tables that go in this domain*
-            }
+            }}
 
-            DiagramView "*incrementing number starting from 00* *-* *Domain name*" {
-              tables {
+            DiagramView "*incrementing number starting from 00* *-* *Domain name*"{{
+              tables {{
                 *List of all the tables that go in this domain*
-              }
-              TableGroups {*Domain name*}
-            }
+              }}
+              TableGroups {{*Domain name*}}
+            }}
 
             Ref: *The exact same references taken from my dbml file* [color: *Domain name color*]
 
         ***FOR EXAMPLE***:
         //00 - Sales
-        TableGroup sales [color: #4d1cdc]{
+        TableGroup sales [color: #4d1cdc]{{
           Helpdesk
           CO2_Reporting
-        }
+        }}
 
-        DiagramView "00 - sales" {
-          tables {
+        DiagramView "00 - sales"{{
+          tables {{
             Helpdesk
             CO2_Reporting
-          }
-          TableGroups {sales}
-        }
+          }}
+          TableGroups {{sales}}
+        }}
 
         Ref: CO2_Reporting.string < Helpdesk.string [color: #4d1cdc]
 
