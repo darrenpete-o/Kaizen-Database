@@ -613,17 +613,13 @@ def create_domains(compressed_updated_content):
         11) Reference & Configuration [color: #95A5A6]
         12) Audit & Integration [color: #34495E]
         13) Legacy or Unknown [color: #7F8C8D]
-        
         Task: Split the tables from the DBML file into the appropriate domains based on the table name, notes, and content.
-
         ***IMPORTANT: Do NOT return the original DBML content. ONLY return the newly created TableGroup, DiagramView, and Ref blocks for each domain.***
-
         RULES:
         1. Each table must be assigned to exactly ONE domain based on its primary purpose.
         2. Tables that don't clearly fit any domain should go to "Legacy or Unknown" (domain #13).
         3. For each domain, include ONLY references between tables that are BOTH in that same domain.
         4. Exclude any references that connect to tables in other domains.
-        
         The format should be this for each domain:
             //*incrementing number starting from 00* *-* *Domain name*
             TableGroup *Domain name* [color: *Domain name color*]{{
@@ -638,14 +634,13 @@ def create_domains(compressed_updated_content):
             }}
 
             Ref: *The exact same references taken from my dbml file* [color: *Domain name color*]
-
         ***FOR EXAMPLE***:
         //00 - Sales
         TableGroup sales [color: #4d1cdc]{{
           Helpdesk
           CO2_Reporting
         }}
-
+        
         DiagramView "00 - sales"{{
           tables {{
             Helpdesk
@@ -655,11 +650,8 @@ def create_domains(compressed_updated_content):
         }}
 
         Ref: CO2_Reporting.string < Helpdesk.string [color: #4d1cdc]
-
-
     Now process this DBML content:
-    {compressed_updated_content}
-        
+    {compressed_updated_content} 
 """
     try:
         #Ask AI
