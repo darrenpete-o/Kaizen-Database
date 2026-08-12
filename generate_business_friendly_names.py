@@ -588,6 +588,89 @@ DiagramView Default {
     # add the default view to the updated content
     return updated_content + "\n" + default_view_overview_map
 
+def create_domains(updated_content):
+    prompt = f"""
+        Given this list of Domains:
+        1) Companies & Organization [color: #2C3E50]
+        2) Employees & Access [color: #3498DB]
+        3) Projects [color: #E67E22]
+        4) Planning & Delivery [color: #1ABC9C]
+        5) Expenses & Travel [color: #F1C40F]
+        6) Invoices & Finance [color: #27AE60]
+        7) CO₂ Management [color: #2ECC71]
+        8) Helpdesk [color: #E74C3C]
+        9) CRM & HubSpot [color: #FF7B7B]
+        10) Website [color: #9B59B6]
+        11) Reference & Configuration [color: #95A5A6]
+        12) Audit & Integration [color: #34495E]
+        13) Legacy or Unknown [color: #7F8C8D]
+        
+        Task: Split the tables from the DBML file into the appropriate domains based on the table name, notes, and content.
+
+        ***IMPORTANT: Do NOT return the original DBML content. ONLY return the newly created TableGroup, DiagramView, and Ref blocks for each domain.***
+
+        RULES:
+        1. Each table must be assigned to exactly ONE domain based on its primary purpose.
+        2. Tables that don't clearly fit any domain should go to "Legacy or Unknown" (domain #13).
+        3. For each domain, include ONLY references between tables that are BOTH in that same domain.
+        4. Exclude any references that connect to tables in other domains.
+        
+        The format should be this for each domain:
+            //*incrementing number starting from 00* *-* *Domain name*
+            TableGroup *Domain name* [color: *Domain name color*]{
+              *List of all the tables that go in this domain*
+            }
+
+            DiagramView "*incrementing number starting from 00* *-* *Domain name*" {
+              tables {
+                *List of all the tables that go in this domain*
+              }
+              TableGroups {*Domain name*}
+            }
+
+            Ref: *The exact same references taken from my dbml file* [color: *Domain name color*]
+
+        ***FOR EXAMPLE***:
+        //00 - Sales
+        TableGroup sales [color: #4d1cdc]{
+          Helpdesk
+          CO2_Reporting
+        }
+
+        DiagramView "00 - sales" {
+          tables {
+            Helpdesk
+            CO2_Reporting
+          }
+          TableGroups {sales}
+        }
+
+        Ref: CO2_Reporting.string < Helpdesk.string [color: #4d1cdc]
+
+
+    Now process this DBML content:
+    {updated_content}
+        
+"""
+    try:
+        #Ask AI
+        response = client.chat.completions.create(
+            model = "llama-3.1-8b-instant",
+            messages = [
+                    {"role": "system", "content": "You are a senior database architect with 15+ years of experience in data modeling and system organization. Your expertise is in analyzing database schemas, understanding table relationships, and logically grouping tables into functional domains. You are meticulous, precise, and always follow formatting rules exactly."},
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=0.7,
+                max_tokens=2000
+            )
+        domains = response.choices[0].message.content.strip()
+        return updated_content + "\n\n" + domains
+    except Exception as e:
+        #Throw an error
+        print(f"Error: {e}")
+        return None
+        
+
 def process_dbml_file(input_file, output_file, views_sql_file, excel_file="tables_missing_from_source_code.xlsx"):
     """Main function to process the DBML file."""
     
@@ -692,7 +775,9 @@ def process_dbml_file(input_file, output_file, views_sql_file, excel_file="table
 
     # Step 9: create the default view (Kim Overview Map)
     updated_content = create_default_view(updated_content)
-    
+
+    # Step 10: Filter tables into domains using AI
+    updated_content = create_domains(updated_content)
     # Step 11: Save the updated file
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write(updated_content)
