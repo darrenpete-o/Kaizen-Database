@@ -588,7 +588,16 @@ DiagramView Default {
     # add the default view to the updated content
     return updated_content + "\n" + default_view_overview_map
 
-def create_domains(updated_content):
+def compress_dbml(content):
+    lines = []
+    for line in content.split('\n'):
+        stripped = line.strip()
+        # Skip comments and empty lines
+        if stripped and not stripped.startswith('//') and not stripped.startswith('/*'):
+            lines.append(line.rstrip())  # Keep minimal indentation
+    return '\n'.join(lines)
+
+def create_domains(compressed_updated_content):
     prompt = f"""
         Given this list of Domains:
         1) Companies & Organization [color: #2C3E50]
@@ -649,7 +658,7 @@ def create_domains(updated_content):
 
 
     Now process this DBML content:
-    {updated_content}
+    {compressed_updated_content}
         
 """
     try:
@@ -661,7 +670,7 @@ def create_domains(updated_content):
                     {"role": "user", "content": prompt}
                 ],
                 temperature=0.7,
-                max_tokens=30
+                max_tokens=2000
             )
         domains = response.choices[0].message.content.strip()
         return updated_content + "\n\n" + domains
@@ -772,9 +781,11 @@ def process_dbml_file(input_file, output_file, views_sql_file, excel_file="table
     
     # Step 8: Create DiagramView that excludes tables
     updated_content = create_diagram_view(updated_content, tables_to_exclude)
-
+    
+    #compress updated_content for AI
+    compressed_updated_content = compress_dbml(updated_content)
     # Step 9: create the default view (Kim Overview Map)
-    updated_content = create_default_view(updated_content)
+    updated_content = create_default_view(compressed_updated_content)
 
     # Step 10: Filter tables into domains using AI
     updated_content = create_domains(updated_content)
