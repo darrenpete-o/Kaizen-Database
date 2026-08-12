@@ -778,7 +778,7 @@ def process_dbml_file(input_file, output_file, views_sql_file, excel_file="table
     
     # Step 7: Add notes to DBML
     updated_content = add_notes_to_dbml(dbml_content, table_names_with_notes)
-    under_token_limit_content = add_notes_to_dbml(dbml_content, table_names_with_notes)
+    under_token_limit_content = dbml_content
     
     # Step 8: Create DiagramView that excludes tables
     updated_content = create_diagram_view(updated_content, tables_to_exclude)
