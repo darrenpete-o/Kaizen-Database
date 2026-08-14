@@ -626,7 +626,7 @@ def create_domains(compressed_updated_content):
         response = client.chat.completions.create(
             model = "llama-3.1-8b-instant",
             messages = [
-                    {"role": "system", "content": "You are a senior database architect with 15+ years of experience in data modeling and system organization. Your expertise is in analyzing database schemas, understanding table relationships, and logically grouping tables into functional domains. You are meticulous, precise, and always follow formatting rules exactly."},
+                    {"role": "system", "content": "You are a meticulous database architect who analyzes schemas, groups tables into domains, and strictly follows formatting rules."},
                     {"role": "user", "content": prompt}
                 ],
                 temperature=0.7,
