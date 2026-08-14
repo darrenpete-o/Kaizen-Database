@@ -775,11 +775,11 @@ def process_dbml_file(input_file, output_file, views_sql_file, excel_file="table
     updated_content = create_default_view(updated_content)
 
     # Use the actual dbml file to pass to the AI
-    with open(output_file, 'w', encoding='utf-8') as f:
-        f.write(updated_content)
+    #with open(output_file, 'w', encoding='utf-8') as f:
+        #f.write(updated_content)
         
     # Step 10: Filter tables into domains using AI
-    updated_content = create_domains(output_file)
+    #updated_content = create_domains(output_file)
     # Step 11: Save the updated file
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write(updated_content)
