@@ -634,14 +634,19 @@ def create_domains(simplified_dbml, updated_content):
         Task: Split the tables from the DBML file into the appropriate domains based on the table name, notes, and content.
         
         ***IMPORTANT: Do NOT return the original DBML content. ONLY return the newly created TableGroup, DiagramView, and Ref blocks for each domain.***
-        ***CRITICAL*** Do NOT return any other text that is not EXACTLY what I asked for and do not wrap your response in any form of quotations
+        ***CRITICAL RULE***: You MUST use the EXACT table names as they appear on the LEFT side of the "=" sign in the simplified DBML I provided. DO NOT use the business names on the right side.
+
+        For example, if you see:
+        invoice_table = Invoices
+        payment_records = Payments
+
+        You MUST use "invoice_table" and "payment_records" in the TableGroup, DiagramView, and Ref blocks - NOT "Invoices" and "Payments".
         
         RULES:
         1. Each table must be assigned to exactly ONE domain based on its primary purpose.
         2. Tables that don't clearly fit any domain should go to "Legacy or Unknown" (domain #13).
         3. For each domain, include ONLY references between tables that are BOTH in that same domain.
         4. Exclude any references that connect to tables in other domains.
-        5. When you are assigning the tables, make sure to use the names on the left side of the "=" because that is the actual table name
         
         The format should be this for each domain:
             //*incrementing number starting from 00* *-* *Domain name*
