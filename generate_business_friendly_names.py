@@ -588,7 +588,33 @@ DiagramView Default {
     # add the default view to the updated content
     return updated_content + "\n" + default_view_overview_map
 
-def create_domains(input_current_dbml_file, updated_content):
+def create_simplified_dbml(output_file):
+    prompt = f"""
+        For each table In the following file, ONLY return the table name and it's correspomding business name (the note of each table).
+        ***IMPORTANT***: Do so in this manner: tablename = businessname
+
+        DBML file for you to process:
+        {output_file}
+"""
+        try:
+        #Ask AI
+        response = client.chat.completions.create(
+            model = "llama-3.1-8b-instant",
+            messages = [
+                    {"role": "system", "content": "You are a specialist at reading the table name and the note attached to it which is its business name"},
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=0.7,
+                max_tokens=30
+            )
+        dbml_simplified = response.choices[0].message.content.strip()
+        return dbml_simplified
+    except Exception as e:
+        #Throw an error
+        print(f"Error: {e}")
+        return None
+    
+def create_domains(simplified_dbml, updated_content):
     prompt = f"""
         Given this list of Domains:
         1) Companies & Organization [color: #2C3E50]
@@ -646,7 +672,7 @@ def create_domains(input_current_dbml_file, updated_content):
 
         Ref: CO2_Reporting.string < Helpdesk.string [color: #4d1cdc]
     Now process this DBML content:
-    {input_current_dbml_file} 
+    {simplified_dbml} 
 """
     try:
         #Ask AI
@@ -777,13 +803,17 @@ def process_dbml_file(input_file, output_file, views_sql_file, excel_file="table
     # save the current dbml
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write(updated_content)
+        print("Saved Current Content")
+
+    # Ask AI to simplify the dbml file so that it's {table_name} = {business_name}
+    simplified_dbml = create_simplified_dbml(output_file)
 
     # read the file back
-    with open(output_file, 'r', encoding='utf-8') as f:
-        input_current_dbml_file = f.read()
+    #with open(output_file, 'r', encoding='utf-8') as f:
+        #input_current_dbml_file = f.read()
         
     # Step 10: Filter tables into domains using AI
-    updated_content = create_domains(input_current_dbml_file, updated_content)
+    updated_content = create_domains(simplified_dbml, updated_content)
     
     # Step 11: Save the updated file
     with open(output_file, 'w', encoding='utf-8') as f:
