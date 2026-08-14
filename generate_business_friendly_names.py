@@ -643,7 +643,7 @@ def create_domains(simplified_dbml, updated_content):
         4. Exclude any references that connect to tables in other domains.
         5. After you have assigned the tables, make sure to use their ACTUAL TABLE NAME NOT THEIR BUSINESS FRIENDLY NAME for the task below
         
-        The format should be this for each domain:
+        The format should be this for each domain BUT USE THE ACTUAL TABLE NAMES NOT THE BUSINESS FRIENLY NAMES:
             //*incrementing number starting from 00* *-* *Domain name*
             TableGroup *Domain name* [color: *Domain name color*]{{
               *List of all the tables that go in this domain*
