@@ -588,7 +588,7 @@ DiagramView Default {
     # add the default view to the updated content
     return updated_content + "\n" + default_view_overview_map
 
-def create_domains(output_file, updated_content):
+def create_domains(input_current_dbml_file, updated_content):
     prompt = f"""
         Given this list of Domains:
         1) Companies & Organization [color: #2C3E50]
@@ -646,7 +646,7 @@ def create_domains(output_file, updated_content):
 
         Ref: CO2_Reporting.string < Helpdesk.string [color: #4d1cdc]
     Now process this DBML content:
-    {output_file} 
+    {input_current_dbml_file} 
 """
     try:
         #Ask AI
@@ -774,12 +774,17 @@ def process_dbml_file(input_file, output_file, views_sql_file, excel_file="table
     # Step 9: create the default view (Kim Overview Map)
     updated_content = create_default_view(updated_content)
 
-    # Use the actual dbml file to pass to the AI
+    # save the current dbml
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write(updated_content)
+
+    # read the file back
+    with open(output_file, 'w', encoding='utf-8') as f:
+        input_current_dbml_file = f.read()
         
     # Step 10: Filter tables into domains using AI
-    updated_content = create_domains(output_file, updated_content)
+    updated_content = create_domains(input_current_dbml_file, updated_content)
+    
     # Step 11: Save the updated file
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write(updated_content)
