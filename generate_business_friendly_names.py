@@ -600,56 +600,24 @@ def compress_dbml(content):
 def create_domains(compressed_updated_content):
     prompt = f"""
         Given this list of Domains:
-        1) Companies & Organization [color: #2C3E50]
-        2) Employees & Access [color: #3498DB]
-        3) Projects [color: #E67E22]
-        4) Planning & Delivery [color: #1ABC9C]
-        5) Expenses & Travel [color: #F1C40F]
-        6) Invoices & Finance [color: #27AE60]
-        7) CO₂ Management [color: #2ECC71]
-        8) Helpdesk [color: #E74C3C]
-        9) CRM & HubSpot [color: #FF7B7B]
-        10) Website [color: #9B59B6]
-        11) Reference & Configuration [color: #95A5A6]
-        12) Audit & Integration [color: #34495E]
-        13) Legacy or Unknown [color: #7F8C8D]
-        Task: Split the tables from the DBML file into the appropriate domains based on the table name, notes, and content.
-        ***IMPORTANT: Do NOT return the original DBML content. ONLY return the newly created TableGroup, DiagramView, and Ref blocks for each domain.***
-        RULES:
-        1. Each table must be assigned to exactly ONE domain based on its primary purpose.
-        2. Tables that don't clearly fit any domain should go to "Legacy or Unknown" (domain #13).
-        3. For each domain, include ONLY references between tables that are BOTH in that same domain.
-        4. Exclude any references that connect to tables in other domains.
-        The format should be this for each domain:
-            //*incrementing number starting from 00* *-* *Domain name*
-            TableGroup *Domain name* [color: *Domain name color*]{{
-              *List of all the tables that go in this domain*
-            }}
-
-            DiagramView "*incrementing number starting from 00* *-* *Domain name*"{{
-              tables {{
-                *List of all the tables that go in this domain*
-              }}
-              TableGroups {{*Domain name*}}
-            }}
-
-            Ref: *The exact same references taken from my dbml file* [color: *Domain name color*]
-        ***FOR EXAMPLE***:
-        //00 - Sales
-        TableGroup sales [color: #4d1cdc]{{
-          Helpdesk
-          CO2_Reporting
-        }}
+        1) Companies & Organization
+        2) Employees & Access
+        3) Projects
+        4) Planning & Delivery
+        5) Expenses & Travel
+        6) Invoices & Finance
+        7) CO₂ Management
+        8) Helpdesk
+        9) CRM & HubSpot
+        10) Website
+        11) Reference & Configuration
+        12) Audit & Integration
+        13) Legacy or Unknown
         
-        DiagramView "00 - sales"{{
-          tables {{
-            Helpdesk
-            CO2_Reporting
-          }}
-          TableGroups {{sales}}
-        }}
+        Task: Split the tables from the DBML file into the appropriate domains based on the table name, notes, and content.
+        
+        ***IMPORTANT: Do NOT return the original DBML content. ONLY return the newly created TableGroup, DiagramView, and Ref blocks for each domain.***
 
-        Ref: CO2_Reporting.string < Helpdesk.string [color: #4d1cdc]
     Now process this DBML content:
     {compressed_updated_content} 
 """
