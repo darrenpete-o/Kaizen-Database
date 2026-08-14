@@ -596,7 +596,7 @@ def create_simplified_dbml(output_file):
         DBML file for you to process:
         {output_file}
 """
-        try:
+    try:
         #Ask AI
         response = client.chat.completions.create(
             model = "llama-3.1-8b-instant",
