@@ -588,16 +588,7 @@ DiagramView Default {
     # add the default view to the updated content
     return updated_content + "\n" + default_view_overview_map
 
-def compress_dbml(content):
-    lines = []
-    for line in content.split('\n'):
-        stripped = line.strip()
-        # Skip comments and empty lines
-        if stripped and not stripped.startswith('//') and not stripped.startswith('/*'):
-            lines.append(line.rstrip())  # Keep minimal indentation
-    return '\n'.join(lines)
-
-def create_domains(compressed_updated_content):
+def create_domains(output_file):
     prompt = f"""
         Given this list of Domains:
         1) Companies & Organization
@@ -619,7 +610,7 @@ def create_domains(compressed_updated_content):
         ***IMPORTANT: Do NOT return the original DBML content. ONLY return the newly created TableGroup, DiagramView, and Ref blocks for each domain.***
 
     Now process this DBML content:
-    {compressed_updated_content} 
+    {output_file} 
 """
     try:
         #Ask AI
@@ -746,10 +737,12 @@ def process_dbml_file(input_file, output_file, views_sql_file, excel_file="table
     # Step 9: create the default view (Kim Overview Map)
     updated_content = create_default_view(updated_content)
 
-    #compress updated_content for AI
-    compressed_updated_content = compress_dbml(under_token_limit_content)
+    # Use the actual dbml file to pass to the AI
+    with open(output_file, 'w', encoding='utf-8') as f:
+        f.write(updated_content)
+        
     # Step 10: Filter tables into domains using AI
-    updated_content = create_domains(compressed_updated_content)
+    updated_content = create_domains(output_file)
     # Step 11: Save the updated file
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write(updated_content)
