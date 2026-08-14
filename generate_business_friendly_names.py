@@ -634,7 +634,6 @@ def create_domains(simplified_dbml, updated_content):
         Task: Split the tables from the DBML file into the appropriate domains based on the table name, notes, and content.
         
         ***IMPORTANT: Do NOT return the original DBML content. ONLY return the newly created TableGroup, DiagramView, and Ref blocks for each domain.***
-        ***VERY IMPORTANT***: DO NOT return ANYTHING except for EXACTLY what I have asked and do not wrap your response in any sort of quotations
         ***CRITICAL RULE***: You MUST use the EXACT table names as they appear on the LEFT side of the "=" sign in the simplified DBML I provided. DO NOT use the business names on the right side.
             DO NOT include the business names, DO NOT include the "=" sign, DO NOT include anything after the "="
             
@@ -680,6 +679,9 @@ def create_domains(simplified_dbml, updated_content):
         }}
 
         Ref: CO2_Reporting.string < Helpdesk.string [color: #4d1cdc]
+
+    ***VERY IMPORTANT***: DO NOT return ANYTHING except for EXACTLY what I have asked and do not wrap your response in any sort of quotations
+
     Now process this DBML content:
     {simplified_dbml} 
 """
