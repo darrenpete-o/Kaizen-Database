@@ -624,7 +624,7 @@ def create_domains(output_file):
                 max_tokens=2000
             )
         domains = response.choices[0].message.content.strip()
-        return updated_content + "\n\n" + domains
+        return output_file + "\n\n" + domains
     except Exception as e:
         #Throw an error
         print(f"Error: {e}")
