@@ -588,7 +588,7 @@ DiagramView Default {
     # add the default view to the updated content
     return updated_content + "\n" + default_view_overview_map
 
-def create_domains(output_file):
+def create_domains(output_file, updated_content):
     prompt = f"""
         Given this list of Domains:
         1) Companies & Organization [color: #2C3E50]
@@ -660,7 +660,7 @@ def create_domains(output_file):
                 max_tokens=2000
             )
         domains = response.choices[0].message.content.strip()
-        return output_file + "\n\n" + domains
+        return updated_content + "\n\n" + domains
     except Exception as e:
         #Throw an error
         print(f"Error: {e}")
@@ -775,11 +775,11 @@ def process_dbml_file(input_file, output_file, views_sql_file, excel_file="table
     updated_content = create_default_view(updated_content)
 
     # Use the actual dbml file to pass to the AI
-    #with open(output_file, 'w', encoding='utf-8') as f:
-        #f.write(updated_content)
+    with open(output_file, 'w', encoding='utf-8') as f:
+        f.write(updated_content)
         
     # Step 10: Filter tables into domains using AI
-    #updated_content = create_domains(output_file)
+    updated_content = create_domains(output_file, updated_content)
     # Step 11: Save the updated file
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write(updated_content)
