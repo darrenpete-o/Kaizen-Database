@@ -177,23 +177,29 @@ Rules:
 **Return ONLY the business name, nothing else. No quotes, no explanations.**
 
 Business name:"""
-    
-    try:
-        response =  client.models.generate_content(
-            model="gemini-3.5-flash",
-            contents=prompt,
-            config={
-                "system_instruction": "You are a database naming expert. You analyze table structures and provide SPECIFIC, MEANINGFUL business names. Never use generic terms like 'Data Group' or 'Information' alone.",
-                "temperature":0.7,
-                "max_output_tokens":50
-            }
-        )
-        business_name = response.text.strip()
-        business_name = business_name.strip('"\'')
-        return business_name
-    except Exception as e:
-        print(f"Error: {e}")
-        return None
+    for attempt in range(5):
+        try:
+            response =  client.models.generate_content(
+                model="gemini-3.6-flash",
+                contents=prompt,
+                config={
+                    "system_instruction": "You are a database naming expert. You analyze table structures and provide SPECIFIC, MEANINGFUL business names. Never use generic terms like 'Data Group' or 'Information' alone.",
+                    "temperature":0.7,
+                    "max_output_tokens":50
+                }
+            )
+
+            if response is not None and response.text:
+                business_name = response.text.strip()
+                business_name = business_name.strip('"\'')
+                return business_name
+            
+        except Exception as e:
+            print(f"  Attempt {attempt+1} failed: {str(e)[:50]}...")
+            if attempt < 4:
+                time.sleep(2)
+                
+    return None
 
 def parse_views_comprehensively(views_sql_content):
     """
