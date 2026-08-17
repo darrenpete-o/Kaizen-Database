@@ -4,12 +4,12 @@ import json
 import time
 from pathlib import Path
 from openai import OpenAI
-from google import genai
 import pandas as pd
 
-# Initialize Gemini client
-client = genai.Client(
-    api_key=os.environ.get("GOOGLE_API_KEY")
+# Initialize Groq client
+client = OpenAI(
+    api_key=os.environ.get("GROQ_API_KEY"),
+    base_url="https://api.groq.com/openai/v1"
 )
 def get_tables_to_exclude(excel_file, sheet_name="Tables NOT in Source Code", column_name="TableName"):
     """
@@ -177,29 +177,23 @@ Rules:
 **Return ONLY the business name, nothing else. No quotes, no explanations.**
 
 Business name:"""
-    for attempt in range(5):
-        try:
-            response =  client.models.generate_content(
-                model="gemini-3.6-flash",
-                contents=prompt,
-                config={
-                    "system_instruction": "You are a database naming expert. You analyze table structures and provide SPECIFIC, MEANINGFUL business names. Never use generic terms like 'Data Group' or 'Information' alone.",
-                    "temperature":0.7,
-                    "max_output_tokens":50
-                }
-            )
-
-            if response is not None and response.text:
-                business_name = response.text.strip()
-                business_name = business_name.strip('"\'')
-                return business_name
-            
-        except Exception as e:
-            print(f"  Attempt {attempt+1} failed: {str(e)[:50]}...")
-            if attempt < 4:
-                time.sleep(2)
-                
-    return None
+    
+    try:
+        response = client.chat.completions.create(
+            model="groq/compound",
+            messages=[
+                {"role": "system", "content": "You are a database naming expert. You analyze table structures and provide SPECIFIC, MEANINGFUL business names. Never use generic terms like 'Data Group' or 'Information' alone."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.7,
+            max_tokens=30
+        )
+        business_name = response.choices[0].message.content.strip()
+        business_name = business_name.strip('"\'')
+        return business_name
+    except Exception as e:
+        print(f"Error: {e}")
+        return None
 
 def parse_views_comprehensively(views_sql_content):
     """
@@ -603,16 +597,17 @@ def create_simplified_dbml(output_file):
         {output_file}
 """
     try:
-        response =  client.models.generate_content(
-            model="gemini-3.5-flash",
-            contents=prompt,
-            config={
-                "system_instruction": "You are a specialist at reading the table name and the note attached to it which is its business name",
-                "temperature":0.7,
-                "max_output_tokens":50
-            }
-        )
-        dbml_simplified = response.text.strip()
+        #Ask AI
+        response = client.chat.completions.create(
+            model = "groq/compound",
+            messages = [
+                    {"role": "system", "content": "You are a specialist at reading the table name and the note attached to it which is its business name"},
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=0.7,
+                max_tokens=30
+            )
+        dbml_simplified = response.choices[0].message.content.strip()
         return dbml_simplified
     except Exception as e:
         #Throw an error
@@ -691,19 +686,20 @@ def create_domains(simplified_dbml, updated_content):
     {simplified_dbml} 
 """
     try:
-        response =  client.models.generate_content(
-            model="gemini-3.5-flash",
-            contents=prompt,
-            config={
-                "system_instruction": "You are a senior database architect with 15+ years of experience in data modeling and system organization. Your expertise is in analyzing database schemas, understanding table relationships, and logically grouping tables into functional domains. You are meticulous, precise, and always follow formatting rules exactly.",
-                "temperature":0.7,
-                "max_output_tokens":50
-            }
-        )
-        business_name = response.text.strip()
-        business_name = business_name.strip('"\'')
-        return business_name
+        #Ask AI
+        response = client.chat.completions.create(
+            model = "groq/compound",
+            messages = [
+                    {"role": "system", "content": "You are a senior database architect with 15+ years of experience in data modeling and system organization. Your expertise is in analyzing database schemas, understanding table relationships, and logically grouping tables into functional domains. You are meticulous, precise, and always follow formatting rules exactly."},
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=0.7,
+                max_tokens=2000
+            )
+        domains = response.choices[0].message.content.strip()
+        return updated_content + "\n\n" + domains
     except Exception as e:
+        #Throw an error
         print(f"Error: {e}")
         return None
         
