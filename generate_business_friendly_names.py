@@ -180,7 +180,7 @@ Business name:"""
     
     try:
         response = client.chat.completions.create(
-            model="llama-4-maverick-17b",
+            model="qwen3-32b",
             messages=[
                 {"role": "system", "content": "You are a database naming expert. You analyze table structures and provide SPECIFIC, MEANINGFUL business names. Never use generic terms like 'Data Group' or 'Information' alone."},
                 {"role": "user", "content": prompt}
