@@ -686,20 +686,19 @@ def create_domains(simplified_dbml, updated_content):
     {simplified_dbml} 
 """
     try:
-        #Ask AI
-        response = client.chat.completions.create(
-            model = "llama-3.1-8b-instant",
-            messages = [
-                    {"role": "system", "content": "You are a senior database architect with 15+ years of experience in data modeling and system organization. Your expertise is in analyzing database schemas, understanding table relationships, and logically grouping tables into functional domains. You are meticulous, precise, and always follow formatting rules exactly."},
-                    {"role": "user", "content": prompt}
-                ],
-                temperature=0.7,
-                max_tokens=2000
-            )
-        domains = response.choices[0].message.content.strip()
-        return updated_content + "\n\n" + domains
+        response =  client.models.generate_content(
+            model="gemini-3.6-flash",
+            contents=prompt,
+            config={
+                "system_instruction": "You are a senior database architect with 15+ years of experience in data modeling and system organization. Your expertise is in analyzing database schemas, understanding table relationships, and logically grouping tables into functional domains. You are meticulous, precise, and always follow formatting rules exactly.",
+                "temperature":0.7,
+                "max_output_tokens":30
+            }
+        )
+        business_name = response.text.strip()
+        business_name = business_name.strip('"\'')
+        return business_name
     except Exception as e:
-        #Throw an error
         print(f"Error: {e}")
         return None
         
@@ -799,7 +798,7 @@ def process_dbml_file(input_file, output_file, views_sql_file, excel_file="table
                 print(f"  -> Using fallback: {fallback}")
             
             if idx < len(tables_to_process):
-                time.sleep(15)
+                time.sleep(0.5)
     
     # Step 7: Add notes to DBML
     updated_content = add_notes_to_dbml(dbml_content, table_names_with_notes)
