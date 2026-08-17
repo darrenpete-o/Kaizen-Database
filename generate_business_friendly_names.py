@@ -185,7 +185,7 @@ Business name:"""
             config={
                 "system_instruction": "You are a database naming expert. You analyze table structures and provide SPECIFIC, MEANINGFUL business names. Never use generic terms like 'Data Group' or 'Information' alone.",
                 "temperature":0.7,
-                "max_output_tokens":30
+                "max_output_tokens":70
             }
         )
         business_name = response.text.strip()
@@ -692,7 +692,7 @@ def create_domains(simplified_dbml, updated_content):
             config={
                 "system_instruction": "You are a senior database architect with 15+ years of experience in data modeling and system organization. Your expertise is in analyzing database schemas, understanding table relationships, and logically grouping tables into functional domains. You are meticulous, precise, and always follow formatting rules exactly.",
                 "temperature":0.7,
-                "max_output_tokens":30
+                "max_output_tokens":70
             }
         )
         business_name = response.text.strip()
