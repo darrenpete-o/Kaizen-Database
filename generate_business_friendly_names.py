@@ -184,7 +184,7 @@ Business name:"""
             contents=prompt,
             config={
                 "system_instruction": "You are a database naming expert. You analyze table structures and provide SPECIFIC, MEANINGFUL business names. Never use generic terms like 'Data Group' or 'Information' alone.",
-                "temperature"=0.7,
+                "temperature":0.7,
                 "max_output_tokens"=30
             }
         )
