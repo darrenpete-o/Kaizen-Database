@@ -185,7 +185,7 @@ Business name:"""
             config={
                 "system_instruction": "You are a database naming expert. You analyze table structures and provide SPECIFIC, MEANINGFUL business names. Never use generic terms like 'Data Group' or 'Information' alone.",
                 "temperature":0.7,
-                "max_output_tokens"=30
+                "max_output_tokens":30
             }
         )
         business_name = response.text.strip()
