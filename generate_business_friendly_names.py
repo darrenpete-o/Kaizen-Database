@@ -799,7 +799,7 @@ def process_dbml_file(input_file, output_file, views_sql_file, excel_file="table
                 print(f"  -> Using fallback: {fallback}")
             
             if idx < len(tables_to_process):
-                time.sleep(0.5)
+                time.sleep(10)
     
     # Step 7: Add notes to DBML
     updated_content = add_notes_to_dbml(dbml_content, table_names_with_notes)
