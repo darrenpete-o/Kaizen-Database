@@ -180,12 +180,12 @@ Business name:"""
     
     try:
         response =  client.models.generate_content(
-            model="gemini-3.6-flash",
+            model="gemini-2.5-flash",
             contents=prompt,
             config={
                 "system_instruction": "You are a database naming expert. You analyze table structures and provide SPECIFIC, MEANINGFUL business names. Never use generic terms like 'Data Group' or 'Information' alone.",
                 "temperature":0.7,
-                "max_output_tokens":70
+                "max_output_tokens":50
             }
         )
         business_name = response.text.strip()
@@ -597,17 +597,16 @@ def create_simplified_dbml(output_file):
         {output_file}
 """
     try:
-        #Ask AI
-        response = client.chat.completions.create(
-            model = "llama-3.1-8b-instant",
-            messages = [
-                    {"role": "system", "content": "You are a specialist at reading the table name and the note attached to it which is its business name"},
-                    {"role": "user", "content": prompt}
-                ],
-                temperature=0.7,
-                max_tokens=30
-            )
-        dbml_simplified = response.choices[0].message.content.strip()
+        response =  client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt,
+            config={
+                "system_instruction": "You are a specialist at reading the table name and the note attached to it which is its business name",
+                "temperature":0.7,
+                "max_output_tokens":50
+            }
+        )
+        dbml_simplified = response.text.strip()
         return dbml_simplified
     except Exception as e:
         #Throw an error
@@ -687,12 +686,12 @@ def create_domains(simplified_dbml, updated_content):
 """
     try:
         response =  client.models.generate_content(
-            model="gemini-3.6-flash",
+            model="gemini-2.5-flash",
             contents=prompt,
             config={
                 "system_instruction": "You are a senior database architect with 15+ years of experience in data modeling and system organization. Your expertise is in analyzing database schemas, understanding table relationships, and logically grouping tables into functional domains. You are meticulous, precise, and always follow formatting rules exactly.",
                 "temperature":0.7,
-                "max_output_tokens":70
+                "max_output_tokens":50
             }
         )
         business_name = response.text.strip()
