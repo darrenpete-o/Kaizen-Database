@@ -8,7 +8,7 @@ import pandas as pd
 
 # Initialize Groq client
 client = OpenAI(
-    api_key=os.environ.get("GROQ_API_KEY"),
+    api_key=os.environ.get("GOOGLE_API_KEY"),
     base_url="https://api.groq.com/openai/v1"
 )
 def get_tables_to_exclude(excel_file, sheet_name="Tables NOT in Source Code", column_name="TableName"):
@@ -180,7 +180,7 @@ Business name:"""
     
     try:
         response = client.chat.completions.create(
-            model="qwen3-32b",
+            model="gemini-3.6-flash",
             messages=[
                 {"role": "system", "content": "You are a database naming expert. You analyze table structures and provide SPECIFIC, MEANINGFUL business names. Never use generic terms like 'Data Group' or 'Information' alone."},
                 {"role": "user", "content": prompt}
