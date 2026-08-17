@@ -4,12 +4,12 @@ import json
 import time
 from pathlib import Path
 from openai import OpenAI
+from google import genai
 import pandas as pd
 
-# Initialize Groq client
-client = OpenAI(
-    api_key=os.environ.get("GOOGLE_API_KEY"),
-    base_url="https://api.groq.com/openai/v1"
+# Initialize Gemini client
+client = genai.Client(
+    api_key=os.environ.get("GOOGLE_API_KEY")
 )
 def get_tables_to_exclude(excel_file, sheet_name="Tables NOT in Source Code", column_name="TableName"):
     """
