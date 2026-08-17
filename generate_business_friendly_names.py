@@ -179,16 +179,16 @@ Rules:
 Business name:"""
     
     try:
-        response = client.chat.completions.create(
+        response =  client.models.generate_content(
             model="gemini-3.6-flash",
-            messages=[
-                {"role": "system", "content": "You are a database naming expert. You analyze table structures and provide SPECIFIC, MEANINGFUL business names. Never use generic terms like 'Data Group' or 'Information' alone."},
-                {"role": "user", "content": prompt}
-            ],
-            temperature=0.7,
-            max_tokens=30
+            contents=prompt,
+            config={
+                "system_instruction": "You are a database naming expert. You analyze table structures and provide SPECIFIC, MEANINGFUL business names. Never use generic terms like 'Data Group' or 'Information' alone.",
+                "temperature"=0.7,
+                "max_output_tokens"=30
+            }
         )
-        business_name = response.choices[0].message.content.strip()
+        business_name = response.text.strip()
         business_name = business_name.strip('"\'')
         return business_name
     except Exception as e:
