@@ -180,7 +180,7 @@ Business name:"""
     
     try:
         response = client.chat.completions.create(
-            model="meta-llama/llama-prompt-guard-2-86m",
+            model="groq/compound-mini",
             messages=[
                 {"role": "system", "content": "You are a database naming expert. You analyze table structures and provide SPECIFIC, MEANINGFUL business names. Never use generic terms like 'Data Group' or 'Information' alone."},
                 {"role": "user", "content": prompt}
@@ -599,7 +599,7 @@ def create_simplified_dbml(output_file):
     try:
         #Ask AI
         response = client.chat.completions.create(
-            model = "meta-llama/llama-prompt-guard-2-86m",
+            model = "groq/compound-mini",
             messages = [
                     {"role": "system", "content": "You are a specialist at reading the table name and the note attached to it which is its business name"},
                     {"role": "user", "content": prompt}
@@ -688,7 +688,7 @@ def create_domains(simplified_dbml, updated_content):
     try:
         #Ask AI
         response = client.chat.completions.create(
-            model = "meta-llama/llama-prompt-guard-2-86m",
+            model = "groq/compound-mini",
             messages = [
                     {"role": "system", "content": "You are a senior database architect with 15+ years of experience in data modeling and system organization. Your expertise is in analyzing database schemas, understanding table relationships, and logically grouping tables into functional domains. You are meticulous, precise, and always follow formatting rules exactly."},
                     {"role": "user", "content": prompt}
