@@ -180,7 +180,7 @@ Business name:"""
     
     try:
         response =  client.models.generate_content(
-            model="gemini-2.5-flash",
+            model="gemini-3.5-flash",
             contents=prompt,
             config={
                 "system_instruction": "You are a database naming expert. You analyze table structures and provide SPECIFIC, MEANINGFUL business names. Never use generic terms like 'Data Group' or 'Information' alone.",
@@ -598,7 +598,7 @@ def create_simplified_dbml(output_file):
 """
     try:
         response =  client.models.generate_content(
-            model="gemini-2.5-flash",
+            model="gemini-3.5-flash",
             contents=prompt,
             config={
                 "system_instruction": "You are a specialist at reading the table name and the note attached to it which is its business name",
@@ -686,7 +686,7 @@ def create_domains(simplified_dbml, updated_content):
 """
     try:
         response =  client.models.generate_content(
-            model="gemini-2.5-flash",
+            model="gemini-3.5-flash",
             contents=prompt,
             config={
                 "system_instruction": "You are a senior database architect with 15+ years of experience in data modeling and system organization. Your expertise is in analyzing database schemas, understanding table relationships, and logically grouping tables into functional domains. You are meticulous, precise, and always follow formatting rules exactly.",
