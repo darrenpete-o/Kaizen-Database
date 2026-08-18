@@ -179,13 +179,25 @@ Rules:
 Business name:"""
     try:
         completion = client.chat.completions.create(
-            messages=[{"role":"user","content":"You are a database naming expert. You analyze table structures and provide SPECIFIC, MEANINGFUL business names. Never use generic terms like 'Data Group' or 'Information' alone."}],
+            messages=[{"role":"user",
+                       "content":"""You are a database naming expert. You analyze table structures and provide SPECIFIC, MEANINGFUL business names. Never use generic terms like 'Data Group' or 'Information' alone.
+**CRITICAL OUTPUT RULE**: Your response MUST contain ONLY the business name. 
+- NO explanations, NO reasoning, NO formatting
+- NO quotes around the name
+- Maximum 4 words
+
+Example of CORRECT output: "Customer Profiles"
+Example of INCORRECT output: "I would name this table Customer Profiles because it stores customer data."
+
+Now name this table:
+
+""" + prompt
+            }],
             model="gemma-4-31b",
-            max_completion_tokens=1024,
+            max_completion_tokens=50,
             temperature=0.2,
             top_p=1,
-            stream=False,
-            reasoning_effort="medium"
+            stream=False
         )
         business_name = completion.choices[0].message.content.strip()
         business_name = business_name.strip('"\'')
@@ -606,6 +618,11 @@ DiagramView Default {
 
 def create_domains(input_current_dbml_file, updated_content):
     prompt = f"""
+        **INSTRUCTION**: You will find the table names and their business names (notes) in the DBML content below. 
+        - Table names are after the word "Table" (e.g., "Table dbo.associations")
+        - Business names are in the note field (e.g., 'note: "Associations"')
+        - Extract BOTH the table name and its note to understand what domain it belongs to.
+        
         Given this list of Domains:
         1) Companies & Organization [color: #2C3E50]
         2) Employees & Access [color: #3498DB]
@@ -622,16 +639,15 @@ def create_domains(input_current_dbml_file, updated_content):
         13) Legacy or Unknown [color: #7F8C8D]
         
         Task: Split the tables from the DBML file into the appropriate domains based on the table name, notes, and content.
+
+        **CRITICAL**: Look for Table definitions like:
+        Table dbo.associations {{
+          note: "Associations"
+          ...
+        }}
+        The table name is "dbo.associations" and the business name is "Associations".
         
         ***IMPORTANT: Do NOT return the original DBML content. ONLY return the newly created TableGroup, DiagramView, and Ref blocks for each domain.***
-        ***CRITICAL RULE***: You MUST use the EXACT table names as they appear on the LEFT side of the "=" sign in the simplified DBML I provided. DO NOT use the business names on the right side.
-            DO NOT include the business names, DO NOT include the "=" sign, DO NOT include anything after the "="
-            
-        For example, if you see:
-        invoice_table = Invoices
-        payment_records = Payments
-
-        You MUST use "invoice_table" and "payment_records" in the TableGroup, DiagramView, and Ref blocks - NOT "Invoices" and "Payments".
         
         RULES:
         1. Each table must be assigned to exactly ONE domain based on its primary purpose.
@@ -677,20 +693,32 @@ def create_domains(input_current_dbml_file, updated_content):
 """
     try:
         completion = client.chat.completions.create(
-            messages=[{"role":"user","content":"You are a senior database architect with 15+ years of experience in data modeling and system organization. Your expertise is in analyzing database schemas, understanding table relationships, and logically grouping tables into functional domains. You are meticulous, precise, and always follow formatting rules exactly."}],
+            messages=[{"role":"user",
+                       "content":"""You are a senior database architect with 15+ years of experience in data modeling and system organization. Your expertise is in analyzing database schemas, understanding table relationships, and logically grouping tables into functional domains. You are meticulous, precise, and always follow formatting rules exactly.
+**CRITICAL OUTPUT RULES**:
+- Extract table names and notes from the DBML content I provide
+- Table names start with "Table" (e.g., "Table dbo.associations")
+- Business names are in the note field (e.g., note: "Associations")
+- Use the EXACT table names as they appear (with "dbo." prefix)
+- Return ONLY the TableGroup, DiagramView, and Ref blocks
+- NO explanations, NO reasoning
+- Use the EXACT domain names and colors provided
+
+Now process this DBML content:
+
+""" + prompt
+            }],
             model="gemma-4-31b",
-            max_completion_tokens=1024,
+            max_completion_tokens=2000,
             temperature=0.2,
             top_p=1,
-            stream=False,
-            reasoning_effort="medium"
+            stream=False
         )
-        business_name = completion.choices[0].message.content.strip()
-        business_name = business_name.strip('"\'')
-        return business_name
+        domains = completion.choices[0].message.content.strip()
+        return updated_content + "\n\n" + domains
     except Exception as e:
         print(f"Error: {e}")
-        return None
+        return updated_content
     """
     try:
         #Ask AI
