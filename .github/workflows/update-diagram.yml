@@ -17,17 +17,17 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pyodbc pymssql openai pandas openpyxl google-genai
+          pip install pyodbc pymssql openai pandas openpyxl google-genai cerebras-cloud-sdk
           echo "✅ Installed packages:"
-          pip list | findstr "pyodbc pymssql openai pandas openpyxl google-genai"  # Windows uses findstr, not grep
+          pip list | findstr "pyodbc pymssql openai pandas openpyxl google-genai cerebras-cloud-sdk"  # Windows uses findstr, not grep
 
       - name: Verify OpenAI installation
         run: |
           python -c "import openai; print(f'✅ OpenAI version: {openai.__version__}')"
 
-      - name: Verify Google Gemini installation
+      - name: Verify Cerebras installation
         run: |
-          python -c "from google import genai; print('✅ Google Gemini SDK installed successfully')"
+          python -c "from cerebras.cloud.sdk import Cerebras; print('✅ Cerebras installed successfully')"
           
       - name: Verify ODBC Driver
         run: |
