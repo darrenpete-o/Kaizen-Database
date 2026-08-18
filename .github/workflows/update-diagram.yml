@@ -92,7 +92,7 @@ jobs:
 
       - name: Run Business Name Check For Database Alterations
         env:
-          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          CEREBRAS_API_KEY: ${{ secrets.CEREBRAS_API_KEY }}
         run: |
           python naming_standard_restrictions.py
         continue-on-error: true
