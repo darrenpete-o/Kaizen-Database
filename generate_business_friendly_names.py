@@ -790,9 +790,8 @@ def process_dbml_file(input_file, output_file, views_sql_file, excel_file="table
         f.write(updated_content)
         print("Saved Current Content")
         
-"""
     # Ask AI to simplify the dbml file so that it's {table_name} = {business_name}
-    simplified_dbml = create_simplified_dbml(output_file)  """
+    #simplified_dbml = create_simplified_dbml(output_file)
 
     # read the file back
     with open(output_file, 'r', encoding='utf-8') as f:
