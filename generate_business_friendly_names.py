@@ -8,9 +8,9 @@ from cerebras.cloud.sdk import Cerebras
 import pandas as pd
 
 # Initialize Cerebras client
-  client = Cerebras(
-      api_key=os.environ.get("CEREBRAS_API_KEY")
-  )
+client = Cerebras(
+    api_key=os.environ.get("CEREBRAS_API_KEY")
+)
 def get_tables_to_exclude(excel_file, sheet_name="Tables NOT in Source Code", column_name="TableName"):
     """
     Read table names from Excel file that should be excluded from visual diagram.
