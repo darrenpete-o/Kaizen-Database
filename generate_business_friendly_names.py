@@ -4,13 +4,13 @@ import json
 import time
 from pathlib import Path
 from openai import OpenAI
+from cerebras.cloud.sdk import Cerebras
 import pandas as pd
 
-# Initialize Groq client
-client = OpenAI(
-    api_key=os.environ.get("GROQ_API_KEY"),
-    base_url="https://api.groq.com/openai/v1"
-)
+# Initialize Cerebras client
+  client = Cerebras(
+      api_key=os.environ.get("CEREBRAS_API_KEY")
+  )
 def get_tables_to_exclude(excel_file, sheet_name="Tables NOT in Source Code", column_name="TableName"):
     """
     Read table names from Excel file that should be excluded from visual diagram.
@@ -177,7 +177,23 @@ Rules:
 **Return ONLY the business name, nothing else. No quotes, no explanations.**
 
 Business name:"""
-    
+    try:
+        completion = client.chat.completions.create(
+            messages=[{"role":"user","content":"You are a database naming expert. You analyze table structures and provide SPECIFIC, MEANINGFUL business names. Never use generic terms like 'Data Group' or 'Information' alone."}],
+            model="gemma-4-31b",
+            max_completion_tokens=1024,
+            temperature=0.2,
+            top_p=1,
+            stream=False,
+            reasoning_effort="medium"
+        )
+        business_name = completion.choices[0].message.content.strip()
+        business_name = business_name.strip('"\'')
+        return business_name
+    except Exception as e:
+        print(f"Error: {e}")
+        return None
+    """
     try:
         response = client.chat.completions.create(
             model="meta-llama/llama-prompt-guard-2-22m",
@@ -193,7 +209,7 @@ Business name:"""
         return business_name
     except Exception as e:
         print(f"Error: {e}")
-        return None
+        return None"""
 
 def parse_views_comprehensively(views_sql_content):
     """
@@ -660,6 +676,23 @@ def create_domains(input_current_dbml_file, updated_content):
     {input_current_dbml_file} 
 """
     try:
+        completion = client.chat.completions.create(
+            messages=[{"role":"user","content":"You are a senior database architect with 15+ years of experience in data modeling and system organization. Your expertise is in analyzing database schemas, understanding table relationships, and logically grouping tables into functional domains. You are meticulous, precise, and always follow formatting rules exactly."}],
+            model="gemma-4-31b",
+            max_completion_tokens=1024,
+            temperature=0.2,
+            top_p=1,
+            stream=False,
+            reasoning_effort="medium"
+        )
+        business_name = completion.choices[0].message.content.strip()
+        business_name = business_name.strip('"\'')
+        return business_name
+    except Exception as e:
+        print(f"Error: {e}")
+        return None
+    """
+    try:
         #Ask AI
         response = client.chat.completions.create(
             model = "meta-llama/llama-prompt-guard-2-22m",
@@ -675,7 +708,7 @@ def create_domains(input_current_dbml_file, updated_content):
     except Exception as e:
         #Throw an error
         print(f"Error: {e}")
-        return None
+        return None"""
         
         
 
