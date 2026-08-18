@@ -797,6 +797,7 @@ def process_dbml_file(input_file, output_file, views_sql_file, excel_file="table
     with open(output_file, 'r', encoding='utf-8') as f:
         input_current_dbml_file = f.read()
         
+    time.sleep(10)  
     # Step 10: Filter tables into domains using AI
     updated_content = create_domains(input_current_dbml_file, updated_content)
     
