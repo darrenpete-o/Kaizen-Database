@@ -587,7 +587,7 @@ DiagramView Default {
 """
     # add the default view to the updated content
     return updated_content + "\n" + default_view_overview_map
-
+"""
 def create_simplified_dbml(output_file):
     prompt = f"""
         For each table In the following file, ONLY return the table name and it's correspomding business name (the note of each table).
@@ -613,8 +613,8 @@ def create_simplified_dbml(output_file):
         #Throw an error
         print(f"Error: {e}")
         return None
-    
-def create_domains(simplified_dbml, updated_content):
+"""
+def create_domains(input_current_dbml_file, updated_content):
     prompt = f"""
         Given this list of Domains:
         1) Companies & Organization [color: #2C3E50]
@@ -683,7 +683,7 @@ def create_domains(simplified_dbml, updated_content):
     ***VERY IMPORTANT***: DO NOT return ANYTHING except for EXACTLY what I have asked and do not wrap your response in any sort of quotations
 
     Now process this DBML content:
-    {simplified_dbml} 
+    {input_current_dbml_file} 
 """
     try:
         #Ask AI
@@ -815,16 +815,17 @@ def process_dbml_file(input_file, output_file, views_sql_file, excel_file="table
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write(updated_content)
         print("Saved Current Content")
-
+        
+"""
     # Ask AI to simplify the dbml file so that it's {table_name} = {business_name}
-    simplified_dbml = create_simplified_dbml(output_file)
+    simplified_dbml = create_simplified_dbml(output_file)  """
 
     # read the file back
-    #with open(output_file, 'r', encoding='utf-8') as f:
-        #input_current_dbml_file = f.read()
+    with open(output_file, 'r', encoding='utf-8') as f:
+        input_current_dbml_file = f.read()
         
     # Step 10: Filter tables into domains using AI
-    updated_content = create_domains(simplified_dbml, updated_content)
+    updated_content = create_domains(input_current_dbml_file, updated_content)
     
     # Step 11: Save the updated file
     with open(output_file, 'w', encoding='utf-8') as f:
