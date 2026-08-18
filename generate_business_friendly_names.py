@@ -587,33 +587,7 @@ DiagramView Default {
 """
     # add the default view to the updated content
     return updated_content + "\n" + default_view_overview_map
-"""
-def create_simplified_dbml(output_file):
-    prompt = f"""
-        For each table In the following file, ONLY return the table name and it's correspomding business name (the note of each table).
-        ***IMPORTANT***: Do so in this manner: tablename = businessname
 
-        DBML file for you to process:
-        {output_file}
-"""
-    try:
-        #Ask AI
-        response = client.chat.completions.create(
-            model = "groq/compound-mini",
-            messages = [
-                    {"role": "system", "content": "You are a specialist at reading the table name and the note attached to it which is its business name"},
-                    {"role": "user", "content": prompt}
-                ],
-                temperature=0.7,
-                max_tokens=30
-            )
-        dbml_simplified = response.choices[0].message.content.strip()
-        return dbml_simplified
-    except Exception as e:
-        #Throw an error
-        print(f"Error: {e}")
-        return None
-"""
 def create_domains(input_current_dbml_file, updated_content):
     prompt = f"""
         Given this list of Domains:
