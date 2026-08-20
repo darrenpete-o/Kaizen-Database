@@ -173,6 +173,7 @@ Rules:
 - Provide a SPECIFIC, DESCRIPTIVE name (2-4 words)
 - Use title case (e.g., "Project Expense Records")
 - Look for patterns in the columns to determine actual purpose
+- **Make it UNIQUE** - don't reuse the same name for different tables
 
 **Return ONLY the business name, nothing else. No quotes, no explanations.**
 
@@ -688,6 +689,10 @@ def create_domains(input_current_dbml_file, updated_content):
 
     ***VERY IMPORTANT***: DO NOT return ANYTHING except for EXACTLY what I have asked and do not wrap your response in any sort of quotations
 
+    **CRITICAL INSTRUCTION**: DO NOT repeat or echo back the DBML content I provided below. ONLY output the TableGroup, DiagramView, and Ref blocks.
+
+    **IMPORTANT**: DO NOT begin the response with any 
+
     Now process this DBML content:
     {input_current_dbml_file} 
 """
@@ -696,6 +701,10 @@ def create_domains(input_current_dbml_file, updated_content):
             messages=[{"role":"user",
                        "content":"""You are a senior database architect with 15+ years of experience in data modeling and system organization. Your expertise is in analyzing database schemas, understanding table relationships, and logically grouping tables into functional domains. You are meticulous, precise, and always follow formatting rules exactly.
 **CRITICAL OUTPUT RULES**:
+- DO NOT repeat or echo back the DBML content I provide
+- DO NOT ask for more information or request that I paste anything
+- DO NOT include introductory text like "Sure!" or "I'll split the tables"
+- DO NOT include any explanatory text, reasoning, or closing remarks
 - Extract table names and notes from the DBML content I provide
 - Table names start with "Table" (e.g., "Table dbo.associations")
 - Business names are in the note field (e.g., note: "Associations")
@@ -703,6 +712,7 @@ def create_domains(input_current_dbml_file, updated_content):
 - Return ONLY the TableGroup, DiagramView, and Ref blocks
 - NO explanations, NO reasoning
 - Use the EXACT domain names and colors provided
+- Start your response IMMEDIATELY with the first domain block (e.g., "//00 - Companies & Organization")
 
 Now process this DBML content:
 
