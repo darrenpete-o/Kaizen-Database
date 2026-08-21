@@ -655,11 +655,10 @@ def create_domains(input_current_dbml_file, updated_content):
         2. Tables that don't clearly fit any domain should go to "Legacy or Unknown" (domain #13).
         3. The TableGroup acts as a container/bracket. Relationships between tables within the same group will be shown automatically.
         4. Do NOT include any Ref blocks - the TableGroup will handle relationships internally.
-        5. When creating TableGroup, ALWAYS add `, group: true` after the color to keep tables in the group closer together.
         
         The format should be this for each domain:
             //*incrementing number starting from 00* *-* *Domain name*
-            TableGroup *Domain name* [color: *Domain name color*, group: true]{{
+            TableGroup *Domain name* [color: *Domain name color*]{{
               *List of all the tables that go in this domain*
             }}
 
@@ -672,7 +671,7 @@ def create_domains(input_current_dbml_file, updated_content):
 
         ***FOR EXAMPLE***:
         //00 - Sales
-        TableGroup sales [color: #4d1cdc, group: true]{{
+        TableGroup sales [color: #4d1cdc]{{
           Helpdesk
           CO2_Reporting
         }}
@@ -716,7 +715,7 @@ Now process this DBML content:
 """ + prompt
             }],
             model="gemma-4-31b",
-            max_completion_tokens=4500,
+            max_completion_tokens=6000,
             temperature=0.2,
             top_p=1,
             stream=False
