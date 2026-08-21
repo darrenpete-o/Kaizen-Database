@@ -653,12 +653,13 @@ def create_domains(input_current_dbml_file, updated_content):
         RULES:
         1. Each table must be assigned to exactly ONE domain based on its primary purpose.
         2. Tables that don't clearly fit any domain should go to "Legacy or Unknown" (domain #13).
-        3. For each domain, include ONLY references between tables that are BOTH in that same domain.
-        4. Exclude any references that connect to tables in other domains.
+        3. The TableGroup acts as a container/bracket. Relationships between tables within the same group will be shown automatically.
+        4. Do NOT include any Ref blocks - the TableGroup will handle relationships internally.
+        5. When creating TableGroup, ALWAYS add `, group: true` after the color to keep tables in the group closer together.
         
         The format should be this for each domain:
             //*incrementing number starting from 00* *-* *Domain name*
-            TableGroup *Domain name* [color: *Domain name color*]{{
+            TableGroup *Domain name* [color: *Domain name color*, group: true]{{
               *List of all the tables that go in this domain*
             }}
 
@@ -669,10 +670,9 @@ def create_domains(input_current_dbml_file, updated_content):
               TableGroups {{*Domain name*}}
             }}
 
-            Ref: *The exact same references taken from my dbml file* [color: *Domain name color*]
         ***FOR EXAMPLE***:
         //00 - Sales
-        TableGroup sales [color: #4d1cdc]{{
+        TableGroup sales [color: #4d1cdc, group: true]{{
           Helpdesk
           CO2_Reporting
         }}
@@ -685,13 +685,10 @@ def create_domains(input_current_dbml_file, updated_content):
           TableGroups {{sales}}
         }}
 
-        Ref: CO2_Reporting.string < Helpdesk.string [color: #4d1cdc]
 
     ***VERY IMPORTANT***: DO NOT return ANYTHING except for EXACTLY what I have asked and do not wrap your response in any sort of quotations
 
-    **CRITICAL INSTRUCTION**: DO NOT repeat or echo back the DBML content I provided below. ONLY output the TableGroup, DiagramView, and Ref blocks.
-
-    **IMPORTANT**: DO NOT begin the response with any 
+    **CRITICAL INSTRUCTION**: DO NOT repeat or echo back the DBML content I provided below. ONLY output the TableGroup and DiagramView.
 
     Now process this DBML content:
     {input_current_dbml_file} 
@@ -719,7 +716,7 @@ Now process this DBML content:
 """ + prompt
             }],
             model="gemma-4-31b",
-            max_completion_tokens=2000,
+            max_completion_tokens=4500,
             temperature=0.2,
             top_p=1,
             stream=False
