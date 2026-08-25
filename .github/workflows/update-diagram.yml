@@ -20,7 +20,12 @@ jobs:
           pip install pyodbc pymssql openai pandas openpyxl google-genai cerebras-cloud-sdk
           echo "✅ Installed packages:"
           pip list | findstr "pyodbc pymssql openai pandas openpyxl google-genai cerebras-cloud-sdk"  # Windows uses findstr, not grep
-      
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+    
       - name: Install dbdiagram CLI
         run: npm install -g dbdiagram
 
