@@ -706,6 +706,7 @@ def create_domains(input_current_dbml_file, updated_content):
 - Business names are in the note field (e.g., note: "Associations")
 - Use the EXACT table names as they appear (with "dbo." prefix)
 - Return ONLY the TableGroup, DiagramView, and Ref blocks
+- Do not repeat tables in different domains. Each table should be a member of 1 domain
 - NO explanations, NO reasoning
 - Use the EXACT domain names and colors provided
 - Start your response IMMEDIATELY with the first domain block (e.g., "//00 - Companies & Organization")
