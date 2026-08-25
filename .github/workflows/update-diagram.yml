@@ -21,17 +21,6 @@ jobs:
           echo "✅ Installed packages:"
           pip list | findstr "pyodbc pymssql openai pandas openpyxl google-genai cerebras-cloud-sdk"  # Windows uses findstr, not grep
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-    
-      - name: Install dbdiagram CLI
-        run: npm install -g dbdiagram
-
-      - name: token generation command
-        run: dbdiagram tokens generate --name "GitHub Actions Token"
-
       - name: Verify OpenAI installation
         run: |
           python -c "import openai; print(f'✅ OpenAI version: {openai.__version__}')"
@@ -100,53 +89,6 @@ jobs:
           Get-ChildItem -File
           Write-Host "`nFull path of DBML file:"
           Resolve-Path "schema_diagram_with_aliases_as_notes.dbml" -ErrorAction SilentlyContinue
-
-      - name: Generate token and set as environment variable
-        id: generate_token
-        run: |
-          # Generate a token and capture it
-          $token = dbdiagram tokens generate --name "GitHub Actions Token" --json | ConvertFrom-Json | Select-Object -ExpandProperty token
-          echo "DBDIAGRAM_TOKEN=$token" >> $env:GITHUB_ENV
-          echo "token=$token" >> $env:GITHUB_OUTPUT
-        env:
-          DBDIAGRAM_EMAIL: ${{ secrets.DBDIAGRAM_EMAIL }}
-          DBDIAGRAM_PASSWORD: ${{ secrets.DBDIAGRAM_PASSWORD }}
-
-      - name: Check if companion file exists
-        id: check_companion
-        run: |
-          if [ -f ".dbdiagram/settings.json" ]; then
-            echo "exists=true" >> $GITHUB_OUTPUT
-          else
-            echo "exists=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Initialize project (first run only)
-        if: steps.check_companion.outputs.exists == 'false'
-        run: |
-          dbdiagram init --entry schema.dbml --diagram-id ${{ secrets.DIAGRAM_ID }}
-        env:
-          DBDIAGRAM_TOKEN: ${{ steps.generate_token.outputs.token }}
-
-      - name: Push DBML to dbdiagram.io
-        run: |
-          dbdiagram push schema.dbml --diagram-id ${{ secrets.DIAGRAM_ID }}
-        env:
-          DBDIAGRAM_TOKEN: ${{ steps.generate_token.outputs.token }}
-
-      - name: Pull latest layout
-        run: |
-          dbdiagram pull --diagram-id ${{ secrets.DIAGRAM_ID }}
-        env:
-          DBDIAGRAM_TOKEN: ${{ steps.generate_token.outputs.token }}
-
-      - name: Commit companion file
-        run: |
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
-          git add .dbdiagram/ || true
-          git commit -m "Update dbdiagram companion file" || echo "No changes to commit"
-          git push
 
       - name: Run Business Name Check For Database Alterations
         env:
