@@ -29,6 +29,9 @@ jobs:
       - name: Install dbdiagram CLI
         run: npm install -g dbdiagram
 
+      - name: token generation command
+        run: dbdiagram tokens generate --name "GitHub Actions Token"
+
       - name: Verify OpenAI installation
         run: |
           python -c "import openai; print(f'✅ OpenAI version: {openai.__version__}')"
