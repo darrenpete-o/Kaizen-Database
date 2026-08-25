@@ -102,9 +102,9 @@ jobs:
         id: generate_token
         run: |
           # Generate a token and capture it
-          TOKEN=$(dbdiagram tokens generate --name "GitHub Actions Token" --json | jq -r '.token')
-          echo "DBDIAGRAM_TOKEN=$TOKEN" >> $GITHUB_ENV
-          echo "token=$TOKEN" >> $GITHUB_OUTPUT
+          $token = dbdiagram tokens generate --name "GitHub Actions Token" --json | ConvertFrom-Json | Select-Object -ExpandProperty token
+          echo "DBDIAGRAM_TOKEN=$token" >> $env:GITHUB_ENV
+          echo "token=$token" >> $env:GITHUB_OUTPUT
         env:
           DBDIAGRAM_EMAIL: ${{ secrets.DBDIAGRAM_EMAIL }}
           DBDIAGRAM_PASSWORD: ${{ secrets.DBDIAGRAM_PASSWORD }}
