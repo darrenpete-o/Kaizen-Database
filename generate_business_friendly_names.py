@@ -654,7 +654,10 @@ def create_domains(input_current_dbml_file, updated_content):
         1. Each table must be assigned to exactly ONE domain based on its primary purpose.
         2. Tables that don't clearly fit any domain should go to "Legacy or Unknown" (domain #13).
         3. The TableGroup acts as a container/bracket. Relationships between tables within the same group will be shown automatically.
-        4. Do NOT include any Ref blocks - the TableGroup will handle relationships internally.
+        4. For each domain, create a chain of invisible references to bring tables closer together. Use the first column listed in the table definition
+        5. Create references in a chain (Table1 > Table2 > Table3 > ... > TableN), not a star pattern. The last table must reference back to the first table to complete the circle
+        6. All references MUST use [color: #FFFFFF] to make them invisible.
+        7. Place Ref blocks AFTER all DiagramView blocks.
         
         The format should be this for each domain:
             //*incrementing number starting from 00* *-* *Domain name*
@@ -668,6 +671,13 @@ def create_domains(input_current_dbml_file, updated_content):
               }}
               TableGroups {{*Domain name*}}
             }}
+
+        // References for *Domain name*
+        Ref: dbo.table1.column1 > dbo.table2.column2 [color: #FFFFFF]
+        Ref: dbo.table2.column2 > dbo.table3.column3 [color: #FFFFFF]
+        ... (continue until all tables in domain are connected in a chain)
+        Ref: dbo.tableN.columnN > dbo.table1.column1 [color: #FFFFFF]  // Complete the circle
+        
 
         ***FOR EXAMPLE***:
         //00 - Sales
@@ -684,6 +694,11 @@ def create_domains(input_current_dbml_file, updated_content):
           TableGroups {{sales}}
         }}
 
+        // References for sales
+        Ref: Helpdesk.id > CO2_Reporting.helpdesk_id [color: #FFFFFF]
+        Ref: CO2_Reporting.id > Helpdesk.co2_id [color: #FFFFFF]
+
+        
 
     ***VERY IMPORTANT***: DO NOT return ANYTHING except for EXACTLY what I have asked and do not wrap your response in any sort of quotations
 
@@ -708,6 +723,10 @@ def create_domains(input_current_dbml_file, updated_content):
 - Return ONLY the TableGroup, DiagramView, and Ref blocks
 - NO explanations, NO reasoning
 - Use the EXACT domain names and colors provided
+- For each domain, create invisible references to bring tables closer together
+- Use [color: #FFFFFF] for all references
+- Create a chain: Table1 > Table2 > Table3 > ... > TableN > back to Table1
+- Use the first column in the table definition
 - Start your response IMMEDIATELY with the first domain block (e.g., "//00 - Companies & Organization")
 
 Now process this DBML content:
@@ -715,7 +734,7 @@ Now process this DBML content:
 """ + prompt
             }],
             model="gemma-4-31b",
-            max_completion_tokens=6000,
+            max_completion_tokens=6500,
             temperature=0.2,
             top_p=1,
             stream=False
