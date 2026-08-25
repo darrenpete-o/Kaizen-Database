@@ -29,6 +29,11 @@ jobs:
       - name: Install dbdiagram CLI
         run: npm install -g dbdiagram
 
+      - name: Check dbdiagram authentication options
+        run: |
+          dbdiagram auth --help
+          dbdiagram tokens --help
+
       - name: Login to dbdiagram.io
         run: |
           dbdiagram login --email ${{ secrets.DBDIAGRAM_EMAIL }} --password ${{ secrets.DBDIAGRAM_PASSWORD }}
