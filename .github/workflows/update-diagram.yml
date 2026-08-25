@@ -29,6 +29,40 @@ jobs:
       - name: Install dbdiagram CLI
         run: npm install -g dbdiagram
 
+      - name: Login to dbdiagram.io
+        run: |
+          dbdiagram login --email ${{ secrets.DBDIAGRAM_EMAIL }} --password ${{ secrets.DBDIAGRAM_PASSWORD }}
+      
+      - name: Generate and save token
+        run: |
+          # Generate token and save it for future runs
+          dbdiagram tokens generate --name "GitHub Actions Token" --save
+          # Extract token for use in this run
+          TOKEN=$(dbdiagram tokens list | grep "GitHub Actions Token" | awk '{print $NF}')
+          echo "DBDIAGRAM_TOKEN=$TOKEN" >> $GITHUB_ENV
+
+      - name: Initialize project
+        run: |
+          dbdiagram init --entry schema.dbml --diagram-id ${{ secrets.DIAGRAM_ID }}
+
+      - name: Push initial DBML
+        run: |
+          dbdiagram push schema.dbml --diagram-id ${{ secrets.DIAGRAM_ID }}
+        env:
+          DBDIAGRAM_TOKEN: ${{ env.DBDIAGRAM_TOKEN }}
+
+      - name: Pull companion file
+        run: |
+          dbdiagram pull --diagram-id ${{ secrets.DIAGRAM_ID }}
+
+      - name: Commit companion file
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add .dbdiagram/ || true
+          git commit -m "Initial dbdiagram companion file" || echo "No changes to commit"
+          git push
+
       - name: Verify OpenAI installation
         run: |
           python -c "import openai; print(f'✅ OpenAI version: {openai.__version__}')"
