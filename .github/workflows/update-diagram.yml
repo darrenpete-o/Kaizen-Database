@@ -19,7 +19,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install pyodbc pymssql openai pandas openpyxl google-genai cerebras-cloud-sdk
           echo "✅ Installed packages:"
-          pip list | findstr "pyodbc pymssql openai pandas openpyxl google-genai cerebras-cloud-sdk"  # Windows uses findstr, not grep
+          pip list | findstr "pyodbc pymssql openai pandas openpyxl google-genai cerebras-cloud-sdk"
 
       - name: Verify OpenAI installation
         run: |
@@ -41,7 +41,7 @@ jobs:
       # Upload baseline for future runs - ONLY if script succeeded
       - name: Upload baseline for next run
         uses: actions/upload-artifact@v4
-        if: success()  # Only upload if the monitoring script succeeded
+        if: success()
         with:
           name: database-baseline
           path: database_baseline.json
@@ -49,7 +49,7 @@ jobs:
       # Upload Excel report - ALWAYS (even if script had warnings)
       - name: Upload Excel Report
         uses: actions/upload-artifact@v4
-        if: always()  # Always upload, even if script fails
+        if: always()
         with:
           name: database-changes
           path: database_changes_*.xlsx
@@ -97,37 +97,92 @@ jobs:
           python naming_standard_restrictions.py
         continue-on-error: true
 
-      - name: Upload DBML to dbdiagram
-        timeout-minutes: 2
-        env:
-          API_TOKEN: ${{ secrets.DBDIAGRAM_API_TOKEN }}
-          DIAGRAM_ID: ${{ secrets.DIAGRAM_ID }}
-        shell: powershell
+      # ================================================
+      # NEW: dbdiagram CLI STEPS (The ones that worked in PowerShell)
+      # ================================================
+
+      - name: Install dbdiagram CLI
         run: |
-          Write-Host "Reading DBML file..."
-    
-          $filePath = "C:\actions-runner\_work\Kaizen-Database\Kaizen-Database\schema_diagram_with_aliases_as_notes.dbml"
-    
-          if (-not (Test-Path $filePath)) {
-            Write-Host "File not found!"
-            exit 1
+          Write-Host "Installing dbdiagram CLI..."
+          npm install -g dbdiagram
+          dbdiagram --version
+        shell: powershell
+
+      - name: Rename DBML file to schema.dbml
+        run: |
+          Write-Host "Renaming DBML file to schema.dbml..."
+          Copy-Item "schema_diagram_with_aliases_as_notes.dbml" "schema.dbml" -Force
+          Write-Host "✅ schema.dbml created"
+        shell: powershell
+
+      - name: Step 1 - Pull first (get latest layout)
+        run: |
+          Write-Host "📥 Pulling latest layout from dbdiagram.io..."
+          dbdiagram pull --diagram-id ${{ secrets.DIAGRAM_ID }} -o schema.dbml
+          Write-Host "✅ Layout pulled successfully"
+        shell: powershell
+        env:
+          DBDIAGRAM_TOKEN: ${{ secrets.DBDIAGRAM_API_TOKEN }}
+
+      - name: Step 2 - Verify companion file exists
+        run: |
+          Write-Host "Checking companion file..."
+          if (Test-Path "schema.dbdiagram") {
+            $size = (Get-Item "schema.dbdiagram").Length
+            Write-Host "✅ schema.dbdiagram exists. Size: $size bytes"
+          } else {
+            Write-Host "⚠️ schema.dbdiagram not found - will be created on push"
           }
-    
-          $content = [System.IO.File]::ReadAllText($filePath)
-          Write-Host "Read $($content.Length) characters"
-          Write-Host "Uploading to dbdiagram.io..."
-    
-          $body = @{
-            name = "Kaizen Database Schema Diagram"
-            content = $content
-          } | ConvertTo-Json -Depth 10
-    
-          $headers = @{
-            "dbdiagram-access-token" = $env:API_TOKEN
-            "Content-Type" = "application/json"
+        shell: powershell
+
+      - name: Step 3 - Push updated DBML (preserves positions)
+        run: |
+          Write-Host "📤 Pushing updated schema to dbdiagram.io..."
+          dbdiagram push schema.dbml --diagram-id ${{ secrets.DIAGRAM_ID }}
+          Write-Host "✅ Schema pushed successfully"
+        shell: powershell
+        env:
+          DBDIAGRAM_TOKEN: ${{ secrets.DBDIAGRAM_API_TOKEN }}
+
+      - name: Step 4 - Pull again (capture any layout changes)
+        run: |
+          Write-Host "📥 Capturing final layout..."
+          dbdiagram pull --diagram-id ${{ secrets.DIAGRAM_ID }} -o schema.dbml
+          Write-Host "✅ Layout captured successfully"
+        shell: powershell
+        env:
+          DBDIAGRAM_TOKEN: ${{ secrets.DBDIAGRAM_API_TOKEN }}
+
+      - name: Step 5 - Commit companion file
+        run: |
+          Write-Host "💾 Committing companion file to repository..."
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          
+          if (Test-Path "schema.dbdiagram") {
+            git add schema.dbdiagram
+            git diff --cached --quiet
+            if ($LASTEXITCODE -ne 0) {
+              git commit -m "chore: update dbdiagram companion file with layout positions [skip ci]"
+              git push
+              Write-Host "✅ Companion file committed and pushed"
+            } else {
+              Write-Host "ℹ️ No changes to companion file"
+            }
+          } else {
+            Write-Host "ℹ️ schema.dbdiagram not found - nothing to commit"
           }
-    
-          $response = Invoke-RestMethod -Method Put -Uri "https://api.dbdiagram.io/v1/diagrams/$env:DIAGRAM_ID" -Headers $headers -Body $body -TimeoutSec 30
-    
-          Write-Host "Upload successful!"
-          Write-Host "View your diagram at: https://dbdiagram.io/d/$env:DIAGRAM_ID"
+        shell: powershell
+
+      - name: Step 6 - Verify deployment
+        run: |
+          Write-Host "✅ Deployment complete!"
+          Write-Host "View your diagram at: https://dbdiagram.io/d/${{ secrets.DIAGRAM_ID }}"
+          Write-Host ""
+          Write-Host "📋 Companion file info:"
+          if (Test-Path "schema.dbdiagram") {
+            Get-Item "schema.dbdiagram" | Format-List Name, Length, LastWriteTime
+          } else {
+            Write-Host "⚠️ No companion file found"
+          }
+        shell: powershell
