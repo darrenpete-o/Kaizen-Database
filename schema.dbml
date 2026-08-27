@@ -1,5 +1,5 @@
 Table dbo.FactorialEmployees {
-  note: "Employee Personnel Profiles"
+  note: "Employee Compliance Records"
   id int
   first_name nvarchar(max)
   last_name nvarchar(max)
@@ -177,7 +177,7 @@ Table dbo.casestudies_core {
 }
 
 Table dbo.casestudies_db {
-  note: "Project Case Studies"
+  note: "Employee Case Studies"
   lid PK
   dtedit datetime2
   dtinsert datetime2
@@ -242,7 +242,7 @@ Table dbo.co2_emission_general_types {
 }
 
 Table dbo.co2_emission_reasons {
-  note: "Emission Reason Categories"
+  note: "CO2 Emission Categories"
   lid PK
   str_label nvarchar(510)
 }
@@ -264,7 +264,7 @@ Table dbo.co2_emissions_factors_per_country {
 }
 
 Table dbo.co2_expenses_metadata {
-  note: "Route Emission Analytics"
+  note: "Carbon Emission Expenses"
   lid PK
   flt_distance float
   str_type_of_train nvarchar(100)
@@ -284,7 +284,7 @@ Table dbo.co2_expenses_metadata {
 }
 
 Table dbo.co2_general_type_unity_map {
-  note: "CO2 Emission Type Mapping"
+  note: "CO2 Unit Mappings"
   lid PK
   general_type_id int
   unity_id int
@@ -298,7 +298,7 @@ Table dbo.co2_generaltype_specific_map {
 }
 
 Table dbo.co2_po_invoices_metadata {
-  note: "CO2 Emission Route Analytics"
+  note: "CO2 Emission Invoices"
   lid PK
   flt_distance float
   str_type_of_train nvarchar(100)
@@ -325,7 +325,7 @@ Table dbo.co2_reason_general_map {
 }
 
 Table dbo.co2_single_emissions {
-  note: "Project Carbon Emissions"
+  note: "Carbon Emission Expenses"
   lid PK
   luserid bigint
   luseridinsert bigint
@@ -347,7 +347,7 @@ Table dbo.co2_single_emissions {
 }
 
 Table dbo.co2_unities {
-  note: "CO2 Emission Units"
+  note: "CO2 Measurement Units"
   lid PK
   str_unity nvarchar(510)
 }
@@ -374,7 +374,7 @@ Table dbo.countries_iso {
 }
 
 Table dbo.cvs_academics {
-  note: "Employee Academic Credentials"
+  note: "Academic Qualifications"
   lid PK
   fklid int
   luserid int
@@ -428,7 +428,7 @@ Table dbo.cvs_languages {
 }
 
 Table dbo.cvs_personal_data {
-  note: "Candidate Application Profiles"
+  note: "Erasmus Candidate Profiles"
   lid PK
   luserid int
   luseridinsert int
@@ -456,7 +456,7 @@ Table dbo.cvs_personal_data {
 }
 
 Table dbo.cvs_professional_experience {
-  note: "Employment History"
+  note: "Professional Work History"
   lid PK
   fklid int
   luserid int
@@ -478,7 +478,7 @@ Table dbo.day_lid_matrix_rate_table {
 }
 
 Table dbo.dsobject {
-  note: "Employee Resource Objects"
+  note: "Employee Directory Objects"
   lid PK
   lcontainerid int
   strname nvarchar(508)
@@ -496,7 +496,7 @@ Table dbo.dsobject {
 }
 
 Table dbo.dsuser {
-  note: "User Account Profiles"
+  note: "Employee User Accounts"
   lid PK
   lboss int
   strlogin nvarchar(508)
@@ -712,7 +712,7 @@ Table dbo.expenses_reviewers {
 }
 
 Table dbo.extracted_tolls {
-  note: "Toll Route Expenses"
+  note: "Toll Trip Logs"
   lid PK
   str_starting_zip nvarchar(510)
   str_starting_city nvarchar(510)
@@ -1040,7 +1040,7 @@ Table dbo.kim_settings {
 }
 
 Table dbo.kim_team_members {
-  note: "Employee Membership Levels"
+  note: "Employee Membership Hierarchy"
   lid PK
   fklid int
   lemployee_lid int
@@ -1053,7 +1053,7 @@ Table dbo.kim_team_members {
 }
 
 Table dbo.kim_team_members_history_metadata {
-  note: "Team Assignment History"
+  note: "Employee Team Transitions"
   lid PK
   dtedit datetime2
   dtinsert datetime2
@@ -1184,7 +1184,7 @@ Table dbo.planner_reviewers {
 }
 
 Table dbo.po_invoices {
-  note: "Purchase Order Invoices"
+  note: "Supplier Purchase Invoices"
   lid PK
   luserid int
   luseridinsert int
@@ -1271,7 +1271,7 @@ Table dbo.project_invoicing_project {
 }
 
 Table dbo.projects_country_deliver_days {
-  note: "Country Delivery Lead Times"
+  note: "Country Delivery Timelines"
   lid PK
   fklid int
   luserid int
@@ -1310,7 +1310,7 @@ Table dbo.projects_starting_points_km {
 }
 
 Table dbo.projects_workshops {
-  note: "Workshop Project Milestones"
+  note: "Workshop Performance Metrics"
   lid PK
   fklid int
   luserid int
@@ -1332,7 +1332,7 @@ Table dbo.projects_workshops {
 }
 
 Table dbo.rates_matrix {
-  note: "Consultant Billing Rates"
+  note: "Project Invoice Rates"
   lid PK
   luserid int
   luseridinsert int
@@ -1401,7 +1401,7 @@ Table dbo.soft_skills {
 }
 
 Table dbo.starting_point_tolls_details {
-  note: "Route Toll Expenses"
+  note: "Route Toll Configurations"
   lid PK
   str_starting_zip nvarchar(510)
   str_starting_city nvarchar(510)
@@ -1427,7 +1427,7 @@ Table dbo.starting_point_tolls_details {
 }
 
 Table dbo.starting_point_tolls_details_test {
-  note: "Route Toll Expenses"
+  note: "Route Toll Metrics"
   lid int
   str_starting_zip nvarchar(510)
   str_starting_city nvarchar(510)
@@ -1723,7 +1723,7 @@ Table dbo.website_products_sectors {
 }
 
 Table dbo.website_products_solutions {
-  note: "Employee Product Assignments"
+  note: "Employee Assignment Records"
   lid PK
   fklid int
   luserid int
@@ -1888,7 +1888,7 @@ Table dbo.xdatagroup06b81eb6 {
 }
 
 Table dbo.xdatagroup17bd9dde {
-  note: "Employee Audit Logs"
+  note: "Employee Account Registry"
   lid PK
   fklid int
   luserid int
@@ -1932,7 +1932,7 @@ Table dbo.xdatagroup1cd09765 {
 }
 
 Table dbo.xdatagroup353ea8c1 {
-  note: "Employee Audit Logs"
+  note: "Employee Account Registry"
   lid PK
   fklid int
   luserid int
@@ -2057,7 +2057,7 @@ Table dbo.xdatagroup455ae863 {
 }
 
 Table dbo.xdatagroup5a7e1860 {
-  note: "Revenue Expense Transactions"
+  note: "Revenue Expense Ledger"
   lid PK
   luserid int
   luseridinsert int
@@ -2072,7 +2072,7 @@ Table dbo.xdatagroup5a7e1860 {
 }
 
 Table dbo.xdatagroup5f99096f {
-  note: "Consultant Assignment Periods"
+  note: "Consultant Assignment History"
   lid PK
   luserid int
   luseridinsert int
@@ -2202,7 +2202,7 @@ Table dbo.xdatagroup8559bb4d {
 }
 
 Table dbo.xdatagroup86fd9c45 {
-  note: "Employee Audit Logs"
+  note: "Employee Account Registry"
   lid PK
   fklid int
   luserid int
@@ -2408,7 +2408,7 @@ Table dbo.xdatagroupc0def29a {
 }
 
 Table dbo.xdatagroupd13d0714 {
-  note: "Xdatagroupd13D0714"
+  note: "Consultant Pricing Records"
   fklid int
   lid PK
   dtedit datetime2
@@ -2574,7 +2574,7 @@ Table dbo.xdatagroupdc03d9cd {
 }
 
 Table dbo.xdatagroupde529862 {
-  note: "Employee Audit Logs"
+  note: "Employee Account Registry"
   lid PK
   fklid int
   luserid int
@@ -2865,7 +2865,7 @@ Table dbo.xtable423058f8 {
 }
 
 Table dbo.xtablee1abc02f {
-  note: "Employee Company Contacts"
+  note: "Employee Contact Addresses"
   lid PK
   dtedit datetime2
   luserid int
@@ -2888,99 +2888,99 @@ Table dbo.xtablee1abc02f {
 
 // Relationships
 
+Ref: dbo.xdatagroupd8b41609.ref_a8b1e944 > dbo.xdatagroup453e0d78.lid
+Ref: dbo.co2_expenses_metadata.ref_co2_single_emission > dbo.co2_single_emissions.lid
+Ref: dbo.co2_expenses_metadata.fklid > dbo.xdatagroupf957bc73.lid
+Ref: dbo.withholding_taxes.fklid > dbo.xdatagroupbbea6600.lid
+Ref: dbo.withholding_taxes.ref_f1c82cb6 > dbo.xdatagroup6bfb60a3.lid
+Ref: dbo.consultants_hourly_rate.fklid > dbo.xtable423058f8.lid
+Ref: dbo.invoice_payments.fklid > dbo.xdatagroup453e0d78.lid
+Ref: dbo.kim_team_members.fklid > dbo.kim_teams.lid
+Ref: dbo.kim_team_members.lemployee_lid > dbo.xdatagroupda72b87b.lid
+Ref: dbo.expenses_reject_reasons_rel.standard_lid > dbo.expenses_reject_reasons_standard.lid
+Ref: dbo.expenses_reject_reasons_rel.specific_lid > dbo.expenses_reject_reasons_specific.lid
+Ref: dbo.xdatagroup86fd9c45.fklid > dbo.casestudies_db.lid
+Ref: dbo.xdatagroup056d1a11.ref_21cf433f > dbo.xdatagroupda72b87b.lid
+Ref: dbo.xdatagroup056d1a11.fklid > dbo.xdatagroupc0def29a.lid
+Ref: dbo.xdatagroup056d1a11.ref_81009404 > dbo.xdatagroupf3be2299.lid
+Ref: dbo.receipts_emails_expenses.ref_expense > dbo.xdatagroupf957bc73.lid
+Ref: dbo.xdatagroup17bd9dde.fklid > dbo.casestudies_db.lid
+Ref: dbo.projects_workshops.ref_ceb9881a > dbo.kaizen_event_workshops.lid
+Ref: dbo.rates_matrix.ref_8961cb0a > dbo.parent_rate_matrix.lid
+Ref: dbo.rates_matrix.ref_9dd190f6 > dbo.xdatagroup74a2b33e.lid
+Ref: dbo.projects_country_deliver_days.fklid > dbo.xtable423058f8.lid
+Ref: dbo.xdatagroupb352e99b.ref_3563d402 > dbo.xtable423058f8.lid
+Ref: dbo.xdatagroupb352e99b.ref_fcf11ec1 > dbo.xdatagroupd368540c.lid
+Ref: dbo.xdatagroupb352e99b.fklid > dbo.xdatagroup06b81eb6.lid
+Ref: dbo.extracted_tolls.fklid > dbo.starting_point_tolls_details.lid
+Ref: dbo.users_licenses.fklid > dbo.xdatagroupda72b87b.lid
+Ref: dbo.users_licenses.l_project_lid > dbo.xtable423058f8.lid
+Ref: dbo.users_licenses.l_id > dbo.office_licenses.lid
+Ref: dbo.hubspot_merge_group_companies.fklid > dbo.hubspot_merge_groups.lid
+Ref: dbo.excluded_days.ref_e21519c4 > dbo.xdatagroupd8b41609.lid
+Ref: dbo.website_products_solutions.l_id > dbo.website_solutions.lid
+Ref: dbo.website_products_solutions.fklid > dbo.website_products.lid
+Ref: dbo.xdatagroup455ae863.fklid > dbo.xtable423058f8.lid
+Ref: dbo.co2_general_type_unity_map.unity_id > dbo.co2_unities.lid
+Ref: dbo.co2_general_type_unity_map.general_type_id > dbo.co2_emission_general_types.lid
+Ref: dbo.xdatagroup1cbaedf3.ref_f1ba868c > dbo.xtable423058f8.lid
+Ref: dbo.xdatagroup1cbaedf3.ref_3315e1c6 > dbo.xdatagroup453e0d78.lid
+Ref: dbo.travelperkcostcenter.fklid > dbo.xtable423058f8.lid
+Ref: dbo.xdatagroupde529862.fklid > dbo.casestudies_db.lid
+Ref: dbo.planner_configlink.ref_385db616 > dbo.dsuser.lid
+Ref: dbo.associations.employee_lid > dbo.xdatagroupda72b87b.lid
+Ref: dbo.associations.association_fklid > dbo.association_names.lid
+Ref: dbo.helpdesk_activity.fklid > dbo.helpdesk_ticket.lid
 Ref: dbo.xdatagroup453e0d78.l_resumebyaccount > dbo.xdatagroup6bfb60a3.lid
 Ref: dbo.xdatagroup453e0d78.ref_f57e8322 > dbo.xdatagroupb42ad6bd.lid
 Ref: dbo.xdatagroup453e0d78.ref_05e7a867 > dbo.xdatagroup74a2b33e.lid
 Ref: dbo.xdatagroup453e0d78.ref_2495e2e9 > dbo.xtable423058f8.lid
-Ref: dbo.co2_general_type_unity_map.unity_id > dbo.co2_unities.lid
-Ref: dbo.co2_general_type_unity_map.general_type_id > dbo.co2_emission_general_types.lid
-Ref: dbo.xtable423058f8.ref_071edd0d > dbo.xdatagroup3cf9152f.lid
-Ref: dbo.xtable423058f8.ref_15cf77be > dbo.xdatagroup74a2b33e.lid
-Ref: dbo.xtable423058f8.ref_invoiced_by > dbo.xtable423058f8.lid
-Ref: dbo.xtable423058f8.ref_startingpointlid > dbo.bu_rsu_starting_points.lid
-Ref: dbo.projects_starting_points_km.ref_startingpoints > dbo.bu_rsu_starting_points.lid
-Ref: dbo.projects_starting_points_km.fklid > dbo.xtable423058f8.lid
-Ref: dbo.associations.employee_lid > dbo.xdatagroupda72b87b.lid
-Ref: dbo.associations.association_fklid > dbo.association_names.lid
-Ref: dbo.project_business_areas.l_id > dbo.business_areas.lid
-Ref: dbo.project_business_areas.fklid > dbo.xtable423058f8.lid
-Ref: dbo.xdatagroup1cbaedf3.ref_f1ba868c > dbo.xtable423058f8.lid
-Ref: dbo.xdatagroup1cbaedf3.ref_3315e1c6 > dbo.xdatagroup453e0d78.lid
-Ref: dbo.projects_country_deliver_days.fklid > dbo.xtable423058f8.lid
-Ref: dbo.planner_configlink.ref_385db616 > dbo.dsuser.lid
-Ref: dbo.xdatagroup06b81eb6.ref_f785cd44 > dbo.xtable423058f8.lid
-Ref: dbo.xdatagroup06b81eb6.ref_44426b54 > dbo.xdatagroupd368540c.lid
-Ref: dbo.xdatagroupb352e99b.ref_3563d402 > dbo.xtable423058f8.lid
-Ref: dbo.xdatagroupb352e99b.ref_fcf11ec1 > dbo.xdatagroupd368540c.lid
-Ref: dbo.xdatagroupb352e99b.fklid > dbo.xdatagroup06b81eb6.lid
-Ref: dbo.kim_team_members.fklid > dbo.kim_teams.lid
-Ref: dbo.kim_team_members.lemployee_lid > dbo.xdatagroupda72b87b.lid
-Ref: dbo.xdatagroup74a2b33e.ref_rsu > dbo.xdatagroup74a2b33e.lid
-Ref: dbo.rates_matrix.ref_8961cb0a > dbo.parent_rate_matrix.lid
-Ref: dbo.rates_matrix.ref_9dd190f6 > dbo.xdatagroup74a2b33e.lid
-Ref: dbo.xdatagroupd8b41609.ref_a8b1e944 > dbo.xdatagroup453e0d78.lid
-Ref: dbo.xdatagroup86fd9c45.fklid > dbo.casestudies_db.lid
-Ref: dbo.website_products_sectors.l_id > dbo.website_sectors.lid
-Ref: dbo.website_products_sectors.fklid > dbo.website_products.lid
+Ref: dbo.website_products_sub_sector.l_id > dbo.website_sub_sector.lid
+Ref: dbo.website_products_sub_sector.fklid > dbo.website_products.lid
+Ref: dbo.xdatagroup353ea8c1.l_id > dbo.ki_employee_team.lid
+Ref: dbo.xdatagroup353ea8c1.fklid > dbo.xdatagroupda72b87b.lid
+Ref: dbo.xdatagroup3af27936.ref_46984757 > dbo.casestudies_mainsectors.lid
+Ref: dbo.co2_generaltype_specific_map.general_type_id > dbo.co2_emission_general_types.lid
+Ref: dbo.co2_generaltype_specific_map.specific_type_id > dbo.co2_emission_specific_types.lid
 Ref: dbo.xdatagroupf957bc73.ref_planner_lid > dbo.xdatagroupd8b41609.lid
 Ref: dbo.xdatagroupf957bc73.ref_6379178d > dbo.xdatagroup453e0d78.lid
 Ref: dbo.xdatagroupf957bc73.ref_6704352a > dbo.xdatagroupdc03d9cd.lid
 Ref: dbo.xdatagroupf957bc73.ref_tolls_expense > dbo.xdatagroupf957bc73.lid
-Ref: dbo.helpdesk_sub_category.fklid > dbo.helpdesk_scopes.lid
-Ref: dbo.new_kim_employees.fklid > dbo.xdatagroup74a2b33e.lid
-Ref: dbo.cvs_academics.fklid > dbo.cvs_personal_data.lid
+Ref: dbo.projects_starting_points_km.ref_startingpoints > dbo.bu_rsu_starting_points.lid
+Ref: dbo.projects_starting_points_km.fklid > dbo.xtable423058f8.lid
+Ref: dbo.xdatagroup74a2b33e.ref_rsu > dbo.xdatagroup74a2b33e.lid
 Ref: dbo.co2_po_invoices_metadata.ref_co2_single_emission > dbo.co2_single_emissions.lid
 Ref: dbo.co2_po_invoices_metadata.fklid > dbo.po_invoices.lid
-Ref: dbo.employee_member_type.l_id > dbo.member_types.lid
-Ref: dbo.employee_member_type.fklid > dbo.xdatagroupda72b87b.lid
-Ref: dbo.helpdesk_activity.fklid > dbo.helpdesk_ticket.lid
-Ref: dbo.extracted_tolls.fklid > dbo.starting_point_tolls_details.lid
-Ref: dbo.xdatagroup6b5f2644.fklid > dbo.xdatagroup06b81eb6.lid
-Ref: dbo.xdatagroupc0def29a.fklid > dbo.xdatagroup8bda859c.lid
-Ref: dbo.xdatagroup455ae863.fklid > dbo.xtable423058f8.lid
-Ref: dbo.excluded_days.ref_e21519c4 > dbo.xdatagroupd8b41609.lid
-Ref: dbo.projects_workshops.ref_ceb9881a > dbo.kaizen_event_workshops.lid
-Ref: dbo.co2_single_emissions.ref_expense > dbo.xdatagroupf957bc73.lid
-Ref: dbo.co2_reason_general_map.reason_id > dbo.co2_emission_reasons.lid
-Ref: dbo.co2_reason_general_map.general_id > dbo.co2_emission_general_types.lid
-Ref: dbo.xdatagroup44427259.fklid > dbo.carerepdata.lid
-Ref: dbo.hubspot_merge_group_companies.fklid > dbo.hubspot_merge_groups.lid
-Ref: dbo.xdatagroup3af27936.ref_46984757 > dbo.casestudies_mainsectors.lid
-Ref: dbo.xdatagroupda72b87b.ref_startingpointlid > dbo.bu_rsu_starting_points.lid
-Ref: dbo.invoice_payments.fklid > dbo.xdatagroup453e0d78.lid
-Ref: dbo.receipts_emails_expenses.ref_expense > dbo.xdatagroupf957bc73.lid
-Ref: dbo.surveys_tracking.connected_day > dbo.xdatagroupd8b41609.lid
-Ref: dbo.surveys_tracking.fklid > dbo.ki_surveys.lid
-Ref: dbo.users_licenses.fklid > dbo.xdatagroupda72b87b.lid
-Ref: dbo.users_licenses.l_project_lid > dbo.xtable423058f8.lid
-Ref: dbo.users_licenses.l_id > dbo.office_licenses.lid
-Ref: dbo.website_products_sub_sector.l_id > dbo.website_sub_sector.lid
-Ref: dbo.website_products_sub_sector.fklid > dbo.website_products.lid
-Ref: dbo.xdatagroup01c77d95.fklid > dbo.xtable423058f8.lid
-Ref: dbo.xdatagroup01c77d95.ref_b0e40b92 > dbo.xdatagroup74a2b33e.lid
+Ref: dbo.website_products_sectors.l_id > dbo.website_sectors.lid
+Ref: dbo.website_products_sectors.fklid > dbo.website_products.lid
 Ref: dbo.xdatagroupf3be2299.fklid > dbo.xdatagroup453e0d78.lid
 Ref: dbo.xdatagroupf3be2299.ref_813981e4 > dbo.xdatagroup6bfb60a3.lid
-Ref: dbo.expenses_reject_reasons_rel.standard_lid > dbo.expenses_reject_reasons_standard.lid
-Ref: dbo.expenses_reject_reasons_rel.specific_lid > dbo.expenses_reject_reasons_specific.lid
-Ref: dbo.withholding_taxes.fklid > dbo.xdatagroupbbea6600.lid
-Ref: dbo.withholding_taxes.ref_f1c82cb6 > dbo.xdatagroup6bfb60a3.lid
-Ref: dbo.xdatagroup056d1a11.ref_21cf433f > dbo.xdatagroupda72b87b.lid
-Ref: dbo.xdatagroup056d1a11.fklid > dbo.xdatagroupc0def29a.lid
-Ref: dbo.xdatagroup056d1a11.ref_81009404 > dbo.xdatagroupf3be2299.lid
-Ref: dbo.co2_generaltype_specific_map.general_type_id > dbo.co2_emission_general_types.lid
-Ref: dbo.co2_generaltype_specific_map.specific_type_id > dbo.co2_emission_specific_types.lid
-Ref: dbo.xdatagroupde529862.fklid > dbo.casestudies_db.lid
-Ref: dbo.xdatagroup353ea8c1.l_id > dbo.ki_employee_team.lid
-Ref: dbo.xdatagroup353ea8c1.fklid > dbo.xdatagroupda72b87b.lid
-Ref: dbo.travelperkcostcenter.fklid > dbo.xtable423058f8.lid
-Ref: dbo.website_products_solutions.l_id > dbo.website_solutions.lid
-Ref: dbo.website_products_solutions.fklid > dbo.website_products.lid
-Ref: dbo.consultants_hourly_rate.fklid > dbo.xtable423058f8.lid
+Ref: dbo.xdatagroup06b81eb6.ref_f785cd44 > dbo.xtable423058f8.lid
+Ref: dbo.xdatagroup06b81eb6.ref_44426b54 > dbo.xdatagroupd368540c.lid
+Ref: dbo.employee_member_type.l_id > dbo.member_types.lid
+Ref: dbo.employee_member_type.fklid > dbo.xdatagroupda72b87b.lid
+Ref: dbo.xtable423058f8.ref_071edd0d > dbo.xdatagroup3cf9152f.lid
+Ref: dbo.xtable423058f8.ref_15cf77be > dbo.xdatagroup74a2b33e.lid
+Ref: dbo.xtable423058f8.ref_invoiced_by > dbo.xtable423058f8.lid
+Ref: dbo.xtable423058f8.ref_startingpointlid > dbo.bu_rsu_starting_points.lid
+Ref: dbo.project_business_areas.l_id > dbo.business_areas.lid
+Ref: dbo.project_business_areas.fklid > dbo.xtable423058f8.lid
+Ref: dbo.new_kim_employees.fklid > dbo.xdatagroup74a2b33e.lid
+Ref: dbo.cvs_academics.fklid > dbo.cvs_personal_data.lid
+Ref: dbo.helpdesk_sub_category.fklid > dbo.helpdesk_scopes.lid
+Ref: dbo.surveys_tracking.connected_day > dbo.xdatagroupd8b41609.lid
+Ref: dbo.surveys_tracking.fklid > dbo.ki_surveys.lid
+Ref: dbo.co2_reason_general_map.reason_id > dbo.co2_emission_reasons.lid
+Ref: dbo.co2_reason_general_map.general_id > dbo.co2_emission_general_types.lid
+Ref: dbo.xdatagroupc0def29a.fklid > dbo.xdatagroup8bda859c.lid
 Ref: dbo.xdatagroupe9a240bb.ref_c0b4cb5a > dbo.xdatagroup453e0d78.lid
 Ref: dbo.xdatagroupe9a240bb.fklid > dbo.xtable423058f8.lid
-Ref: dbo.xdatagroup17bd9dde.fklid > dbo.casestudies_db.lid
-Ref: dbo.co2_expenses_metadata.ref_co2_single_emission > dbo.co2_single_emissions.lid
-Ref: dbo.co2_expenses_metadata.fklid > dbo.xdatagroupf957bc73.lid
+Ref: dbo.xdatagroupda72b87b.ref_startingpointlid > dbo.bu_rsu_starting_points.lid
+Ref: dbo.xdatagroup6b5f2644.fklid > dbo.xdatagroup06b81eb6.lid
+Ref: dbo.xdatagroup44427259.fklid > dbo.carerepdata.lid
+Ref: dbo.xdatagroup01c77d95.fklid > dbo.xtable423058f8.lid
+Ref: dbo.xdatagroup01c77d95.ref_b0e40b92 > dbo.xdatagroup74a2b33e.lid
+Ref: dbo.co2_single_emissions.ref_expense > dbo.xdatagroupf957bc73.lid
 Ref: dbo.co2_single_emissions.str_country > dbo.co2_emissions_factors_per_country.str_country
 Ref: dbo.cvs_personal_data.lid > dbo.cvs_languages.fklid
 Ref: dbo.invoices_connections.l_original > dbo.xdatagroup453e0d78.lid
@@ -3251,10 +3251,15 @@ TableGroup "Companies & Organization" [color: #2C3E50]{
   dbo.association_names
   dbo.associations
   dbo.business_areas
+  dbo.employees_with_connected_countries_mat
+  dbo.factorial_employees_teams_clean_mat
+  dbo.ki_employee_team
+  dbo.kim_team_members
+  dbo.kim_team_members_history_metadata
+  dbo.kim_teams
   dbo.xdatagroup1cd09765
   dbo.xdatagroup74a2b33e
   dbo.xdatagroupb508677a
-  dbo.xtablee1abc02f
 }
 
 DiagramView "00 - Companies & Organization"{
@@ -3262,10 +3267,15 @@ DiagramView "00 - Companies & Organization"{
     dbo.association_names
     dbo.associations
     dbo.business_areas
+    dbo.employees_with_connected_countries_mat
+    dbo.factorial_employees_teams_clean_mat
+    dbo.ki_employee_team
+    dbo.kim_team_members
+    dbo.kim_team_members_history_metadata
+    dbo.kim_teams
     dbo.xdatagroup1cd09765
     dbo.xdatagroup74a2b33e
     dbo.xdatagroupb508677a
-    dbo.xtablee1abc02f
   }
   TableGroups {"Companies & Organization"}
 }
@@ -3273,6 +3283,10 @@ DiagramView "00 - Companies & Organization"{
 //01 - Employees & Access
 TableGroup "Employees & Access" [color: #3498DB]{
   dbo.FactorialEmployees
+  dbo.casestudies_core
+  dbo.casestudies_db
+  dbo.casestudies_mainsectors
+  dbo.casestudies_product
   dbo.cvs_academics
   dbo.cvs_languages
   dbo.cvs_personal_data
@@ -3281,13 +3295,7 @@ TableGroup "Employees & Access" [color: #3498DB]{
   dbo.dsuser
   dbo.dsuser_ad
   dbo.employee_member_type
-  dbo.employees_with_connected_countries_mat
-  dbo.factorial_employees_teams_clean_mat
   dbo.fast_username_lid_mat
-  dbo.ki_employee_team
-  dbo.kim_team_members
-  dbo.kim_team_members_history_metadata
-  dbo.kim_teams
   dbo.member_types
   dbo.new_kim_employees
   dbo.outlook_sync_registrations
@@ -3295,12 +3303,21 @@ TableGroup "Employees & Access" [color: #3498DB]{
   dbo.user_sites_permissions
   dbo.users_licenses
   dbo.vbluser_mat
+  dbo.xdatagroup17bd9dde
+  dbo.xdatagroup353ea8c1
+  dbo.xdatagroup86fd9c45
   dbo.xdatagroupda72b87b
+  dbo.xdatagroupde529862
+  dbo.xtablee1abc02f
 }
 
 DiagramView "01 - Employees & Access"{
   tables {
     dbo.FactorialEmployees
+    dbo.casestudies_core
+    dbo.casestudies_db
+    dbo.casestudies_mainsectors
+    dbo.casestudies_product
     dbo.cvs_academics
     dbo.cvs_languages
     dbo.cvs_personal_data
@@ -3309,13 +3326,7 @@ DiagramView "01 - Employees & Access"{
     dbo.dsuser
     dbo.dsuser_ad
     dbo.employee_member_type
-    dbo.employees_with_connected_countries_mat
-    dbo.factorial_employees_teams_clean_mat
     dbo.fast_username_lid_mat
-    dbo.ki_employee_team
-    dbo.kim_team_members
-    dbo.kim_team_members_history_metadata
-    dbo.kim_teams
     dbo.member_types
     dbo.new_kim_employees
     dbo.outlook_sync_registrations
@@ -3323,17 +3334,18 @@ DiagramView "01 - Employees & Access"{
     dbo.user_sites_permissions
     dbo.users_licenses
     dbo.vbluser_mat
+    dbo.xdatagroup17bd9dde
+    dbo.xdatagroup353ea8c1
+    dbo.xdatagroup86fd9c45
     dbo.xdatagroupda72b87b
+    dbo.xdatagroupde529862
+    dbo.xtablee1abc02f
   }
   TableGroups {"Employees & Access"}
 }
 
 //02 - Projects
 TableGroup "Projects" [color: #E67E22]{
-  dbo.casestudies_core
-  dbo.casestudies_db
-  dbo.casestudies_mainsectors
-  dbo.casestudies_product
   dbo.ideas_collection
   dbo.project_business_areas
   dbo.project_consultant_cicles
@@ -3348,10 +3360,6 @@ TableGroup "Projects" [color: #E67E22]{
 
 DiagramView "02 - Projects"{
   tables {
-    dbo.casestudies_core
-    dbo.casestudies_db
-    dbo.casestudies_mainsectors
-    dbo.casestudies_product
     dbo.ideas_collection
     dbo.project_business_areas
     dbo.project_consultant_cicles
@@ -3368,29 +3376,21 @@ DiagramView "02 - Projects"{
 
 //03 - Planning & Delivery
 TableGroup "Planning & Delivery" [color: #1ABC9C]{
-  dbo.carerepdata
   dbo.excluded_days
-  dbo.kaizen_event_workshops
   dbo.planner_configlink
   dbo.planner_reviewers
   dbo.projects_country_deliver_days
-  dbo.projects_starting_points_km
   dbo.surveys_tracking
-  dbo.xdatagroup44427259
   dbo.xdatagroupd8b41609
 }
 
 DiagramView "03 - Planning & Delivery"{
   tables {
-    dbo.carerepdata
     dbo.excluded_days
-    dbo.kaizen_event_workshops
     dbo.planner_configlink
     dbo.planner_reviewers
     dbo.projects_country_deliver_days
-    dbo.projects_starting_points_km
     dbo.surveys_tracking
-    dbo.xdatagroup44427259
     dbo.xdatagroupd8b41609
   }
   TableGroups {"Planning & Delivery"}
@@ -3398,13 +3398,13 @@ DiagramView "03 - Planning & Delivery"{
 
 //04 - Expenses & Travel
 TableGroup "Expenses & Travel" [color: #F1C40F]{
+  dbo.extracted_tolls
   dbo.expense_log_not_changed_tracker
   dbo.expenses_log_track
   dbo.expenses_reject_reasons_rel
   dbo.expenses_reject_reasons_specific
   dbo.expenses_reject_reasons_standard
   dbo.expenses_reviewers
-  dbo.extracted_tolls
   dbo.receipts_emails_expenses
   dbo.routes_distances
   dbo.starting_point_tolls_details
@@ -3412,6 +3412,7 @@ TableGroup "Expenses & Travel" [color: #F1C40F]{
   dbo.travelperkcostcenter
   dbo.validated_routes
   dbo.xdatagroup06b81eb6
+  dbo.xdatagroup6b5f2644
   dbo.xdatagroupb352e99b
   dbo.xdatagroupdc03d9cd
   dbo.xdatagroupf957bc73
@@ -3419,13 +3420,13 @@ TableGroup "Expenses & Travel" [color: #F1C40F]{
 
 DiagramView "04 - Expenses & Travel"{
   tables {
+    dbo.extracted_tolls
     dbo.expense_log_not_changed_tracker
     dbo.expenses_log_track
     dbo.expenses_reject_reasons_rel
     dbo.expenses_reject_reasons_specific
     dbo.expenses_reject_reasons_standard
     dbo.expenses_reviewers
-    dbo.extracted_tolls
     dbo.receipts_emails_expenses
     dbo.routes_distances
     dbo.starting_point_tolls_details
@@ -3433,6 +3434,7 @@ DiagramView "04 - Expenses & Travel"{
     dbo.travelperkcostcenter
     dbo.validated_routes
     dbo.xdatagroup06b81eb6
+    dbo.xdatagroup6b5f2644
     dbo.xdatagroupb352e99b
     dbo.xdatagroupdc03d9cd
     dbo.xdatagroupf957bc73
@@ -3457,6 +3459,7 @@ TableGroup "Invoices & Finance" [color: #27AE60]{
   dbo.xdatagroup453e0d78
   dbo.xdatagroup5a7e1860
   dbo.xdatagroup6bfb60a3
+  dbo.xdatagroupd13d0714
   dbo.xdatagroupdf856a4c
   dbo.xdatagroupe9a240bb
   dbo.xdatagroupf3be2299
@@ -3479,6 +3482,7 @@ DiagramView "05 - Invoices & Finance"{
     dbo.xdatagroup453e0d78
     dbo.xdatagroup5a7e1860
     dbo.xdatagroup6bfb60a3
+    dbo.xdatagroupd13d0714
     dbo.xdatagroupdf856a4c
     dbo.xdatagroupe9a240bb
     dbo.xdatagroupf3be2299
@@ -3597,7 +3601,7 @@ TableGroup "Reference & Configuration" [color: #95A5A6]{
   dbo.utils_table
   dbo.xdatagroup3cf9152f
   dbo.xdatagroupbbea6600
-  dbo.xdatagroupb42ad6bd
+  dbo.xdatagroupd368540c
 }
 
 DiagramView "10 - Reference & Configuration"{
@@ -3609,7 +3613,7 @@ DiagramView "10 - Reference & Configuration"{
     dbo.utils_table
     dbo.xdatagroup3cf9152f
     dbo.xdatagroupbbea6600
-    dbo.xdatagroupb42ad6bd
+    dbo.xdatagroupd368540c
   }
   TableGroups {"Reference & Configuration"}
 }
@@ -3618,50 +3622,50 @@ DiagramView "10 - Reference & Configuration"{
 TableGroup "Audit & Integration" [color: #34495E]{
   dbo.changes_log
   dbo.table_log
-  dbo.xdatagroup17bd9dde
-  dbo.xdatagroup353ea8c1
-  dbo.xdatagroup86fd9c45
-  dbo.xdatagroupde529862
 }
 
 DiagramView "11 - Audit & Integration"{
   tables {
     dbo.changes_log
     dbo.table_log
-    dbo.xdatagroup17bd9dde
-    dbo.xdatagroup353ea8c1
-    dbo.xdatagroup86fd9c45
-    dbo.xdatagroupde529862
   }
   TableGroups {"Audit & Integration"}
 }
 
 //12 - Legacy or Unknown
 TableGroup "Legacy or Unknown" [color: #7F8C8D]{
+  dbo.carerepdata
+  dbo.kaizen_event_workshops
   dbo.ki_suggestion_box_sub_categories
   dbo.ki_surveys
+  dbo.projects_starting_points_km
   dbo.xdatagroup056d1a11
-  dbo.xdatagroup3af27936
+  dbo.xdatagroup44427259
+  dbo.xdatagroup455ae863
+  dbo.xdatagroup5f99096f
   dbo.xdatagroup8bda859c
   dbo.xdatagroup99370602
+  dbo.xdatagroupb42ad6bd
   dbo.xdatagroupb65314a3
   dbo.xdatagroupc0def29a
-  dbo.xdatagroupd13d0714
-  dbo.xdatagroupd368540c
 }
 
 DiagramView "12 - Legacy or Unknown"{
   tables {
+    dbo.carerepdata
+    dbo.kaizen_event_workshops
     dbo.ki_suggestion_box_sub_categories
     dbo.ki_surveys
+    dbo.projects_starting_points_km
     dbo.xdatagroup056d1a11
-    dbo.xdatagroup3af27936
+    dbo.xdatagroup44427259
+    dbo.xdatagroup455ae863
+    dbo.xdatagroup5f99096f
     dbo.xdatagroup8bda859c
     dbo.xdatagroup99370602
+    dbo.xdatagroupb42ad6bd
     dbo.xdatagroupb65314a3
     dbo.xdatagroupc0def29a
-    dbo.xdatagroupd13d0714
-    dbo.xdatagroupd368540c
   }
   TableGroups {"Legacy or Unknown"}
 }

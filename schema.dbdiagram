@@ -2860,6 +2860,12 @@
           "schemaName": "dbo",
           "x": 52.65012939130611,
           "y": 483.6948281228273
+        },
+        {
+          "name": "xdatagroupd368540c",
+          "schemaName": "dbo",
+          "x": 52.65012939130611,
+          "y": 598.6948281228273
         }
       ],
       "tableGroupCollapseStates": [
@@ -2878,20 +2884,20 @@
         {
           "name": "kaizen_event_workshops",
           "schemaName": "dbo",
-          "x": 791.5550580961549,
-          "y": 417.15037479159787
+          "x": 743.8827882818457,
+          "y": 421.3198403579643
         },
         {
           "name": "ki_suggestion_box_sub_categories",
           "schemaName": "dbo",
-          "x": 1556.7672630506495,
+          "x": 1173.7452331632676,
           "y": 421.3198403579643
         },
         {
           "name": "ki_surveys",
           "schemaName": "dbo",
-          "x": 1561.719330792078,
-          "y": 559.0060568745581
+          "x": 1630.761928454182,
+          "y": 429.1402184148879
         },
         {
           "name": "surveys_tracking",
@@ -2908,8 +2914,8 @@
         {
           "name": "xdatagroup056d1a11",
           "schemaName": "dbo",
-          "x": 1736.5126810110776,
-          "y": 821.5885347291427
+          "x": 1659.2507264844382,
+          "y": 732.8194805921529
         },
         {
           "name": "xdatagroup3af27936",
@@ -2920,32 +2926,32 @@
         {
           "name": "xdatagroup5f99096f",
           "schemaName": "dbo",
-          "x": 1252.2739937666727,
-          "y": 823.6732675123259
+          "x": 1128.9836407986315,
+          "y": 746.4113129856868
         },
         {
           "name": "xdatagroup8bda859c",
           "schemaName": "dbo",
-          "x": 791.5550580961549,
-          "y": 559.0060568745581
+          "x": 750.4582737734745,
+          "y": 564.6457359117984
         },
         {
           "name": "xdatagroup99370602",
           "schemaName": "dbo",
-          "x": 798.784780964794,
-          "y": 823.6732675123259
+          "x": 568.6427887577837,
+          "y": 746.4113129856868
         },
         {
           "name": "xdatagroupb65314a3",
           "schemaName": "dbo",
-          "x": 787.4939515965011,
-          "y": 411.19413337042545
+          "x": 386.38933660713974,
+          "y": 412.83800474333265
         },
         {
           "name": "xdatagroupc0def29a",
           "schemaName": "dbo",
-          "x": 1207.1343842257454,
-          "y": 610.1433836709125
+          "x": 1254.8066540400548,
+          "y": 596.9924126876549
         },
         {
           "name": "xdatagroupd368540c",
@@ -2956,14 +2962,14 @@
         {
           "name": "xdatagroup455ae863",
           "schemaName": "dbo",
-          "x": 2111.333754570398,
-          "y": 821.5885347291427
+          "x": 1685.5710689874284,
+          "y": 581.5833142846888
         },
         {
           "name": "xdatagroupb42ad6bd",
           "schemaName": "dbo",
-          "x": 399.63916015625,
-          "y": 3560.7343539497856
+          "x": 399.9310689947529,
+          "y": 570.1635089362678
         },
         {
           "name": "xdatagroupd13d0714",
@@ -2980,8 +2986,20 @@
         {
           "name": "xdatagroup44427259",
           "schemaName": "dbo",
-          "x": 2135.0208461674633,
-          "y": 564.6457359117984
+          "x": 2146.5279457778142,
+          "y": 610.6741343532005
+        },
+        {
+          "name": "carerepdata",
+          "schemaName": "dbo",
+          "x": 1888.5411152374515,
+          "y": 429.1402184148879
+        },
+        {
+          "name": "projects_starting_points_km",
+          "schemaName": "dbo",
+          "x": 2080.2400266528725,
+          "y": 750.5496368986584
         }
       ],
       "tableGroupCollapseStates": [
@@ -2998,15 +3016,7 @@
           "isCollapsed": false
         }
       ],
-      "stickyNoteLayouts": [
-        {
-          "name": "note_1787848407058",
-          "x": 2134.6482510066417,
-          "y": 169.1724547170747,
-          "width": 192,
-          "height": 192
-        }
-      ],
+      "stickyNoteLayouts": [],
       "referencePaths": [
         {
           "firstFieldNames": [
@@ -3085,6 +3095,21 @@
             ""
           ],
           "secondTableName": "xdatagroupc0def29a",
+          "secondSchemaName": "dbo",
+          "secondRelation": "1",
+          "checkPoints": []
+        },
+        {
+          "firstFieldNames": [
+            ""
+          ],
+          "firstTableName": "xdatagroup44427259",
+          "firstSchemaName": "dbo",
+          "firstRelation": "*",
+          "secondFieldNames": [
+            ""
+          ],
+          "secondTableName": "carerepdata",
           "secondSchemaName": "dbo",
           "secondRelation": "1",
           "checkPoints": []
@@ -3743,14 +3768,14 @@
         {
           "name": "association_names",
           "schemaName": "dbo",
-          "x": 619.8721884730205,
-          "y": 155.04035915066572
+          "x": 599.2301996826502,
+          "y": 160.00000000000006
         },
         {
           "name": "associations",
           "schemaName": "dbo",
-          "x": 664.4080808899791,
-          "y": 274.5650281093201
+          "x": 607.372211122635,
+          "y": 414.6748821030135
         },
         {
           "name": "bu_rsu_starting_points",
@@ -3761,8 +3786,8 @@
         {
           "name": "business_areas",
           "schemaName": "dbo",
-          "x": 552.0829176937639,
-          "y": 69.52017957533286
+          "x": 620.2779793721104,
+          "y": 69.52017957533292
         },
         {
           "name": "carerepdata",
@@ -3935,8 +3960,8 @@
         {
           "name": "employees_with_connected_countries_mat",
           "schemaName": "dbo",
-          "x": 40,
-          "y": 432
+          "x": 37.52017957533258,
+          "y": 424.5605387259985
         },
         {
           "name": "event_payment_status",
@@ -3995,8 +4020,8 @@
         {
           "name": "factorial_employees_teams_clean_mat",
           "schemaName": "dbo",
-          "x": 40,
-          "y": 248
+          "x": 51.72623426283258,
+          "y": 250.4798204246672
         },
         {
           "name": "fast_username_lid_mat",
@@ -4085,8 +4110,8 @@
         {
           "name": "ki_employee_team",
           "schemaName": "dbo",
-          "x": 512,
-          "y": 72
+          "x": 334.77804732095274,
+          "y": 67.04035915066578
         },
         {
           "name": "ki_suggestion_box_sub_categories",
@@ -4109,20 +4134,20 @@
         {
           "name": "kim_team_members",
           "schemaName": "dbo",
-          "x": 248,
+          "x": 348.43272719901915,
           "y": 344
         },
         {
           "name": "kim_team_members_history_metadata",
           "schemaName": "dbo",
-          "x": 424,
+          "x": 476.07622891801,
           "y": 248
         },
         {
           "name": "kim_teams",
           "schemaName": "dbo",
-          "x": 40,
-          "y": 344
+          "x": 23.881167239663682,
+          "y": 340.2802693629993
         },
         {
           "name": "member_types",
@@ -4421,8 +4446,8 @@
         {
           "name": "xdatagroup1cd09765",
           "schemaName": "dbo",
-          "x": 276.82285055571174,
-          "y": 69.52017957533286
+          "x": 40.583984375,
+          "y": 62.0807183013315
         },
         {
           "name": "xdatagroup353ea8c1",
@@ -4487,8 +4512,8 @@
         {
           "name": "xdatagroup74a2b33e",
           "schemaName": "dbo",
-          "x": 334.77804732095274,
-          "y": 155.04035915066572
+          "x": 318.80099653970274,
+          "y": 162.4798204246672
         },
         {
           "name": "xdatagroup8559bb4d",
@@ -4529,7 +4554,7 @@
         {
           "name": "xdatagroupb508677a",
           "schemaName": "dbo",
-          "x": 40,
+          "x": 23.881167239663682,
           "y": 155.04035915066572
         },
         {
@@ -6342,23 +6367,6 @@
           "firstFieldNames": [
             ""
           ],
-          "firstTableName": "associations",
-          "firstSchemaName": "dbo",
-          "firstRelation": "*",
-          "secondFieldNames": [
-            ""
-          ],
-          "secondTableName": "association_names",
-          "secondSchemaName": "dbo",
-          "secondRelation": "1",
-          "firstEndpointSide": null,
-          "secondEndpointSide": null,
-          "checkPoints": []
-        },
-        {
-          "firstFieldNames": [
-            ""
-          ],
           "firstTableName": "kim_team_members",
           "firstSchemaName": "dbo",
           "firstRelation": "*",
@@ -6368,8 +6376,21 @@
           "secondTableName": "kim_teams",
           "secondSchemaName": "dbo",
           "secondRelation": "1",
-          "firstEndpointSide": null,
-          "secondEndpointSide": null,
+          "checkPoints": []
+        },
+        {
+          "firstFieldNames": [
+            ""
+          ],
+          "firstTableName": "associations",
+          "firstSchemaName": "dbo",
+          "firstRelation": "*",
+          "secondFieldNames": [
+            ""
+          ],
+          "secondTableName": "association_names",
+          "secondSchemaName": "dbo",
+          "secondRelation": "1",
           "checkPoints": []
         }
       ]
@@ -8989,6 +9010,8 @@
           "secondTableName": "xtable423058f8",
           "secondSchemaName": "dbo",
           "secondRelation": "1",
+          "firstEndpointSide": null,
+          "secondEndpointSide": null,
           "checkPoints": []
         },
         {
@@ -9004,6 +9027,8 @@
           "secondTableName": "xtable423058f8",
           "secondSchemaName": "dbo",
           "secondRelation": "1",
+          "firstEndpointSide": null,
+          "secondEndpointSide": null,
           "checkPoints": []
         }
       ]
@@ -14359,6 +14384,8 @@
           "secondTableName": "xdatagroupd8b41609",
           "secondSchemaName": "dbo",
           "secondRelation": "1",
+          "firstEndpointSide": null,
+          "secondEndpointSide": null,
           "checkPoints": []
         },
         {
@@ -14374,6 +14401,8 @@
           "secondTableName": "xdatagroupd8b41609",
           "secondSchemaName": "dbo",
           "secondRelation": "1",
+          "firstEndpointSide": null,
+          "secondEndpointSide": null,
           "checkPoints": []
         },
         {
@@ -14389,6 +14418,8 @@
           "secondTableName": "carerepdata",
           "secondSchemaName": "dbo",
           "secondRelation": "1",
+          "firstEndpointSide": null,
+          "secondEndpointSide": null,
           "checkPoints": []
         }
       ]
@@ -14638,6 +14669,8 @@
           "secondTableName": "co2_unities",
           "secondSchemaName": "dbo",
           "secondRelation": "1",
+          "firstEndpointSide": null,
+          "secondEndpointSide": null,
           "checkPoints": []
         },
         {
@@ -14653,6 +14686,8 @@
           "secondTableName": "co2_emission_general_types",
           "secondSchemaName": "dbo",
           "secondRelation": "1",
+          "firstEndpointSide": null,
+          "secondEndpointSide": null,
           "checkPoints": []
         },
         {
@@ -14668,6 +14703,8 @@
           "secondTableName": "co2_single_emissions",
           "secondSchemaName": "dbo",
           "secondRelation": "1",
+          "firstEndpointSide": null,
+          "secondEndpointSide": null,
           "checkPoints": []
         },
         {
@@ -14683,6 +14720,8 @@
           "secondTableName": "co2_emission_reasons",
           "secondSchemaName": "dbo",
           "secondRelation": "1",
+          "firstEndpointSide": null,
+          "secondEndpointSide": null,
           "checkPoints": []
         },
         {
@@ -14698,6 +14737,8 @@
           "secondTableName": "co2_emission_general_types",
           "secondSchemaName": "dbo",
           "secondRelation": "1",
+          "firstEndpointSide": null,
+          "secondEndpointSide": null,
           "checkPoints": []
         },
         {
@@ -14713,6 +14754,8 @@
           "secondTableName": "co2_emission_general_types",
           "secondSchemaName": "dbo",
           "secondRelation": "1",
+          "firstEndpointSide": null,
+          "secondEndpointSide": null,
           "checkPoints": []
         },
         {
@@ -14728,6 +14771,8 @@
           "secondTableName": "co2_emission_specific_types",
           "secondSchemaName": "dbo",
           "secondRelation": "1",
+          "firstEndpointSide": null,
+          "secondEndpointSide": null,
           "checkPoints": []
         },
         {
@@ -14743,6 +14788,8 @@
           "secondTableName": "co2_single_emissions",
           "secondSchemaName": "dbo",
           "secondRelation": "1",
+          "firstEndpointSide": null,
+          "secondEndpointSide": null,
           "checkPoints": []
         },
         {
@@ -14758,6 +14805,8 @@
           "secondTableName": "co2_emissions_factors_per_country",
           "secondSchemaName": "dbo",
           "secondRelation": "1",
+          "firstEndpointSide": null,
+          "secondEndpointSide": null,
           "checkPoints": []
         }
       ]
@@ -14885,6 +14934,8 @@
           "secondTableName": "hubspot_merge_groups",
           "secondSchemaName": "dbo",
           "secondRelation": "1",
+          "firstEndpointSide": null,
+          "secondEndpointSide": null,
           "checkPoints": []
         }
       ]
@@ -14973,6 +15024,8 @@
           "secondTableName": "helpdesk_scopes",
           "secondSchemaName": "dbo",
           "secondRelation": "1",
+          "firstEndpointSide": null,
+          "secondEndpointSide": null,
           "checkPoints": []
         },
         {
@@ -14988,6 +15041,8 @@
           "secondTableName": "helpdesk_ticket",
           "secondSchemaName": "dbo",
           "secondRelation": "1",
+          "firstEndpointSide": null,
+          "secondEndpointSide": null,
           "checkPoints": []
         }
       ]
@@ -15196,6 +15251,8 @@
           "secondTableName": "website_sectors",
           "secondSchemaName": "dbo",
           "secondRelation": "1",
+          "firstEndpointSide": null,
+          "secondEndpointSide": null,
           "checkPoints": []
         },
         {
@@ -15211,6 +15268,8 @@
           "secondTableName": "website_products",
           "secondSchemaName": "dbo",
           "secondRelation": "1",
+          "firstEndpointSide": null,
+          "secondEndpointSide": null,
           "checkPoints": []
         },
         {
@@ -15226,6 +15285,8 @@
           "secondTableName": "website_sub_sector",
           "secondSchemaName": "dbo",
           "secondRelation": "1",
+          "firstEndpointSide": null,
+          "secondEndpointSide": null,
           "checkPoints": []
         },
         {
@@ -15241,6 +15302,8 @@
           "secondTableName": "website_products",
           "secondSchemaName": "dbo",
           "secondRelation": "1",
+          "firstEndpointSide": null,
+          "secondEndpointSide": null,
           "checkPoints": []
         },
         {
@@ -15256,6 +15319,8 @@
           "secondTableName": "website_solutions",
           "secondSchemaName": "dbo",
           "secondRelation": "1",
+          "firstEndpointSide": null,
+          "secondEndpointSide": null,
           "checkPoints": []
         },
         {
@@ -15271,6 +15336,8 @@
           "secondTableName": "website_products",
           "secondSchemaName": "dbo",
           "secondRelation": "1",
+          "firstEndpointSide": null,
+          "secondEndpointSide": null,
           "checkPoints": []
         }
       ]
@@ -15312,26 +15379,26 @@
         {
           "name": "casestudies_core",
           "schemaName": "dbo",
-          "x": 3145.7665699004356,
-          "y": 1518.6577522459138
+          "x": 3140.3905383199785,
+          "y": 1509.5944562935415
         },
         {
           "name": "casestudies_db",
           "schemaName": "dbo",
-          "x": 1009.35107421875,
-          "y": 2712
+          "x": 1958.5060268902935,
+          "y": 1705.6866920257326
         },
         {
           "name": "casestudies_mainsectors",
           "schemaName": "dbo",
-          "x": 4237.25244140625,
-          "y": 578
+          "x": 3035.0428313412353,
+          "y": 1307.8248925584194
         },
         {
           "name": "casestudies_product",
           "schemaName": "dbo",
-          "x": 4634.37255859375,
-          "y": 12
+          "x": 1572.9466741502465,
+          "y": 1321.4787676890294
         },
         {
           "name": "changes_log",
@@ -15420,26 +15487,26 @@
         {
           "name": "cvs_academics",
           "schemaName": "dbo",
-          "x": 3252.1811201543,
-          "y": 1703.5910330889199
+          "x": 3140.3905383199785,
+          "y": 1680.7688845475532
         },
         {
           "name": "cvs_languages",
           "schemaName": "dbo",
-          "x": 2365.261724709547,
-          "y": 2030.9557812771945
+          "x": 2359.8856931290893,
+          "y": 1823.9785654295981
         },
         {
           "name": "cvs_personal_data",
           "schemaName": "dbo",
-          "x": 2772.8371708130726,
-          "y": 1817.8576898492079
+          "x": 2743.268997120559,
+          "y": 1680.7688845475532
         },
         {
           "name": "cvs_professional_experience",
           "schemaName": "dbo",
-          "x": 4108.284932845348,
-          "y": 1509.5944562935415
+          "x": 3922.8118433195796,
+          "y": 1514.9704878739985
         },
         {
           "name": "day_lid_matrix_rate_table",
@@ -15450,26 +15517,26 @@
         {
           "name": "dsobject",
           "schemaName": "dbo",
-          "x": 1669.3713115146531,
-          "y": 2014.2695930421921
+          "x": 1661.3072641439676,
+          "y": 1904.0609456428226
         },
         {
           "name": "dsuser",
           "schemaName": "dbo",
-          "x": 2752.440393608282,
-          "y": 1332.256572626159
+          "x": 2540.087146180229,
+          "y": 1307.8248925584194
         },
         {
           "name": "dsuser_ad",
           "schemaName": "dbo",
-          "x": 4682.058720446559,
-          "y": 1319.222265586372
+          "x": 4571.850073047189,
+          "y": 1317.979168698009
         },
         {
           "name": "employee_member_type",
           "schemaName": "dbo",
-          "x": 4273.229163843884,
-          "y": 1958.6068704376369
+          "x": 4109.260200639943,
+          "y": 1875.2783809405526
         },
         {
           "name": "employees_with_connected_countries_mat",
@@ -15540,8 +15607,8 @@
         {
           "name": "fast_username_lid_mat",
           "schemaName": "dbo",
-          "x": 1506.2319843719474,
-          "y": 1515.310123620024
+          "x": 1572.9466741502465,
+          "y": 1520.686155200481
         },
         {
           "name": "helpdesk_activity",
@@ -15666,13 +15733,13 @@
         {
           "name": "member_types",
           "schemaName": "dbo",
-          "x": 4677.721934357996,
-          "y": 2163.510594988069
+          "x": 4494.936860622458,
+          "y": 1711.9239422296766
         },
         {
           "name": "new_kim_employees",
           "schemaName": "dbo",
-          "x": 2648.5954374571465,
+          "x": 2728.015579151809,
           "y": 1518.6577522459138
         },
         {
@@ -15684,8 +15751,8 @@
         {
           "name": "outlook_sync_registrations",
           "schemaName": "dbo",
-          "x": 3644.236677031024,
-          "y": 1319.222265586372
+          "x": 3597.349714140399,
+          "y": 1307.8248925584194
         },
         {
           "name": "parent_rate_matrix",
@@ -15792,8 +15859,8 @@
         {
           "name": "soft_skills",
           "schemaName": "dbo",
-          "x": 1893.964248216304,
-          "y": 1515.310123620024
+          "x": 2031.4170934051474,
+          "y": 1509.5944562935415
         },
         {
           "name": "starting_point_tolls_details",
@@ -15828,14 +15895,14 @@
         {
           "name": "user_sites_permissions",
           "schemaName": "dbo",
-          "x": 4155.867236595303,
+          "x": 4169.307315546446,
           "y": 1315.2911529077805
         },
         {
           "name": "users_licenses",
           "schemaName": "dbo",
-          "x": 4685.6049623003,
-          "y": 1531.0567745000967
+          "x": 4556.580204369331,
+          "y": 1536.4328060805537
         },
         {
           "name": "utils_table",
@@ -15852,7 +15919,7 @@
         {
           "name": "vbluser_mat",
           "schemaName": "dbo",
-          "x": 3644.236677031024,
+          "x": 3597.349714140399,
           "y": 1509.5944562935415
         },
         {
@@ -15948,8 +16015,8 @@
         {
           "name": "xdatagroup17bd9dde",
           "schemaName": "dbo",
-          "x": 1617.8193359375,
-          "y": 3014
+          "x": 2323.3843818494047,
+          "y": 1654.6143920113907
         },
         {
           "name": "xdatagroup1cbaedf3",
@@ -15966,8 +16033,8 @@
         {
           "name": "xdatagroup353ea8c1",
           "schemaName": "dbo",
-          "x": 7985.568359375,
-          "y": 4287
+          "x": 2897.1279165494193,
+          "y": 1839.8433453641426
         },
         {
           "name": "xdatagroup3af27936",
@@ -16038,8 +16105,8 @@
         {
           "name": "xdatagroup86fd9c45",
           "schemaName": "dbo",
-          "x": 1617.8193359375,
-          "y": 3316
+          "x": 1962.5704137176472,
+          "y": 1890.5496702771031
         },
         {
           "name": "xdatagroup8bda859c",
@@ -16110,8 +16177,8 @@
         {
           "name": "xdatagroupda72b87b",
           "schemaName": "dbo",
-          "x": 3998.737721177984,
-          "y": 1703.5910330889199
+          "x": 3729.9361421551316,
+          "y": 1680.7688845475532
         },
         {
           "name": "xdatagroupdc03d9cd",
@@ -16122,8 +16189,8 @@
         {
           "name": "xdatagroupde529862",
           "schemaName": "dbo",
-          "x": 1617.8193359375,
-          "y": 2712
+          "x": 1579.5545843064965,
+          "y": 1708.4617565031201
         },
         {
           "name": "xdatagroupdf856a4c",
@@ -16158,14 +16225,14 @@
         {
           "name": "xtablee1abc02f",
           "schemaName": "dbo",
-          "x": 3348.853515625,
-          "y": 578
+          "x": 2031.4170934051474,
+          "y": 1315.2911529077805
         },
         {
           "name": "FactorialEmployees",
           "schemaName": "dbo",
-          "x": 2191.0000756778545,
-          "y": 1518.6577522459138
+          "x": 2314.648802028367,
+          "y": 1509.5944562935415
         },
         {
           "name": "Companies_and_Employees",
