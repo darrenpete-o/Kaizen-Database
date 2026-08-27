@@ -100,7 +100,11 @@ jobs:
       # ================================================
       # NEW: dbdiagram CLI STEPS (The ones that worked in PowerShell)
       # ================================================
-
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22' # Or any LTS version like '20' or '18'
+          
       - name: Install dbdiagram CLI
         run: |
           Write-Host "Installing dbdiagram CLI..."
