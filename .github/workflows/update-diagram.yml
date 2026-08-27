@@ -175,8 +175,8 @@ jobs:
             git diff --cached --quiet
             if ($LASTEXITCODE -ne 0) {
               git commit -m "chore: update dbdiagram companion file with layout positions [skip ci]"
-              # Add timeout and force push
-              timeout 30 git push --force || echo "Push completed or timed out"
+              Write-Host "Pushing to GitHub..."
+              git push --force
               Write-Host "Companion file committed and pushed"
             } else {
               Write-Host "No changes to companion file"
