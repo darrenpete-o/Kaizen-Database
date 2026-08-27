@@ -185,6 +185,8 @@ jobs:
             Write-Host "schema.dbdiagram not found - nothing to commit"
           }
         shell: powershell
+        continue-on-error: true  
+        timeout-minutes: 3
 
       - name: Step 6 - Verify deployment
         run: |
