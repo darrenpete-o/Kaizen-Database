@@ -103,7 +103,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22' # Or any LTS version like '20' or '18'
+          node-version: '24' # Or any LTS version like '20' or '18'
           
       - name: Install dbdiagram CLI
         run: |
@@ -116,14 +116,14 @@ jobs:
         run: |
           Write-Host "Renaming DBML file to schema.dbml..."
           Copy-Item "schema_diagram_with_aliases_as_notes.dbml" "schema.dbml" -Force
-          Write-Host "✅ schema.dbml created"
+          Write-Host "schema.dbml created"
         shell: powershell
 
       - name: Step 1 - Pull first (get latest layout)
         run: |
-          Write-Host "📥 Pulling latest layout from dbdiagram.io..."
+          Write-Host "Pulling latest layout from dbdiagram.io..."
           dbdiagram pull --diagram-id ${{ secrets.DIAGRAM_ID }} -o schema.dbml
-          Write-Host "✅ Layout pulled successfully"
+          Write-Host "Layout pulled successfully"
         shell: powershell
         env:
           DBDIAGRAM_TOKEN: ${{ secrets.DBDIAGRAM_API_TOKEN }}
@@ -133,33 +133,33 @@ jobs:
           Write-Host "Checking companion file..."
           if (Test-Path "schema.dbdiagram") {
             $size = (Get-Item "schema.dbdiagram").Length
-            Write-Host "✅ schema.dbdiagram exists. Size: $size bytes"
+            Write-Host "schema.dbdiagram exists. Size: $size bytes"
           } else {
-            Write-Host "⚠️ schema.dbdiagram not found - will be created on push"
+            Write-Host "schema.dbdiagram not found - will be created on push"
           }
         shell: powershell
 
       - name: Step 3 - Push updated DBML (preserves positions)
         run: |
-          Write-Host "📤 Pushing updated schema to dbdiagram.io..."
+          Write-Host "Pushing updated schema to dbdiagram.io..."
           dbdiagram push schema.dbml --diagram-id ${{ secrets.DIAGRAM_ID }}
-          Write-Host "✅ Schema pushed successfully"
+          Write-Host "Schema pushed successfully"
         shell: powershell
         env:
           DBDIAGRAM_TOKEN: ${{ secrets.DBDIAGRAM_API_TOKEN }}
 
       - name: Step 4 - Pull again (capture any layout changes)
         run: |
-          Write-Host "📥 Capturing final layout..."
+          Write-Host "Capturing final layout..."
           dbdiagram pull --diagram-id ${{ secrets.DIAGRAM_ID }} -o schema.dbml
-          Write-Host "✅ Layout captured successfully"
+          Write-Host "Layout captured successfully"
         shell: powershell
         env:
           DBDIAGRAM_TOKEN: ${{ secrets.DBDIAGRAM_API_TOKEN }}
 
       - name: Step 5 - Commit companion file
         run: |
-          Write-Host "💾 Committing companion file to repository..."
+          Write-Host "Committing companion file to repository..."
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           
@@ -169,24 +169,24 @@ jobs:
             if ($LASTEXITCODE -ne 0) {
               git commit -m "chore: update dbdiagram companion file with layout positions [skip ci]"
               git push
-              Write-Host "✅ Companion file committed and pushed"
+              Write-Host "Companion file committed and pushed"
             } else {
-              Write-Host "ℹ️ No changes to companion file"
+              Write-Host "No changes to companion file"
             }
           } else {
-            Write-Host "ℹ️ schema.dbdiagram not found - nothing to commit"
+            Write-Host "schema.dbdiagram not found - nothing to commit"
           }
         shell: powershell
 
       - name: Step 6 - Verify deployment
         run: |
-          Write-Host "✅ Deployment complete!"
+          Write-Host "Deployment complete!"
           Write-Host "View your diagram at: https://dbdiagram.io/d/${{ secrets.DIAGRAM_ID }}"
           Write-Host ""
-          Write-Host "📋 Companion file info:"
+          Write-Host "Companion file info:"
           if (Test-Path "schema.dbdiagram") {
             Get-Item "schema.dbdiagram" | Format-List Name, Length, LastWriteTime
           } else {
-            Write-Host "⚠️ No companion file found"
+            Write-Host "No companion file found"
           }
         shell: powershell
