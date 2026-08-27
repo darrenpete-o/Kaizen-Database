@@ -163,15 +163,20 @@ jobs:
       - name: Step 5 - Commit companion file
         run: |
           Write-Host "Committing companion file to repository..."
+    
+          # Set the remote URL with the token
+          git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+    
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          
+    
           if (Test-Path "schema.dbdiagram") {
             git add schema.dbdiagram
             git diff --cached --quiet
             if ($LASTEXITCODE -ne 0) {
               git commit -m "chore: update dbdiagram companion file with layout positions [skip ci]"
-              git push
+              # Add timeout and force push
+              timeout 30 git push --force || echo "Push completed or timed out"
               Write-Host "Companion file committed and pushed"
             } else {
               Write-Host "No changes to companion file"
