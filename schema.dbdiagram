@@ -898,50 +898,50 @@
       {
         "name": "Companies_and_Employees",
         "schemaName": "public",
-        "x": -557.9489634854617,
-        "y": -268.0327277240708
+        "x": 12,
+        "y": 12
       },
       {
         "name": "Projects",
         "schemaName": "public",
-        "x": -28.4211068645086,
-        "y": -14.356021432853481
+        "x": 319.14892578125,
+        "y": 12
       },
       {
         "name": "Planning_and_delivery",
         "schemaName": "public",
-        "x": 417.43808546912476,
-        "y": 262.3822036121102
+        "x": 552.5126953125,
+        "y": 12
       },
       {
         "name": "Expenses_and_Trips",
         "schemaName": "public",
-        "x": 888.4146081572246,
-        "y": -29.18128348883397
+        "x": 827.46630859375,
+        "y": 12
       },
       {
         "name": "Invoices_and_Payments",
         "schemaName": "public",
-        "x": 1103.3375381725866,
-        "y": -231.7931982538969
+        "x": 1085.2177734375,
+        "y": 12
       },
       {
         "name": "CO2_Reporting",
         "schemaName": "public",
-        "x": 706.4250786870502,
-        "y": -533.2401933921614
+        "x": 1368.6201171875,
+        "y": 12
       },
       {
         "name": "Helpdesk",
         "schemaName": "public",
-        "x": 355.946711472959,
-        "y": -699.6125786870502
+        "x": 1601.98388671875,
+        "y": 12
       },
       {
         "name": "Analytics",
         "schemaName": "public",
-        "x": 5.251418006219865,
-        "y": -445.93587239583337
+        "x": 1835.34765625,
+        "y": 12
       }
     ],
     "tableGroupCollapseStates": [],
@@ -2714,8 +2714,6 @@
         "secondTableName": "Projects",
         "secondSchemaName": "public",
         "secondRelation": "*",
-        "firstEndpointSide": null,
-        "secondEndpointSide": null,
         "checkPoints": []
       },
       {
@@ -2731,8 +2729,6 @@
         "secondTableName": "Planning_and_delivery",
         "secondSchemaName": "public",
         "secondRelation": "*",
-        "firstEndpointSide": null,
-        "secondEndpointSide": null,
         "checkPoints": []
       },
       {
@@ -2748,8 +2744,6 @@
         "secondTableName": "Expenses_and_Trips",
         "secondSchemaName": "public",
         "secondRelation": "*",
-        "firstEndpointSide": null,
-        "secondEndpointSide": null,
         "checkPoints": []
       },
       {
@@ -2765,8 +2759,6 @@
         "secondTableName": "Invoices_and_Payments",
         "secondSchemaName": "public",
         "secondRelation": "*",
-        "firstEndpointSide": null,
-        "secondEndpointSide": null,
         "checkPoints": []
       },
       {
@@ -2782,8 +2774,6 @@
         "secondTableName": "CO2_Reporting",
         "secondSchemaName": "public",
         "secondRelation": "*",
-        "firstEndpointSide": null,
-        "secondEndpointSide": null,
         "checkPoints": []
       },
       {
@@ -2799,8 +2789,6 @@
         "secondTableName": "Helpdesk",
         "secondSchemaName": "public",
         "secondRelation": "*",
-        "firstEndpointSide": null,
-        "secondEndpointSide": null,
         "checkPoints": []
       },
       {
@@ -2816,8 +2804,6 @@
         "secondTableName": "Analytics",
         "secondSchemaName": "public",
         "secondRelation": "*",
-        "firstEndpointSide": null,
-        "secondEndpointSide": null,
         "checkPoints": []
       }
     ]
@@ -2868,6 +2854,12 @@
           "schemaName": "dbo",
           "x": 52.65012939130611,
           "y": 232.40370331945712
+        },
+        {
+          "name": "bu_rsu_starting_points",
+          "schemaName": "dbo",
+          "x": 52.65012939130611,
+          "y": 483.6948281228273
         }
       ],
       "tableGroupCollapseStates": [
@@ -2946,8 +2938,8 @@
         {
           "name": "xdatagroupb65314a3",
           "schemaName": "dbo",
-          "x": 37,
-          "y": 69
+          "x": 787.4939515965011,
+          "y": 411.19413337042545
         },
         {
           "name": "xdatagroupc0def29a",
@@ -2976,8 +2968,8 @@
         {
           "name": "xdatagroupd13d0714",
           "schemaName": "dbo",
-          "x": 825.9326171875,
-          "y": 3560.7343539497856
+          "x": 1203.8589936007454,
+          "y": 830.9584263811628
         },
         {
           "name": "ideas_collection",
@@ -2996,9 +2988,25 @@
         {
           "name": "Legacy or Unknown",
           "isCollapsed": false
+        },
+        {
+          "name": "Projects",
+          "isCollapsed": false
+        },
+        {
+          "name": "Planning & Delivery",
+          "isCollapsed": false
         }
       ],
-      "stickyNoteLayouts": [],
+      "stickyNoteLayouts": [
+        {
+          "name": "note_1787848407058",
+          "x": 2134.6482510066417,
+          "y": 169.1724547170747,
+          "width": 192,
+          "height": 192
+        }
+      ],
       "referencePaths": [
         {
           "firstFieldNames": [
@@ -3049,6 +3057,36 @@
           "secondRelation": "1",
           "firstEndpointSide": null,
           "secondEndpointSide": null,
+          "checkPoints": []
+        },
+        {
+          "firstFieldNames": [
+            ""
+          ],
+          "firstTableName": "xdatagroupc0def29a",
+          "firstSchemaName": "dbo",
+          "firstRelation": "*",
+          "secondFieldNames": [
+            ""
+          ],
+          "secondTableName": "xdatagroup8bda859c",
+          "secondSchemaName": "dbo",
+          "secondRelation": "1",
+          "checkPoints": []
+        },
+        {
+          "firstFieldNames": [
+            ""
+          ],
+          "firstTableName": "xdatagroup056d1a11",
+          "firstSchemaName": "dbo",
+          "firstRelation": "*",
+          "secondFieldNames": [
+            ""
+          ],
+          "secondTableName": "xdatagroupc0def29a",
+          "secondSchemaName": "dbo",
+          "secondRelation": "1",
           "checkPoints": []
         }
       ]
@@ -3556,6 +3594,8 @@
           "secondTableName": "xdatagroup453e0d78",
           "secondSchemaName": "dbo",
           "secondRelation": "1",
+          "firstEndpointSide": null,
+          "secondEndpointSide": null,
           "checkPoints": []
         },
         {
@@ -3571,6 +3611,8 @@
           "secondTableName": "parent_rate_matrix",
           "secondSchemaName": "dbo",
           "secondRelation": "1",
+          "firstEndpointSide": null,
+          "secondEndpointSide": null,
           "checkPoints": []
         },
         {
@@ -3586,6 +3628,8 @@
           "secondTableName": "xdatagroup6bfb60a3",
           "secondSchemaName": "dbo",
           "secondRelation": "1",
+          "firstEndpointSide": null,
+          "secondEndpointSide": null,
           "checkPoints": []
         },
         {
@@ -3601,6 +3645,8 @@
           "secondTableName": "xdatagroup453e0d78",
           "secondSchemaName": "dbo",
           "secondRelation": "1",
+          "firstEndpointSide": null,
+          "secondEndpointSide": null,
           "checkPoints": []
         },
         {
@@ -3616,6 +3662,8 @@
           "secondTableName": "xdatagroup6bfb60a3",
           "secondSchemaName": "dbo",
           "secondRelation": "1",
+          "firstEndpointSide": null,
+          "secondEndpointSide": null,
           "checkPoints": []
         },
         {
@@ -3631,6 +3679,8 @@
           "secondTableName": "xdatagroup453e0d78",
           "secondSchemaName": "dbo",
           "secondRelation": "1",
+          "firstEndpointSide": null,
+          "secondEndpointSide": null,
           "checkPoints": []
         },
         {
@@ -3646,6 +3696,8 @@
           "secondTableName": "xdatagroup453e0d78",
           "secondSchemaName": "dbo",
           "secondRelation": "1",
+          "firstEndpointSide": null,
+          "secondEndpointSide": null,
           "checkPoints": []
         },
         {
@@ -3661,6 +3713,8 @@
           "secondTableName": "xdatagroup6bfb60a3",
           "secondSchemaName": "dbo",
           "secondRelation": "1",
+          "firstEndpointSide": null,
+          "secondEndpointSide": null,
           "checkPoints": []
         },
         {
@@ -3676,6 +3730,8 @@
           "secondTableName": "xdatagroup453e0d78",
           "secondSchemaName": "dbo",
           "secondRelation": "1",
+          "firstEndpointSide": null,
+          "secondEndpointSide": null,
           "checkPoints": []
         }
       ]
@@ -6355,8 +6411,8 @@
         {
           "name": "casestudies_core",
           "schemaName": "dbo",
-          "x": 3286.1455078125,
-          "y": 12
+          "x": 4311.53421898411,
+          "y": 154.55404033361407
         },
         {
           "name": "casestudies_db",
@@ -6643,8 +6699,8 @@
         {
           "name": "ideas_collection",
           "schemaName": "dbo",
-          "x": 6608.45921935646,
-          "y": 1259.7571759666544
+          "x": 5500.5392216759155,
+          "y": 587.0021435150367
         },
         {
           "name": "invoice_payments",
@@ -6973,8 +7029,8 @@
         {
           "name": "xdatagroup01c77d95",
           "schemaName": "dbo",
-          "x": 6527.217666815051,
-          "y": 1574.7983699010044
+          "x": 4691.521779010265,
+          "y": 156.76081079294778
         },
         {
           "name": "xdatagroup056d1a11",
@@ -8933,8 +8989,21 @@
           "secondTableName": "xtable423058f8",
           "secondSchemaName": "dbo",
           "secondRelation": "1",
-          "firstEndpointSide": null,
-          "secondEndpointSide": null,
+          "checkPoints": []
+        },
+        {
+          "firstFieldNames": [
+            ""
+          ],
+          "firstTableName": "xdatagroup01c77d95",
+          "firstSchemaName": "dbo",
+          "firstRelation": "*",
+          "secondFieldNames": [
+            ""
+          ],
+          "secondTableName": "xtable423058f8",
+          "secondSchemaName": "dbo",
+          "secondRelation": "1",
           "checkPoints": []
         }
       ]
@@ -12018,8 +12087,8 @@
         {
           "name": "kaizen_event_workshops",
           "schemaName": "dbo",
-          "x": 10260.0517578125,
-          "y": 578
+          "x": 3743.9036006447595,
+          "y": 716.4329353356544
         },
         {
           "name": "ki_employee_team",
@@ -12108,8 +12177,8 @@
         {
           "name": "planner_reviewers",
           "schemaName": "dbo",
-          "x": 3711.7161662318185,
-          "y": 512.851836998927
+          "x": 3506.7656531465987,
+          "y": 534.3228431316643
         },
         {
           "name": "po_invoices",
@@ -12162,8 +12231,8 @@
         {
           "name": "projects_starting_points_km",
           "schemaName": "dbo",
-          "x": 7985.568359375,
-          "y": 5312
+          "x": 3882.3674556087576,
+          "y": 530.4371011173969
         },
         {
           "name": "projects_workshops",
@@ -12384,8 +12453,8 @@
         {
           "name": "xdatagroup44427259",
           "schemaName": "dbo",
-          "x": 2577.537109375,
-          "y": 2712
+          "x": 3074.5398775325325,
+          "y": 539.9614071633308
         },
         {
           "name": "xdatagroup453e0d78",
@@ -14290,8 +14359,6 @@
           "secondTableName": "xdatagroupd8b41609",
           "secondSchemaName": "dbo",
           "secondRelation": "1",
-          "firstEndpointSide": null,
-          "secondEndpointSide": null,
           "checkPoints": []
         },
         {
@@ -14307,8 +14374,21 @@
           "secondTableName": "xdatagroupd8b41609",
           "secondSchemaName": "dbo",
           "secondRelation": "1",
-          "firstEndpointSide": null,
-          "secondEndpointSide": null,
+          "checkPoints": []
+        },
+        {
+          "firstFieldNames": [
+            ""
+          ],
+          "firstTableName": "xdatagroup44427259",
+          "firstSchemaName": "dbo",
+          "firstRelation": "*",
+          "secondFieldNames": [
+            ""
+          ],
+          "secondTableName": "carerepdata",
+          "secondSchemaName": "dbo",
+          "secondRelation": "1",
           "checkPoints": []
         }
       ]
@@ -14390,15 +14470,7 @@
           "isCollapsed": false
         }
       ],
-      "stickyNoteLayouts": [
-        {
-          "name": "note_1787845832339",
-          "x": 1439.6245567444016,
-          "y": -176.30716900058084,
-          "width": 192,
-          "height": 192
-        }
-      ],
+      "stickyNoteLayouts": [],
       "referencePaths": [
         {
           "firstFieldNames": [
@@ -14552,6 +14624,141 @@
           "firstEndpointSide": null,
           "secondEndpointSide": null,
           "checkPoints": []
+        },
+        {
+          "firstFieldNames": [
+            ""
+          ],
+          "firstTableName": "co2_general_type_unity_map",
+          "firstSchemaName": "dbo",
+          "firstRelation": "*",
+          "secondFieldNames": [
+            ""
+          ],
+          "secondTableName": "co2_unities",
+          "secondSchemaName": "dbo",
+          "secondRelation": "1",
+          "checkPoints": []
+        },
+        {
+          "firstFieldNames": [
+            ""
+          ],
+          "firstTableName": "co2_general_type_unity_map",
+          "firstSchemaName": "dbo",
+          "firstRelation": "*",
+          "secondFieldNames": [
+            ""
+          ],
+          "secondTableName": "co2_emission_general_types",
+          "secondSchemaName": "dbo",
+          "secondRelation": "1",
+          "checkPoints": []
+        },
+        {
+          "firstFieldNames": [
+            ""
+          ],
+          "firstTableName": "co2_po_invoices_metadata",
+          "firstSchemaName": "dbo",
+          "firstRelation": "*",
+          "secondFieldNames": [
+            ""
+          ],
+          "secondTableName": "co2_single_emissions",
+          "secondSchemaName": "dbo",
+          "secondRelation": "1",
+          "checkPoints": []
+        },
+        {
+          "firstFieldNames": [
+            ""
+          ],
+          "firstTableName": "co2_reason_general_map",
+          "firstSchemaName": "dbo",
+          "firstRelation": "*",
+          "secondFieldNames": [
+            ""
+          ],
+          "secondTableName": "co2_emission_reasons",
+          "secondSchemaName": "dbo",
+          "secondRelation": "1",
+          "checkPoints": []
+        },
+        {
+          "firstFieldNames": [
+            ""
+          ],
+          "firstTableName": "co2_reason_general_map",
+          "firstSchemaName": "dbo",
+          "firstRelation": "*",
+          "secondFieldNames": [
+            ""
+          ],
+          "secondTableName": "co2_emission_general_types",
+          "secondSchemaName": "dbo",
+          "secondRelation": "1",
+          "checkPoints": []
+        },
+        {
+          "firstFieldNames": [
+            ""
+          ],
+          "firstTableName": "co2_generaltype_specific_map",
+          "firstSchemaName": "dbo",
+          "firstRelation": "*",
+          "secondFieldNames": [
+            ""
+          ],
+          "secondTableName": "co2_emission_general_types",
+          "secondSchemaName": "dbo",
+          "secondRelation": "1",
+          "checkPoints": []
+        },
+        {
+          "firstFieldNames": [
+            ""
+          ],
+          "firstTableName": "co2_generaltype_specific_map",
+          "firstSchemaName": "dbo",
+          "firstRelation": "*",
+          "secondFieldNames": [
+            ""
+          ],
+          "secondTableName": "co2_emission_specific_types",
+          "secondSchemaName": "dbo",
+          "secondRelation": "1",
+          "checkPoints": []
+        },
+        {
+          "firstFieldNames": [
+            ""
+          ],
+          "firstTableName": "co2_expenses_metadata",
+          "firstSchemaName": "dbo",
+          "firstRelation": "*",
+          "secondFieldNames": [
+            ""
+          ],
+          "secondTableName": "co2_single_emissions",
+          "secondSchemaName": "dbo",
+          "secondRelation": "1",
+          "checkPoints": []
+        },
+        {
+          "firstFieldNames": [
+            ""
+          ],
+          "firstTableName": "co2_single_emissions",
+          "firstSchemaName": "dbo",
+          "firstRelation": "*",
+          "secondFieldNames": [
+            ""
+          ],
+          "secondTableName": "co2_emissions_factors_per_country",
+          "secondSchemaName": "dbo",
+          "secondRelation": "1",
+          "checkPoints": []
         }
       ]
     },
@@ -14664,6 +14871,21 @@
           "firstEndpointSide": null,
           "secondEndpointSide": null,
           "checkPoints": []
+        },
+        {
+          "firstFieldNames": [
+            ""
+          ],
+          "firstTableName": "hubspot_merge_group_companies",
+          "firstSchemaName": "dbo",
+          "firstRelation": "*",
+          "secondFieldNames": [
+            ""
+          ],
+          "secondTableName": "hubspot_merge_groups",
+          "secondSchemaName": "dbo",
+          "secondRelation": "1",
+          "checkPoints": []
         }
       ]
     },
@@ -14736,6 +14958,36 @@
           "secondRelation": "1",
           "firstEndpointSide": null,
           "secondEndpointSide": null,
+          "checkPoints": []
+        },
+        {
+          "firstFieldNames": [
+            ""
+          ],
+          "firstTableName": "helpdesk_sub_category",
+          "firstSchemaName": "dbo",
+          "firstRelation": "*",
+          "secondFieldNames": [
+            ""
+          ],
+          "secondTableName": "helpdesk_scopes",
+          "secondSchemaName": "dbo",
+          "secondRelation": "1",
+          "checkPoints": []
+        },
+        {
+          "firstFieldNames": [
+            ""
+          ],
+          "firstTableName": "helpdesk_activity",
+          "firstSchemaName": "dbo",
+          "firstRelation": "*",
+          "secondFieldNames": [
+            ""
+          ],
+          "secondTableName": "helpdesk_ticket",
+          "secondSchemaName": "dbo",
+          "secondRelation": "1",
           "checkPoints": []
         }
       ]
@@ -14929,6 +15181,96 @@
           "secondRelation": "1",
           "firstEndpointSide": null,
           "secondEndpointSide": null,
+          "checkPoints": []
+        },
+        {
+          "firstFieldNames": [
+            ""
+          ],
+          "firstTableName": "website_products_sectors",
+          "firstSchemaName": "dbo",
+          "firstRelation": "*",
+          "secondFieldNames": [
+            ""
+          ],
+          "secondTableName": "website_sectors",
+          "secondSchemaName": "dbo",
+          "secondRelation": "1",
+          "checkPoints": []
+        },
+        {
+          "firstFieldNames": [
+            ""
+          ],
+          "firstTableName": "website_products_sectors",
+          "firstSchemaName": "dbo",
+          "firstRelation": "*",
+          "secondFieldNames": [
+            ""
+          ],
+          "secondTableName": "website_products",
+          "secondSchemaName": "dbo",
+          "secondRelation": "1",
+          "checkPoints": []
+        },
+        {
+          "firstFieldNames": [
+            ""
+          ],
+          "firstTableName": "website_products_sub_sector",
+          "firstSchemaName": "dbo",
+          "firstRelation": "*",
+          "secondFieldNames": [
+            ""
+          ],
+          "secondTableName": "website_sub_sector",
+          "secondSchemaName": "dbo",
+          "secondRelation": "1",
+          "checkPoints": []
+        },
+        {
+          "firstFieldNames": [
+            ""
+          ],
+          "firstTableName": "website_products_sub_sector",
+          "firstSchemaName": "dbo",
+          "firstRelation": "*",
+          "secondFieldNames": [
+            ""
+          ],
+          "secondTableName": "website_products",
+          "secondSchemaName": "dbo",
+          "secondRelation": "1",
+          "checkPoints": []
+        },
+        {
+          "firstFieldNames": [
+            ""
+          ],
+          "firstTableName": "website_products_solutions",
+          "firstSchemaName": "dbo",
+          "firstRelation": "*",
+          "secondFieldNames": [
+            ""
+          ],
+          "secondTableName": "website_solutions",
+          "secondSchemaName": "dbo",
+          "secondRelation": "1",
+          "checkPoints": []
+        },
+        {
+          "firstFieldNames": [
+            ""
+          ],
+          "firstTableName": "website_products_solutions",
+          "firstSchemaName": "dbo",
+          "firstRelation": "*",
+          "secondFieldNames": [
+            ""
+          ],
+          "secondTableName": "website_products",
+          "secondSchemaName": "dbo",
+          "secondRelation": "1",
           "checkPoints": []
         }
       ]
