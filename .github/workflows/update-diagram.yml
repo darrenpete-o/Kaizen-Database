@@ -164,7 +164,7 @@ jobs:
         run: |
           Write-Host "Committing companion file to repository..."
     
-           Set the remote URL with the token
+          #Set the remote URL with the token
           git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
     
           git config user.name "GitHub Actions"
