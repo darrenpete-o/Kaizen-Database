@@ -204,4 +204,3 @@ jobs:
             Write-Host "No companion file found"
           }
         shell: powershell
-        continue-on-error: true
