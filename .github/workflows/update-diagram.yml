@@ -122,14 +122,14 @@ jobs:
           Write-Host "schema.dbml created"
         shell: powershell
 
-      - name: Step 1 - Pull first (get latest layout)
-        run: |
-          Write-Host "Pulling latest layout from dbdiagram.io..."
-          dbdiagram pull --diagram-id ${{ secrets.DIAGRAM_ID }} -o schema.dbml
-          Write-Host "Layout pulled successfully"
-        shell: powershell
-        env:
-          DBDIAGRAM_TOKEN: ${{ secrets.DBDIAGRAM_TOKEN }}
+      #- name: Step 1 - Pull first (get latest layout)
+        #run: |
+          #Write-Host "Pulling latest layout from dbdiagram.io..."
+          #dbdiagram pull --diagram-id ${{ secrets.DIAGRAM_ID }} -o schema.dbml
+          #Write-Host "Layout pulled successfully"
+        #shell: powershell
+        #env:
+          #DBDIAGRAM_TOKEN: ${{ secrets.DBDIAGRAM_TOKEN }}
 
       - name: Step 2 - Verify companion file exists
         run: |
