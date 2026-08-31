@@ -142,6 +142,7 @@ jobs:
             Write-Host "schema.dbdiagram not found - will be created on push"
           }
         shell: powershell
+        continue-on-error: true
 
       - name: Step 3 - Push updated DBML (preserves positions)
         run: |
@@ -149,6 +150,7 @@ jobs:
           dbdiagram push schema.dbml --diagram-id ${{ secrets.DIAGRAM_ID }}
           Write-Host "Schema pushed successfully"
         shell: powershell
+        continue-on-error: true
         env:
           DBDIAGRAM_TOKEN: ${{ secrets.DBDIAGRAM_TOKEN }}
 
@@ -158,6 +160,7 @@ jobs:
           dbdiagram pull --diagram-id ${{ secrets.DIAGRAM_ID }} -o schema.dbml
           Write-Host "Layout captured successfully"
         shell: powershell
+        continue-on-error: true
         env:
           DBDIAGRAM_TOKEN: ${{ secrets.DBDIAGRAM_TOKEN }}
 
@@ -201,3 +204,4 @@ jobs:
             Write-Host "No companion file found"
           }
         shell: powershell
+        continue-on-error: true
