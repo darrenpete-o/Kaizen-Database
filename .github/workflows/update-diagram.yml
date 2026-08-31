@@ -128,6 +128,7 @@ jobs:
           dbdiagram pull --diagram-id ${{ secrets.DIAGRAM_ID }} -o schema.dbml
           Write-Host "Layout pulled successfully"
         shell: powershell
+        continue-on-error: true
         env:
           DBDIAGRAM_TOKEN: ${{ secrets.DBDIAGRAM_TOKEN }}
 
