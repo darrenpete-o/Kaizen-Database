@@ -103,24 +103,24 @@ jobs:
       # ================================================
       # NEW: dbdiagram CLI STEPS (The ones that worked in PowerShell)
       # ================================================
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '24' # Or any LTS version like '20' or '18'
+#      - name: Setup Node.js
+#        uses: actions/setup-node@v4
+#        with:
+#          node-version: '24' # Or any LTS version like '20' or '18'
           
-      - name: Install dbdiagram CLI
-        run: |
-          Write-Host "Installing dbdiagram CLI..."
-          npm install -g dbdiagram
-          dbdiagram --version
-        shell: powershell
+#      - name: Install dbdiagram CLI
+#        run: |
+#          Write-Host "Installing dbdiagram CLI..."
+#          npm install -g dbdiagram
+#          dbdiagram --version
+#        shell: powershell
 
-      - name: Rename DBML file to schema.dbml
-        run: |
-          Write-Host "Renaming DBML file to schema.dbml..."
-          Copy-Item "schema_diagram_with_aliases_as_notes.dbml" "schema.dbml" -Force
-          Write-Host "schema.dbml created"
-        shell: powershell
+#      - name: Rename DBML file to schema.dbml
+#        run: |
+#          Write-Host "Renaming DBML file to schema.dbml..."
+#          Copy-Item "schema_diagram_with_aliases_as_notes.dbml" "schema.dbml" -Force
+#          Write-Host "schema.dbml created"
+#        shell: powershell
 
       #- name: Step 1 - Pull first (get latest layout)
         #run: |
@@ -131,61 +131,61 @@ jobs:
         #env:
           #DBDIAGRAM_TOKEN: ${{ secrets.DBDIAGRAM_TOKEN }}
 
-      - name: Step 2 - Verify companion file exists
-        run: |
-          Write-Host "Checking companion file..."
-          if (Test-Path "schema.dbdiagram") {
-            $size = (Get-Item "schema.dbdiagram").Length
-            Write-Host "schema.dbdiagram exists. Size: $size bytes"
-          } else {
-            Write-Host "schema.dbdiagram not found - will be created on push"
-          }
-        shell: powershell
+ #     - name: Step 2 - Verify companion file exists
+ #       run: |
+#          Write-Host "Checking companion file..."
+#          if (Test-Path "schema.dbdiagram") {
+#            $size = (Get-Item "schema.dbdiagram").Length
+#            Write-Host "schema.dbdiagram exists. Size: $size bytes"
+#          } else {
+#            Write-Host "schema.dbdiagram not found - will be created on push"
+#          }
+#        shell: powershell
+#
+#      - name: Step 3 - Push updated DBML (preserves positions)
+#        run: |
+#          Write-Host "Pushing updated schema to dbdiagram.io..."
+#          dbdiagram push schema.dbml --diagram-id ${{ secrets.DIAGRAM_ID }}
+#          Write-Host "Schema pushed successfully"
+#        shell: powershell
+#        env:
+#          DBDIAGRAM_TOKEN: ${{ secrets.DBDIAGRAM_TOKEN }}
 
-      - name: Step 3 - Push updated DBML (preserves positions)
-        run: |
-          Write-Host "Pushing updated schema to dbdiagram.io..."
-          dbdiagram push schema.dbml --diagram-id ${{ secrets.DIAGRAM_ID }}
-          Write-Host "Schema pushed successfully"
-        shell: powershell
-        env:
-          DBDIAGRAM_TOKEN: ${{ secrets.DBDIAGRAM_TOKEN }}
+#      - name: Step 4 - Pull again (capture any layout changes)
+#        run: |
+#          Write-Host "Capturing final layout..."
+#          dbdiagram pull --diagram-id ${{ secrets.DIAGRAM_ID }} -o schema.dbml
+#          Write-Host "Layout captured successfully"
+#        shell: powershell
+#        env:
+#          DBDIAGRAM_TOKEN: ${{ secrets.DBDIAGRAM_TOKEN }}
 
-      - name: Step 4 - Pull again (capture any layout changes)
-        run: |
-          Write-Host "Capturing final layout..."
-          dbdiagram pull --diagram-id ${{ secrets.DIAGRAM_ID }} -o schema.dbml
-          Write-Host "Layout captured successfully"
-        shell: powershell
-        env:
-          DBDIAGRAM_TOKEN: ${{ secrets.DBDIAGRAM_TOKEN }}
-
-      - name: Step 5 - Commit companion file
-        run: |
-          Write-Host "Committing companion file to repository..."
+#      - name: Step 5 - Commit companion file
+#        run: |
+#          Write-Host "Committing companion file to repository..."
     
           # Set the remote URL with the token
-          git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+#          git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
     
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
+#          git config user.name "GitHub Actions"
+#          git config user.email "actions@github.com"
     
-          if (Test-Path "schema.dbdiagram") {
-            git add schema.dbdiagram
-            git diff --cached --quiet
-            if ($LASTEXITCODE -ne 0) {
-              git commit -m "chore: update dbdiagram companion file with layout positions [skip ci]"
-              Write-Host "Pushing to GitHub..."
-              git push --force
-              Write-Host "Companion file committed and pushed"
-            } else {
-              Write-Host "No changes to companion file"
-            }
-          } else {
-            Write-Host "schema.dbdiagram not found - nothing to commit"
-          }
-        shell: powershell  
-        timeout-minutes: 3
+#          if (Test-Path "schema.dbdiagram") {
+#            git add schema.dbdiagram
+#            git diff --cached --quiet
+#            if ($LASTEXITCODE -ne 0) {
+#              git commit -m "chore: update dbdiagram companion file with layout positions [skip ci]"
+#              Write-Host "Pushing to GitHub..."
+#              git push --force
+#              Write-Host "Companion file committed and pushed"
+#            } else {
+#              Write-Host "No changes to companion file"
+#            }
+#          } else {
+#            Write-Host "schema.dbdiagram not found - nothing to commit"
+#          }
+#        shell: powershell  
+#        timeout-minutes: 3
 
       - name: Step 6 - Verify deployment
         run: |
