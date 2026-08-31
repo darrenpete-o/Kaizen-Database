@@ -187,6 +187,41 @@ jobs:
 #        shell: powershell  
 #        timeout-minutes: 3
 
+      - name: Upload DBML to dbdiagram
+        timeout-minutes: 2
+        env:
+          API_TOKEN: ${{ secrets.DBDIAGRAM_API_TOKEN }}
+          DIAGRAM_ID: ${{ secrets.DIAGRAM_ID }}
+        shell: powershell
+        run: |
+          Write-Host "Reading DBML file..."
+    
+          $filePath = "C:\actions-runner\_work\Kaizen-Database\Kaizen-Database\schema_diagram_with_aliases_as_notes.dbml"
+    
+          if (-not (Test-Path $filePath)) {
+            Write-Host "File not found!"
+            exit 1
+          }
+    
+          $content = [System.IO.File]::ReadAllText($filePath)
+          Write-Host "Read $($content.Length) characters"
+          Write-Host "Uploading to dbdiagram.io..."
+    
+          $body = @{
+            name = "Kaizen Database Schema Diagram"
+            content = $content
+          } | ConvertTo-Json -Depth 10
+    
+          $headers = @{
+            "dbdiagram-access-token" = $env:API_TOKEN
+            "Content-Type" = "application/json"
+          }
+    
+          $response = Invoke-RestMethod -Method Put -Uri "https://api.dbdiagram.io/v1/diagrams/$env:DIAGRAM_ID" -Headers $headers -Body $body -TimeoutSec 30
+    
+          Write-Host "Upload successful!"
+          Write-Host "View your diagram at: https://dbdiagram.io/d/$env:DIAGRAM_ID"
+          
       - name: Step 6 - Verify deployment
         run: |
           Write-Host "Deployment complete!"
